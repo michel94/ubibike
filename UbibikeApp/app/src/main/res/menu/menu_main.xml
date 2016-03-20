@@ -2,9 +2,40 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="tecnico.cmu.ubibikeapp.MainActivity">
+
+
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+        android:id="@+id/action_home"
+        android:orderInCategory="200"
+        android:title="Search"
+        android:icon="@*android:drawable/ic_menu_home"
+        app:showAsAction="always"
+    ></item>
+
+    <item
+        android:id="@+id/action_history"
+        android:orderInCategory="200"
+        android:title="Search"
+        android:icon="@android:drawable/ic_menu_recent_history"
+        app:showAsAction="always"
+
+
+
+    ></item>
+
+    <item
+        android:id="@+id/action_users"
+        android:orderInCategory="200"
+        android:title="Search"
+        android:icon="@*android:drawable/ic_menu_cc"
+        app:showAsAction="always"
+        ></item>
+
+    <item
+        android:id="@+id/action_me"
+        android:orderInCategory="300"
+        android:title="User"
+        android:icon="@*android:drawable/ic_menu_preferences"
+        app:showAsAction="always"></item>
+
 </menu>
