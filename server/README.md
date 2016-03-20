@@ -2,6 +2,7 @@
 Assuming you have node and npm installed, just run:
 
 npm update
+
 npm start
 
 The server should be running on port 3000.
