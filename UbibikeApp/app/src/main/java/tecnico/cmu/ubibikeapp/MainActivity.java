@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
                     fragment = new BikeActivityFragment();
                     break;
                 case 2:
-                    fragment = new FriendsFragment();
+                    fragment = (Fragment) new FriendsFragment();
                     break;
                 case 3:
                     fragment = new ProfileFragment();
