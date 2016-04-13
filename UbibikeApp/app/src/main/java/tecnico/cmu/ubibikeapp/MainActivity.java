@@ -1,6 +1,7 @@
 package tecnico.cmu.ubibikeapp;
 
 
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -63,6 +64,13 @@ public class MainActivity extends AppCompatActivity {
 
         setTabListener(actionBar);
 
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("preferences", 0); // 0 - for private mode
+        SharedPreferences.Editor editor = pref.edit();
+        String username = pref.getString("username", null);
+        String password = pref.getString("password", null);
+        if(username == null){
+
+        }
     }
 
     @Override
