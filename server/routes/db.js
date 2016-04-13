@@ -24,8 +24,8 @@ var stationSchema = new Schema({
 
 })
 
-Users = mongoose.model('Users', userSchema);
-Bikes = mongoose.model('Bikes', bikeSchema);
-Stations = mongoose.model('Stations', stationSchema);
+User = mongoose.model('User', userSchema);
+Bike = mongoose.model('Bike', bikeSchema);
+Station = mongoose.model('Station', stationSchema);
 
-module.exports = {db: db, Users: Users, Bikes: Bikes, Stations: Stations};
+module.exports = {db: db, User: User, Bike: Bike, Station: Station};

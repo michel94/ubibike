@@ -4,9 +4,9 @@ var schemas = require('./db')
 var db = schemas.db;
 var Test = db.get('test');
 
-var Users = schemas.Users;
-var Bikes = schemas.Bikes;
-var Stations = schemas.Stations
+var User = schemas.User;
+var Bike = schemas.Bike;
+var Station = schemas.Station;
 
 router.post('/test', function(req, res, next){
 	console.log(req.body);
@@ -17,16 +17,30 @@ router.post('/test', function(req, res, next){
 });
 
 router.post('/register', function(req, res, next){
-	Users.find({}, {}, function(e, docs){
-		res.json(docs);
+	var data = req.body;
+	console.log(data);
+	User.findOne({username: data.username}, {}, function(e, doc){
+		console.log(data);
+		if(doc != null)
+			res.json({success: false, reason: "Username already exists"});
+		else{
+			var user = new User({
+				username: data.username,
+				password: data.password
+			});
+			user.save();
+			res.json({success: true});
+		}
+
 	})
 });
 
 router.post('/login', function(req, res, next){
-	console.log(req);
-	Users.find({username: req.username, password: password}, {},
-		function(e, docs){
-			if(docs.length == 1)
+	var data = req.body;
+	console.log(data);
+	User.findOne({username: data.username, password: data.password}, {},
+		function(e, doc){
+			if(doc != null)
 				res.json({success: true});
 			else
 				res.json({success: false});
