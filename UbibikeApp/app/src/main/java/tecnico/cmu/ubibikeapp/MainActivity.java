@@ -1,6 +1,7 @@
 package tecnico.cmu.ubibikeapp;
 
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -69,7 +71,10 @@ public class MainActivity extends AppCompatActivity {
         String username = pref.getString("username", null);
         String password = pref.getString("password", null);
         if(username == null){
-
+            Log.d("Main", "username not defined!");
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
         }
     }
 

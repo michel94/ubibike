@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.JsonReader;
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,11 +25,17 @@ public class RestTask extends AsyncTask<String, String, JSONObject>{
     private String restUrl;
     private ResponseCallback callback;
     private Exception exception = null;
+    private JSONObject data = null;
+
+    public RestTask(String restUrl, ResponseCallback callback, JSONObject data){
+        this.restUrl = restUrl;
+        this.callback = callback;
+        this.data = data;
+    }
 
     public RestTask(String restUrl, ResponseCallback callback){
         this.restUrl = restUrl;
         this.callback = callback;
-
     }
 
     private String stream2String(java.io.InputStream is) {
@@ -37,7 +44,7 @@ public class RestTask extends AsyncTask<String, String, JSONObject>{
     }
 
     @Override
-    protected JSONObject doInBackground(String... params){
+    protected JSONObject doInBackground(String ... params){
         try {
             URL url = new URL(restUrl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -47,12 +54,9 @@ public class RestTask extends AsyncTask<String, String, JSONObject>{
             conn.setRequestProperty("Accept", "application/json");
             conn.setRequestMethod("POST");
 
-            JSONObject data = new JSONObject();
-            data.put("username", "testuser");
-            data.put("password", "testpass");
-
             OutputStream wr = conn.getOutputStream();
-            wr.write(data.toString().getBytes("UTF-8"));
+            if(data != null)
+                wr.write(data.toString().getBytes("UTF-8"));
 
             wr.close();
 
