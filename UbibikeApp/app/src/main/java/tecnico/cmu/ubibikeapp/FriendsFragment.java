@@ -56,7 +56,7 @@ public class FriendsFragment extends ListFragment {
             }
             @Override
             public void onError(Exception e){
-                Log.d("F", "Error: " + e.getMessage());
+                Log.d("F", "Error: " + e.getMessage()); e.printStackTrace();
             }
         });
 
