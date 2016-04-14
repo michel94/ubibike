@@ -16,7 +16,7 @@ public class API {
     }
 
     public void getUsers(ResponseCallback callback){
-        new RestTask(serverUrl + "test", callback).execute();
+        new RestTask(serverUrl + "users", callback).execute();
     }
 
     public void login(String username, String password, ResponseCallback callback){

@@ -16,6 +16,13 @@ router.post('/test', function(req, res, next){
     });
 });
 
+router.post('/users', function(req, res, next){
+	console.log(req.body);
+	User.find({},{},function(e, docs){
+        res.json({users: docs});
+    });
+});
+
 router.post('/register', function(req, res, next){
 	var data = req.body;
 	console.log(data);

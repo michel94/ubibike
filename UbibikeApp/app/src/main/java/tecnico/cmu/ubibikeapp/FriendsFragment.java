@@ -14,6 +14,8 @@ import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -26,20 +28,16 @@ import tecnico.cmu.ubibikeapp.network.ResponseCallback;
  */
 public class FriendsFragment extends ListFragment {
     private ArrayAdapter<String> adapter;
-    private ArrayList<String> contacts;
+    private ArrayList<String> contacts = new ArrayList<String>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.users_layout, container, false);
-        //ListView listView = (ListView) rootView.findViewById(R.id.list);
 
-        String[] contacts = {"asdasd", "bfgfg", "asdasd", "bfgfg", "asdasd", "bfgfg", "asdasd", "bfgfg", "asdasd", "bfgfg", "asdasd", "bfgfg", "asdasd", "bfgfg", "asdasd", "bfgfg", "asdasd", "bfgfg"};
         adapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_list_item_1,
                 contacts);
-        //listView.setAdapter(adapter);
 
         return rootView;
     }
@@ -49,14 +47,23 @@ public class FriendsFragment extends ListFragment {
         getListView().setAdapter(adapter);
 
         API api = new API();
-        api.getTest(new ResponseCallback() {
+        api.getUsers(new ResponseCallback() {
             @Override
             public void onDataReceived(JSONObject response) {
-                Log.d("F", "AYY LMAO " + response);
+                try {
+                    JSONArray users = response.getJSONArray("users");
+                    contacts.clear();
+                    for(int u=0; u<users.length(); u++){
+                        contacts.add(((JSONObject)users.get(u)).getString("username"));
+                    }
+                    adapter.notifyDataSetChanged();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
             @Override
             public void onError(Exception e){
-                Log.d("F", "Error: " + e.getMessage()); e.printStackTrace();
+                Log.d("UsersFrag", "Error: " + e.getMessage()); e.printStackTrace();
             }
         });
 
