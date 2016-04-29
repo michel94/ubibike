@@ -2,32 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="pt.tecnico.ulisboa.pt.cmuproj02.Actividade">
+    android:layout_height="match_parent">
 
-
-    <ImageView
-        android:layout_column="1"
-        android:padding="8dip"
-        android:src="@drawable/back"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:id="@+id/share1"
-        android:layout_alignBottom="@+id/imageView"
-        android:clickable="true" />
-
-
-    <ImageView
-        android:layout_column="1"
-        android:padding="8dip"
-        android:src="@drawable/share"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:id="@+id/imageView"
-        android:clickable="true" />
 
     <TableLayout
         android:layout_width="match_parent"
@@ -55,7 +31,7 @@
 
                 android:layout_gravity="center"
                 android:id="@+id/idpont"
-                android:text="20"
+                android:text="00"
                 android:textSize="21dp"
                 android:gravity="top|right"
                 android:textAppearance="?android:attr/textAppearanceLarge"
@@ -83,7 +59,7 @@
             <TextView
                 android:layout_gravity="center"
                 android:id="@+id/idkm"
-                android:text="2"
+                android:text="0"
                 android:textSize="20dp"
                 android:gravity="top|right"
                 android:textAppearance="?android:attr/textAppearanceLarge"
@@ -100,25 +76,37 @@
 
     </TableLayout>
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/share1"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_above="@+id/tableLayout"
+        android:orientation="vertical"
         android:id="@+id/frame"
         >
 
-        <com.esri.android.map.MapView
+        <fragment
             android:id="@+id/map"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            mapoptions.MapType="Streets"
-            mapoptions.center="38.7738718, -9.0958291"
-            mapoptions.ZoomLevel="16">
-        </com.esri.android.map.MapView>
+            android:layout_width="match_parent"
+            android:layout_height="338dp"
+            android:name="com.google.android.gms.maps.MapFragment"
+            />
 
-    </FrameLayout>
+        <ImageView
+            android:layout_column="1"
+            android:padding="8dip"
+            android:src="@drawable/share"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:id="@+id/imageView"
+            android:clickable="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="right|bottom" />
+
+
+    </LinearLayout>
 
 </RelativeLayout>

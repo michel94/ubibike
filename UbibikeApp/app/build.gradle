@@ -12,12 +12,6 @@ android {
         versionName "1.0"
     }
 
-// ====================Fredy============
-    packagingOptions{
-        exclude 'META-INF/LGPL2.1'
-        exclude 'META-INF/LICENSE'
-        exclude 'META-INF/NOTICE'
-    }
 
     buildTypes {
         release {
@@ -35,5 +29,4 @@ dependencies {
     compile 'com.android.support:support-v4:23.2.0'
 //Dependecias para o MAP =============  Fredy================
     compile 'com.google.android.gms:play-services-maps:8.4.0'
-    compile 'com.esri.arcgis.android:arcgis-android:10.2.7'
 }

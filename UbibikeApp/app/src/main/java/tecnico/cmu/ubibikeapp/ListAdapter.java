@@ -12,13 +12,13 @@ import java.util.List;
 /**
  * Created by Fredy Felisberto on 4/21/2016.
  */
-public class ListAdapter extends ArrayAdapter<ActivityAttr> {
+public class ListAdapter extends ArrayAdapter<Attribute> {
 
 
 
     public ListAdapter(Context context, int resource) {super(context,0);}
 
-    public ListAdapter(Context context, int resource, List<ActivityAttr> myList) {
+    public ListAdapter(Context context, int resource, List<Attribute> myList) {
         super(context,R.layout.tabela, myList);
     }
 
@@ -32,7 +32,7 @@ public class ListAdapter extends ArrayAdapter<ActivityAttr> {
         View v = convertView;
 
 
-        ActivityAttr attr = getItem(position);
+        Attribute attr = getItem(position);
 
         if (attr != null) {
             TextView tt1 = (TextView) v.findViewById(R.id.pontos);

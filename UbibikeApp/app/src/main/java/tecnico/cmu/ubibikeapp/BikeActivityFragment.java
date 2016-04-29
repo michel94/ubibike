@@ -1,11 +1,13 @@
 package tecnico.cmu.ubibikeapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -29,29 +31,40 @@ public class BikeActivityFragment extends Fragment {
         CriarListaActivity();
 
         listView = (ListView)rootView.findViewById(R.id.idlist);
-        List<ActivityAttr> yourItem = CriarListaActivity();
+        List<Attribute> yourItem = CriarListaActivity();
         if(yourItem!=null) System.out.println(CriarListaActivity());
         listAdapter = new ListAdapter(view.getContext().getApplicationContext(),R.layout.tabela, yourItem);
         listView.setAdapter(listAdapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getActivity(), MapActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
 
         return rootView;
     }
 
 
-    public List<ActivityAttr> CriarListaActivity(){
-        List<ActivityAttr> attrs = new ArrayList<ActivityAttr>();
-        ActivityAttr attr = new ActivityAttr("1132","00:30:20");
-        ActivityAttr attr1 = new ActivityAttr("1132","01:30:20");
-        ActivityAttr attr2 = new ActivityAttr("1332","02:30:20");
-        ActivityAttr attr3 = new ActivityAttr("1432","01:00:20");
-        ActivityAttr attr4 = new ActivityAttr("1532","02:00:20");
-        ActivityAttr attr5 = new ActivityAttr("5132","03:30:20");
-        ActivityAttr attr6 = new ActivityAttr("3132","04:30:20");
-        ActivityAttr attr7 = new ActivityAttr("1332","02:30:20");
-        ActivityAttr attr8 = new ActivityAttr("1432","01:00:20");
-        ActivityAttr attr9 = new ActivityAttr("1532","02:00:20");
-     /*   ActivityAttr attr10 = new ActivityAttr("5132","03:30:20");
-        ActivityAttr attr11 = new ActivityAttr("3132","04:30:20"); */
+
+    public List<Attribute> CriarListaActivity(){
+        List<Attribute> attrs = new ArrayList<Attribute>();
+        Attribute attr = new Attribute("1132","00:30:20");
+        Attribute attr1 = new Attribute("1132","01:30:20");
+        Attribute attr2 = new Attribute("1332","02:30:20");
+        Attribute attr3 = new Attribute("1432","01:00:20");
+        Attribute attr4 = new Attribute("1532","02:00:20");
+        Attribute attr5 = new Attribute("5132","03:30:20");
+        Attribute attr6 = new Attribute("3132","04:30:20");
+        Attribute attr7 = new Attribute("1332","02:30:20");
+        Attribute attr8 = new Attribute("1432","01:00:20");
+        Attribute attr9 = new Attribute("1532","02:00:20");
+     /*   Attribute attr10 = new Attribute("5132","03:30:20");
+        Attribute attr11 = new Attribute("3132","04:30:20"); */
         attrs.add(attr);
         attrs.add(attr1);
         attrs.add(attr2);
@@ -66,5 +79,7 @@ public class BikeActivityFragment extends Fragment {
         attrs.add(attr11); */
         return attrs;
     }
+
+
 
 }
