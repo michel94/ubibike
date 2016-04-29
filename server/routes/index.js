@@ -36,7 +36,7 @@ router.post('/register', function(req, res, next){
 				password: data.password
 			});
 			user.save();
-			res.json({success: true});
+			res.json({success: true});	
 		}
 
 	})
