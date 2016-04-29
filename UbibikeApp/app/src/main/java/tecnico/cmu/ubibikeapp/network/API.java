@@ -7,7 +7,7 @@ import org.json.JSONObject;
  * Created by michel on 4/12/16.
  */
 public class API {
-    private final String serverIp = "194.210.230.133";
+    private final String serverIp = "192.168.43.184";
     private final int port = 3000;
     private final String serverUrl = "http://" + serverIp +  ":" + port + "/";
 
