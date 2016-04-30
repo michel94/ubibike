@@ -7,6 +7,8 @@ import android.widget.BaseAdapter;
 
 import java.util.ArrayList;
 
+import tecnico.cmu.ubibikeapp.model.Message;
+
 /**
  * Created by Fredy Felisberto on 4/29/2016.
  */

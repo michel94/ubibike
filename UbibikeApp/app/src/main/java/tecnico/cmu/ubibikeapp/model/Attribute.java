@@ -1,4 +1,4 @@
-package tecnico.cmu.ubibikeapp;
+package tecnico.cmu.ubibikeapp.model;
 
 import java.util.Date;
 

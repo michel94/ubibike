@@ -23,17 +23,32 @@ router.post('/users', function(req, res, next){
     });
 });
 
+router.post('/userStats', function(req, res, next){
+    console.log(req.body);
+    var data = req.body;
+    User.find({username: data.username}, {}, function(e, doc){
+        console.log(doc);
+        if(doc == null || doc.length == 0){
+            res.json({sucess: false, message: "Username doesn't exist"})
+        } else {
+            res.json(doc[0]);
+        }
+    })
+})
+
 router.post('/register', function(req, res, next){
 	var data = req.body;
 	console.log(data);
 	User.findOne({username: data.username}, {}, function(e, doc){
 		console.log(data);
 		if(doc != null)
-			res.json({success: false, reason: "Username already exists"});
+			res.json({success: false, message: "Username already exists"});
 		else{
 			var user = new User({
 				username: data.username,
-				password: data.password
+				password: data.password,
+                score: 0,
+                distance: 0
 			});
 			user.save();
 			res.json({success: true});	

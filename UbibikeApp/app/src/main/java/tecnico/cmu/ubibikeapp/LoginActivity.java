@@ -2,7 +2,6 @@ package tecnico.cmu.ubibikeapp;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -91,11 +90,9 @@ public class LoginActivity extends AppCompatActivity{
                     if(response.getBoolean("success")) {
                         Log.d("login", "correct credentials");
 
-                        SharedPreferences pref = getApplicationContext().getSharedPreferences("preferences", 0); // 0 - for private mode
-                        SharedPreferences.Editor editor = pref.edit();
-                        editor.putString("username", username);
-                        editor.putString("password", password);
-                        editor.commit();
+                        Utils.setUsername(getApplicationContext(), username);
+                        Utils.setPassword(getApplicationContext(), password);
+
 
                         Intent intent = new Intent(self, MainActivity.class);
                         startActivity(intent);

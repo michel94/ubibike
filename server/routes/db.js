@@ -12,6 +12,7 @@ var userSchema = new Schema({
     password: String,
     name: String,
     score: Number,
+    distance: Number,
     trajectories: []
 });
 

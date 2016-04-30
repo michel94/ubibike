@@ -1,4 +1,4 @@
-package tecnico.cmu.ubibikeapp;
+package tecnico.cmu.ubibikeapp.tabs;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +12,11 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import tecnico.cmu.ubibikeapp.ListAdapter;
+import tecnico.cmu.ubibikeapp.MapActivity;
+import tecnico.cmu.ubibikeapp.R;
+import tecnico.cmu.ubibikeapp.model.Attribute;
 
 /**
  * Created by david on 31-03-2016.
