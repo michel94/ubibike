@@ -1,43 +1,55 @@
 package tecnico.cmu.ubibikeapp;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Fredy Felisberto on 4/29/2016.
  */
-public class MessageAdapter extends BaseAdapter {
+public class MessageAdapter extends ArrayAdapter<Message>{
 
-    Context messageContext;
-    ArrayList<Message> messageList;
-
-    public MessageAdapter(Context context, ArrayList<Message> messages){
-        messageList = messages;
-        messageContext = context;
-    }
-
+    private TextView chatText;
+    private List<Message> chatMessageList = new ArrayList<Message>();
+    private Context context;
 
     @Override
+    public void add(Message object) {
+        chatMessageList.add(object);
+        super.add(object);
+    }
+
+    public MessageAdapter(Context context, int textViewResourceId) {
+        super(context, textViewResourceId);
+        this.context = context;
+    }
+
     public int getCount() {
-        return 0;
+        return this.chatMessageList.size();
     }
 
-    @Override
-    public Object getItem(int position) {
-        return null;
+    public Message getItem(int index) {
+        return this.chatMessageList.get(index);
     }
 
-    @Override
-    public long getItemId(int position) {
-        return 0;
-    }
-
-    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        return null;
+        Message chatMessageObj = getItem(position);
+        View row = convertView;
+        LayoutInflater  inflater = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        if (chatMessageObj.left) {
+            row = inflater.inflate(R.layout.activity_right, parent, false);
+        }else{
+            row = inflater.inflate(R.layout.activity_left, parent, false);
+        }
+        chatText = (TextView) row.findViewById(R.id.msgr);
+        chatText.setText(chatMessageObj.message);
+        return row;
     }
+
 }

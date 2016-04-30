@@ -16,7 +16,12 @@
         android:id="@+id/messages_view"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:background="@null"
+        android:divider="@null"
+        android:stackFromBottom="true"
+        android:transcriptMode="alwaysScroll"
+         />
 
     <LinearLayout
         android:id="@+id/input_bar"
@@ -31,17 +36,18 @@
             android:layout_weight="0.7"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:inputType="text" />
+            android:inputType="text"
+            android:hint="Say anything ..."/>
 
 
         <ImageButton
             android:padding="8dip"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="61dp"
+            android:layout_height="match_parent"
             android:id="@+id/send_button"
             android:layout_marginTop="5dp"
             android:layout_marginRight="5dp"
-            android:src="@drawable/send"/>
+            android:src="@drawable/send" />
 
     </LinearLayout>
 
