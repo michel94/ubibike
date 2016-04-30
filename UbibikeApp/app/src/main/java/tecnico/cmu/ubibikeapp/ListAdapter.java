@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import tecnico.cmu.ubibikeapp.model.Attribute;
+
 /**
  * Created by Fredy Felisberto on 4/21/2016.
  */

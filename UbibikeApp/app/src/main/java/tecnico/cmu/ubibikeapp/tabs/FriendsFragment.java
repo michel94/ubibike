@@ -1,4 +1,4 @@
-package tecnico.cmu.ubibikeapp;
+package tecnico.cmu.ubibikeapp.tabs;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +17,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import tecnico.cmu.ubibikeapp.R;
+import tecnico.cmu.ubibikeapp.UserActivity;
 import tecnico.cmu.ubibikeapp.network.API;
 import tecnico.cmu.ubibikeapp.network.ResponseCallback;
 
@@ -24,6 +26,9 @@ import tecnico.cmu.ubibikeapp.network.ResponseCallback;
  * Created by david on 31-03-2016.
  */
 public class FriendsFragment extends ListFragment {
+
+    private static final String TAG = "FriendsFragment";
+
     private ArrayAdapter<String> adapter;
     private ArrayList<String> contacts = new ArrayList<String>();
     ListView listView;
@@ -51,6 +56,7 @@ public class FriendsFragment extends ListFragment {
         api.getUsers(new ResponseCallback() {
             @Override
             public void onDataReceived(JSONObject response) {
+                Log.d(TAG, "Users: "+ response);
                 try {
                     JSONArray users = response.getJSONArray("users");
                     contacts.clear();
@@ -75,7 +81,7 @@ public class FriendsFragment extends ListFragment {
             }
             @Override
             public void onError(Exception e){
-                Log.d("UsersFrag", "Error: " + e.getMessage()); e.printStackTrace();
+                Log.d("UsersFrag", "Error: " + e.getMessage());
             }
         });
 

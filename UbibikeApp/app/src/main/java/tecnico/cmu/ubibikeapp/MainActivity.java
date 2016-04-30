@@ -1,6 +1,7 @@
 package tecnico.cmu.ubibikeapp;
 
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
@@ -15,8 +16,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import java.util.ArrayList;
+
+import tecnico.cmu.ubibikeapp.network.WDService;
+
+import tecnico.cmu.ubibikeapp.tabs.BikeActivityFragment;
+import tecnico.cmu.ubibikeapp.tabs.FriendsFragment;
+import tecnico.cmu.ubibikeapp.tabs.HomeFragment;
+import tecnico.cmu.ubibikeapp.tabs.ProfileFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -61,16 +70,19 @@ public class MainActivity extends AppCompatActivity {
 
         setTabListener(actionBar);
 
-        SharedPreferences pref = getApplicationContext().getSharedPreferences("preferences", 0); // 0 - for private mode
-        SharedPreferences.Editor editor = pref.edit();
-        String username = pref.getString("username", null);
-        String password = pref.getString("password", null);
+        String username = Utils.getUsername(this);
+        String password = Utils.getPassword(this);
         if(username == null){
             Log.d("Main", "username not defined!");
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             finish();
         }
+
+        Log.d("Main", "Starting service");
+        ComponentName req = startService(new Intent(getApplicationContext(), WDService.class));
+        if(req == null)
+            Log.d("Main", "Failed");
     }
 
     @Override
@@ -149,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
                     fragment = new BikeActivityFragment();
                     break;
                 case 2:
-                    fragment = (Fragment) new FriendsFragment();
+                    fragment = new FriendsFragment();
                     break;
                 case 3:
                     fragment = new ProfileFragment();

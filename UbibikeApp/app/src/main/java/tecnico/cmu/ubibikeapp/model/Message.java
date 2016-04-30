@@ -1,4 +1,4 @@
-package tecnico.cmu.ubibikeapp;
+package tecnico.cmu.ubibikeapp.model;
 
 /**
  * Created by Fredy Felisberto on 4/29/2016.

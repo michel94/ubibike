@@ -1,4 +1,4 @@
-package tecnico.cmu.ubibikeapp;
+package tecnico.cmu.ubibikeapp.tabs;
 
 
 import android.os.Bundle;
@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import tecnico.cmu.ubibikeapp.R;
 
 /**
  * Created by david on 31-03-2016.
