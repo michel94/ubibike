@@ -1,9 +1,9 @@
 package tecnico.cmu.ubibikeapp;
 
 
+import android.content.ComponentName;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,8 +16,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import java.util.ArrayList;
+
+import tecnico.cmu.ubibikeapp.network.WDService;
 
 import tecnico.cmu.ubibikeapp.tabs.BikeActivityFragment;
 import tecnico.cmu.ubibikeapp.tabs.FriendsFragment;
@@ -40,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
                         getSupportFragmentManager());
 
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        actionBar.setBackgroundDrawable(new ColorDrawable(Color.rgb(123, 233, 122)));
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayShowHomeEnabled(false);
 
@@ -76,6 +78,11 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
+
+        Log.d("Main", "Starting service");
+        ComponentName req = startService(new Intent(getApplicationContext(), WDService.class));
+        if(req == null)
+            Log.d("Main", "Failed");
     }
 
     @Override
