@@ -2,13 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="tecnico.cmu.ubibikeapp">
 
-<<<<<<< HEAD
-=======
     <uses-sdk
-        android:minSdkVersion="12"
-        android:targetSdkVersion="17" />
+        android:minSdkVersion="15"
+        android:targetSdkVersion="22" />
 
->>>>>>> c977f192d2dc3b631d45c4a18cee0f5927033e8c
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
