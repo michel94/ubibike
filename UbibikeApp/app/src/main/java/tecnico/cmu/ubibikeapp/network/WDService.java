@@ -61,6 +61,7 @@ public class WDService extends Service implements
         Log.d(TAG, "Wifi ON");
         Intent intent = new Intent(this, SimWifiP2pService.class);
         boolean r = bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+            startService(intent);
         Log.d(TAG, "Binding service to mConnection: " + r);
         mBound = true;
     };
