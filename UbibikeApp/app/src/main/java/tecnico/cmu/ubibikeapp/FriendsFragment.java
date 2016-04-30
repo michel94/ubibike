@@ -1,18 +1,15 @@
 package tecnico.cmu.ubibikeapp;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTabHost;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TabHost;
-import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,22 +26,26 @@ import tecnico.cmu.ubibikeapp.network.ResponseCallback;
 public class FriendsFragment extends ListFragment {
     private ArrayAdapter<String> adapter;
     private ArrayList<String> contacts = new ArrayList<String>();
+    ListView listView;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.users_layout, container, false);
 
-        adapter = new ArrayAdapter<String>(getActivity(),
+                adapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_list_item_1,
                 contacts);
 
-        return rootView;
+         return rootView;
     }
 
     @Override
     public void onViewCreated (View view, Bundle savedInstanceState) {
         getListView().setAdapter(adapter);
+
+        listView = (ListView)getListView().findViewById(android.R.id.list);
 
         API api = new API();
         api.getUsers(new ResponseCallback() {
@@ -57,15 +58,27 @@ public class FriendsFragment extends ListFragment {
                         contacts.add(((JSONObject)users.get(u)).getString("username"));
                     }
                     adapter.notifyDataSetChanged();
+
+                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            Intent intent = new Intent(getActivity(), UserActivity.class);
+                            startActivity(intent);
+                        }
+                    });
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+
+
             }
             @Override
             public void onError(Exception e){
                 Log.d("UsersFrag", "Error: " + e.getMessage());
             }
         });
+
 
     }
 
