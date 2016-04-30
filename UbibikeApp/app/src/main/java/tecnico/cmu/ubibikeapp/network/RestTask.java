@@ -26,6 +26,7 @@ public class RestTask extends AsyncTask<String, String, JSONObject>{
     private ResponseCallback callback;
     private Exception exception = null;
     private JSONObject data = null;
+    private static int TIMEOUT = 3 * 1000;
 
     public RestTask(String restUrl, ResponseCallback callback, JSONObject data){
         this.restUrl = restUrl;
@@ -48,6 +49,7 @@ public class RestTask extends AsyncTask<String, String, JSONObject>{
         try {
             URL url = new URL(restUrl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setConnectTimeout(TIMEOUT);
             conn.setDoOutput(true);
             conn.setDoInput(true);
             conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
