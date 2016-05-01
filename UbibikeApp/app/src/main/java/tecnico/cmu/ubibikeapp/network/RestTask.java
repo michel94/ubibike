@@ -72,7 +72,7 @@ public class RestTask extends AsyncTask<String, String, JSONObject>{
             return response;
         } catch (IOException e) {
             //e.printStackTrace();
-            //exception = new ConnectException(e);
+            //exception = new ConnectException(e); // maybe later
             exception = e;
         } catch (JSONException e) {
             //e.printStackTrace();

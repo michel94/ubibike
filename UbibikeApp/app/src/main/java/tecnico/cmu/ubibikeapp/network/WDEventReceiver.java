@@ -13,9 +13,11 @@ import pt.inesc.termite.wifidirect.SimWifiP2pInfo;
 public class WDEventReceiver extends BroadcastReceiver{
 
     static String TAG = "WDEvent";
+    WDService service;
 
-    public WDEventReceiver() {
+    public WDEventReceiver(WDService service) {
         super();
+        this.service = service;
     }
 
     @Override
@@ -43,23 +45,22 @@ public class WDEventReceiver extends BroadcastReceiver{
             // Request available peers from the wifi p2p manager. This is an
             // asynchronous call and the calling activity is notified with a
             // callback on PeerListListener.onPeersAvailable()
-
+            service.requestPeers();
             //Toast.makeText(mActivity, "Peer list changed", Toast.LENGTH_SHORT).show();
 
         } else if (SimWifiP2pBroadcast.WIFI_P2P_NETWORK_MEMBERSHIP_CHANGED_ACTION.equals(action)) {
             Log.d(TAG, "Network membership changed");
 
-            SimWifiP2pInfo ginfo = (SimWifiP2pInfo) intent.getSerializableExtra(
-                    SimWifiP2pBroadcast.EXTRA_GROUP_INFO);
-            ginfo.print();
+            service.requestGroupInfo();
+            SimWifiP2pInfo ginfo = (SimWifiP2pInfo) intent.getSerializableExtra(SimWifiP2pBroadcast.EXTRA_GROUP_INFO);
+            //ginfo.print();
             //Toast.makeText(mActivity, "Network membership changed", Toast.LENGTH_SHORT).show();
 
         } else if (SimWifiP2pBroadcast.WIFI_P2P_GROUP_OWNERSHIP_CHANGED_ACTION.equals(action)) {
             Log.d(TAG, "Group ownership changed");
 
-            SimWifiP2pInfo ginfo = (SimWifiP2pInfo) intent.getSerializableExtra(
-                    SimWifiP2pBroadcast.EXTRA_GROUP_INFO);
-            ginfo.print();
+            SimWifiP2pInfo ginfo = (SimWifiP2pInfo) intent.getSerializableExtra(SimWifiP2pBroadcast.EXTRA_GROUP_INFO);
+            //ginfo.print();
             //Toast.makeText(mActivity, "Group ownership changed", Toast.LENGTH_SHORT).show();
         }
     }
