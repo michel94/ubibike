@@ -10,6 +10,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
+import tecnico.cmu.ubibikeapp.model.Message;
+
 public class UserActivity extends AppCompatActivity {
 
     private static final String TAG = "ChatActivity";

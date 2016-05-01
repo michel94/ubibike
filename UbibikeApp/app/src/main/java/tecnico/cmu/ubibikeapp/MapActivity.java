@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MapActivity extends AppCompatActivity {
-   // static final LatLng ActualPosition = new LatLng(38.7738718, -9.0958291);
+
     private GoogleMap googleMap;
 
     @Override
@@ -41,12 +42,8 @@ public class MapActivity extends AppCompatActivity {
                 googleMap = ((MapFragment) getFragmentManager().
                         findFragmentById(R.id.map)).getMap();
             }
-          /*  googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-            Marker TP = googleMap.addMarker(new MarkerOptions().
-                    position(ActualPosition).title("Fucking my Mind")); */
 
             Liatitutelongetude();
-
             final LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
             for (int i = 0; i < Liatitutelongetude().size(); i++) {
@@ -55,7 +52,8 @@ public class MapActivity extends AppCompatActivity {
 
                 googleMap.addMarker(options);
                 builder.include(position);
-                googleMap.setMyLocationEnabled(true);
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position,12));
+
 
             }
         }
