@@ -29,3 +29,6 @@ proguard/
 
 # Android Studio captures folder
 captures/
+
+#File with my ip!!
+UbibikeApp/app/src/main/java/tecnico/cmu/ubibikeapp/network/MyData.java
