@@ -52,6 +52,7 @@ public class ResponseUser {
         private String password;
         private int distance;
         private int points;
+        private int id;
         private ArrayList<Trajectory> trajectories;
 
         public User(String username, String password, int distance, int points, ArrayList<Trajectory> trajectories) {

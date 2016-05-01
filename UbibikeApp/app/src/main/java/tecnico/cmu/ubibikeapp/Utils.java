@@ -14,6 +14,11 @@ public class Utils {
 
     private static final String UBI_PREFS = "UbibikePreferences";
 
+    public static String getUserID(Context context){
+        SharedPreferences preferences = context.getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
+        return (preferences != null) ? preferences.getString("userID", null) : null;
+    }
+
     public static String getUsername(Context context){
         SharedPreferences preferences = context.getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
         return (preferences != null) ? preferences.getString("username", null) : null;

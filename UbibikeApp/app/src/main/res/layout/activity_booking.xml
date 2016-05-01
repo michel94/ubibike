@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+   android:orientation="vertical"
+    tools:context="tecnico.cmu.ubibikeapp.Booking"
+    android:weightSum="1">
+
+    <TextView
+        android:layout_width="wrap_content"  android:layout_height="wrap_content"  android:paddingBottom="10dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/cardview_light_background"
+        >
+
+        <ImageButton
+            android:layout_column="1"
+            android:padding="8dip"
+            android:background="@color/cardview_light_background"
+            android:src="@drawable/back"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginLeft="10dp"
+            />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Station Name"
+            android:textSize="30sp"
+            android:id="@+id/stationame"
+            android:layout_gravity="center_horizontal"
+            android:paddingBottom="10dp"/>
+
+
+    </LinearLayout>
+
+
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.60">
+
+
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/bikelist"
+            android:layout_gravity="left|top" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_weight="0.31">
+
+        <ImageView
+            android:layout_column="1"
+            android:padding="8dip"
+            android:src="@drawable/bikeblack"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            />
+
+        <TableLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="134dp"
+            android:orientation="horizontal"
+            >
+
+        <TableRow android:weightSum="2">
+            <LinearLayout android:orientation="vertical" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:layout_weight="1"
+                android:layout_marginRight="4dp"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bike ID:"
+                    android:textSize="18sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Total KM:"
+                    android:textSize="18sp"/>
+            </LinearLayout>
+            <LinearLayout android:orientation="vertical" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:layout_weight="1"
+                android:layout_marginRight="4dp"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="000000"
+                    android:textSize="20sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="111111"
+                    android:textSize="20sp"/>
+            </LinearLayout>
+        </TableRow>
+
+        <TableRow android:weightSum="1">
+            <LinearLayout android:orientation="vertical" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:layout_weight="1"
+                android:layout_marginRight="4dp"
+                android:padding="10dp">
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Booking"
+                    />
+
+            </LinearLayout>
+            </TableRow>
+    </TableLayout>
+
+
+    </FrameLayout>
+
+
+</LinearLayout>
