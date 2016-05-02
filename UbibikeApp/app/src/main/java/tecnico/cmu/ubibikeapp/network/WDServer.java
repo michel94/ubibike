@@ -48,7 +48,7 @@ public class WDServer extends Thread {
                     try {
                         JSONObject parsedJson = new JSONObject(data);
                         String methodName = parsedJson.getString("_methodName");
-
+                        Log.d(TAG, "Received method " + methodName);
 
                         if(methodName.equals("sendPoints"))
                             response = peerBackend.sendPoints(parsedJson);
@@ -59,10 +59,11 @@ public class WDServer extends Thread {
                         else if(methodName.equals("getLocation"))
                             response = peerBackend.getLocation();
 
-
+                        Log.d(TAG, "Response is "+ response);
 
                     } catch (JSONException e) {
                         response = new JSONObject();
+                        Log.d(TAG, "JSON Exception");
                         try {
                             response.put("error", e.toString());
                         } catch (JSONException e1) {;}
@@ -77,6 +78,7 @@ public class WDServer extends Thread {
 
                 } catch (IOException e) {
                     Log.d("Error reading socket:", e.getMessage());
+                    e.printStackTrace();
                 } finally {
                     socket.close();
                 }
@@ -85,5 +87,6 @@ public class WDServer extends Thread {
                 break;
             }
         }
+
     }
 }

@@ -92,6 +92,7 @@ public class LoginActivity extends AppCompatActivity{
 
                         Utils.setUsername(getApplicationContext(), username);
                         Utils.setPassword(getApplicationContext(), password);
+                        Utils.setUserID(getApplicationContext(), (String) response.get("userID"));
 
 
                         Intent intent = new Intent(self, MainActivity.class);

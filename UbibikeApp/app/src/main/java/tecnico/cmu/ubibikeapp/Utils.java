@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import com.google.gson.Gson;
 
 import tecnico.cmu.ubibikeapp.model.ResponseUser;
+import tecnico.cmu.ubibikeapp.network.ResponseCallback;
 
 /**
  * Created by david on 30-04-2016.
@@ -17,6 +18,13 @@ public class Utils {
     public static String getUserID(Context context){
         SharedPreferences preferences = context.getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
         return (preferences != null) ? preferences.getString("userID", null) : null;
+    }
+
+    public static void setUserID(Context context, String userID) {
+        SharedPreferences preferences = context.getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("userID", userID);
+        editor.apply();
     }
 
     public static String getUsername(Context context){
@@ -62,4 +70,6 @@ public class Utils {
             return new ResponseUser().getUser();
         }
     }
+
 }
+

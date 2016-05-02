@@ -34,8 +34,9 @@ public class MapActivity extends AppCompatActivity {
         }
 
         Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        double longitude = location.getLongitude();
-        double latitude = location.getLatitude();
+        //pls remove this, crashing
+        //double longitude = location.getLongitude();
+        //double latitude = location.getLatitude();
 
         try {
             if (googleMap == null) {

@@ -9,19 +9,17 @@
     >
 
     <ListView
-        android:layout_marginTop="10dp"
         android:layout_marginBottom="80dp"
         android:layout_width="match_parent"
         android:layout_height="500dp"
         android:id="@+id/messages_view"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:background="@null"
         android:divider="@null"
         android:stackFromBottom="true"
         android:transcriptMode="alwaysScroll"
-         />
+        android:layout_below="@+id/statusIndic" />
 
     <LinearLayout
         android:id="@+id/input_bar"
@@ -50,5 +48,17 @@
             android:src="@drawable/send" />
 
     </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Offline"
+        android:id="@+id/statusIndic"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="17dp"
+        android:layout_marginEnd="17dp" />
 
 </RelativeLayout>

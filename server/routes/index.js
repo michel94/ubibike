@@ -51,7 +51,7 @@ router.post('/register', function(req, res, next){
                 distance: 0
 			});
 			user.save();
-			res.json({success: true});	
+			res.json({success: true});
 		}
 
 	})
@@ -61,9 +61,9 @@ router.post('/login', function(req, res, next){
 	var data = req.body;
 	console.log(data);
 	User.findOne({username: data.username, password: data.password}, {},
-		function(e, doc){
-			if(doc != null)
-				res.json({success: true});
+		function(e, user){
+			if(user != null)
+				res.json({success: true, userID: user._id});
 			else
 				res.json({success: false});
 		})

@@ -19,7 +19,7 @@ import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocket;
  * Created by michel on 4/30/16.
  */
 public class WDTask extends AsyncTask<String, String, JSONObject> {
-    private static String TAG = "WDSendTask";
+    private static String TAG = "WDTask";
     private ResponseCallback callback;
     private SimWifiP2pDevice device;
     private int port;
@@ -33,6 +33,8 @@ public class WDTask extends AsyncTask<String, String, JSONObject> {
         this.data = data;
         this.callback = callback;
 
+        if(this.data == null)
+            this.data = new JSONObject();
         try {
             this.data.put("_methodName", method);
         } catch (JSONException e) {
@@ -50,9 +52,8 @@ public class WDTask extends AsyncTask<String, String, JSONObject> {
         try {
             Log.d(TAG, "Connecting to " + ip);
             SimWifiP2pSocket socket = new SimWifiP2pSocket(ip, port);
-            Log.d(TAG, "Sending data: " + data);
             OutputStream stream = socket.getOutputStream();//.write(data.getBytes());
-            stream.write(data.toString().getBytes());
+            stream.write( (data.toString() + "\n").getBytes());
             stream.close();
 
             InputStream in = new BufferedInputStream(socket.getInputStream());
@@ -62,6 +63,8 @@ public class WDTask extends AsyncTask<String, String, JSONObject> {
             in.close();
             socket.close();
 
+            Log.d(TAG, "Response: " + data.toString());
+
             return response;
 
         } catch (UnknownHostException e) {
@@ -69,6 +72,7 @@ public class WDTask extends AsyncTask<String, String, JSONObject> {
             exception = e;
         } catch (IOException e) {
             Log.d(TAG, "IO error: " + e.getMessage());
+            e.printStackTrace();
             exception = e;
         }catch (Exception e){
             Log.d(TAG, "Random Exception: " + e.toString() + e.getMessage());
@@ -81,10 +85,17 @@ public class WDTask extends AsyncTask<String, String, JSONObject> {
 
     @Override
     protected void onPostExecute(JSONObject result) {
-        if(exception != null)
+        Log.d(TAG, "Received result: " + result);
+
+        if(exception != null) {
             callback.onError(exception);
-        else
+        }else if(result.has("error")) {
+            try {
+                callback.onError(new Exception((String) result.get("error")));
+            } catch (JSONException e) {;}
+        }else {
             callback.onDataReceived(result);
+        }
 
         super.onPostExecute(result);
     }

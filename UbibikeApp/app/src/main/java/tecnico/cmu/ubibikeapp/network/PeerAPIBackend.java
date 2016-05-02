@@ -3,6 +3,7 @@ package tecnico.cmu.ubibikeapp.network;
 import android.location.Location;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -17,6 +18,8 @@ import tecnico.cmu.ubibikeapp.model.ResponseUser.User;
  */
 public class PeerAPIBackend {
     WDService service;
+    private final String TAG = "PeerAPIBackend";
+
     public PeerAPIBackend(WDService service){
         this.service = service;
     }

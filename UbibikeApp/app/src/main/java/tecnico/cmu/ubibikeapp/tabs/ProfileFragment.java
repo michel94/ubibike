@@ -51,19 +51,20 @@ public class ProfileFragment extends Fragment {
 
         }
         Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        final double longitude = location.getLongitude();
-        final double latitude = location.getLatitude();
+        // crashing, pls remove:
+        //final double longitude = location.getLongitude();
+        //final double latitude = location.getLatitude();
 
         try {
             if (googleMap == null) {
                 googleMap = ((MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.map)).getMap();
             }
 
-            Liatitutelongetude();
+            List<LatLng> testLocations = genTestLocations();
             final LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-            for (int i = 0; i < Liatitutelongetude().size(); i++) {
-                 LatLng position = new LatLng(Liatitutelongetude().get(i).latitude, Liatitutelongetude().get(i).longitude);
+            for (int i = 0; i < testLocations.size(); i++) {
+                 LatLng position = new LatLng(testLocations.get(i).latitude, testLocations.get(i).longitude);
                  MarkerOptions options = new MarkerOptions().position(position).title("Estacao " + (i + 1) + "/" + 4 + " I RESERVAR ---");
 
                 googleMap.addMarker(options);
@@ -87,7 +88,7 @@ public class ProfileFragment extends Fragment {
         return  rootView;
     }
 
-    public List<LatLng> Liatitutelongetude(){
+    public List<LatLng> genTestLocations(){
         List<LatLng> latLng = new ArrayList<>();
 
         LatLng lng = new LatLng(38.7738718, -9.0958291);

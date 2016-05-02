@@ -6,9 +6,7 @@ import pt.inesc.termite.wifidirect.SimWifiP2pInfo;
 import pt.inesc.termite.wifidirect.SimWifiP2pManager;
 import pt.inesc.termite.wifidirect.SimWifiP2pManager.Channel;
 import pt.inesc.termite.wifidirect.service.SimWifiP2pService;
-import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocket;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketManager;
-import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketServer;
 import pt.inesc.termite.wifidirect.SimWifiP2pDeviceList;
 import pt.inesc.termite.wifidirect.SimWifiP2pManager.PeerListListener;
 import pt.inesc.termite.wifidirect.SimWifiP2pManager.GroupInfoListener;
@@ -22,13 +20,17 @@ import android.content.ServiceConnection;
 
 import android.location.Location;
 import android.location.LocationListener;
+import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Messenger;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class WDService extends Service implements
         PeerListListener, GroupInfoListener, LocationListener {
@@ -39,10 +41,12 @@ public class WDService extends Service implements
     private SimWifiP2pManager mManager = null;
     private Channel mChannel = null;
     private Messenger mService = null;
-    private WDServer mServer;
+    private WDServer server;
     private boolean mBound = false;
     private WDEventReceiver mReceiver;
     private Location currentLocation;
+
+    private ArrayList<Peer> peerList = new ArrayList<Peer>();
 
     @Override
     public void onCreate() {
@@ -69,15 +73,21 @@ public class WDService extends Service implements
         return START_STICKY;
     }
 
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
+
+    private final IBinder binder = new LocalBinder();
+
+    public class LocalBinder extends Binder {
+        public WDService getService() {
+            // Return this instance of LocalService so clients can call public methods
+            return WDService.this;
+        }
     }
 
-	/*
-	 * Listeners associated to buttons
-	 */
+    @Override
+    public IBinder onBind(Intent intent) {
+        return binder;
+    }
+
 
     private void wifiOn(){
 
@@ -85,8 +95,8 @@ public class WDService extends Service implements
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         mBound = true;
 
-        mServer = new WDServer(this);
-        mServer.start();
+        server = new WDServer(this);
+        server.start();
 
     };
 
@@ -144,17 +154,14 @@ public class WDService extends Service implements
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
-
     }
 
     @Override
     public void onProviderEnabled(String provider) {
-
     }
 
     @Override
     public void onProviderDisabled(String provider) {
-
     }
 
 	/*
@@ -163,23 +170,21 @@ public class WDService extends Service implements
 
     @Override
     public void onPeersAvailable(SimWifiP2pDeviceList peers) {
-        Log.d(TAG, "Peers Available");
 
         StringBuilder peersStr = new StringBuilder();
 
         // compile list of devices in range
-
         for (SimWifiP2pDevice device : peers.getDeviceList()) {
             String devstr = "" + device.deviceName + " (" + device.getVirtIp() + ")\n";
             peersStr.append(devstr);
-            //testPeer(device);
         }
-        Log.d(TAG, "Current peers: " + peersStr.toString());
     }
 
     @Override
     public void onGroupInfoAvailable(SimWifiP2pDeviceList devices,
                                      SimWifiP2pInfo groupInfo) {
+
+        peerList.clear();
 
         // compile list of network members
         StringBuilder peersStr = new StringBuilder();
@@ -188,14 +193,18 @@ public class WDService extends Service implements
             String devstr = "" + deviceName + " (" +
                     ((device == null)?"??":device.getVirtIp()) + ")\n";
             peersStr.append(devstr);
-            testPeer(device);
+            //testPeer(device);
+
+            final Peer peer = new Peer(this, device);
+            peer.identify();
+            peerList.add(peer);
         }
 
         Log.d(TAG, "Current group peers: " + peersStr.toString());
     }
 
     private void testPeer(SimWifiP2pDevice device){
-        PeerAPI peer = new PeerAPI(this, device);
+        Peer peer = new Peer(this, device);
         peer.sendMessage("Ayy lmao", new ResponseCallback() {
             @Override
             public void onDataReceived(JSONObject response) {
@@ -206,7 +215,27 @@ public class WDService extends Service implements
                 // Parse json to find out if there is an error
             }
         });
-        //new WDTask(device.getVirtIp(), WDService.PORT, "get rekt mate\n").execute();
+    }
+
+    public void testMethod(String l){
+        Log.d(TAG, "Called service method: " + l);
+    }
+
+    public boolean isUserAvailable(String userID){
+        //Log.d(TAG, "isUser " + userID + " Available?");
+        for(Peer peer : peerList) {
+            //Log.d(TAG, peer.getUserID() + " " + peer.getUsername());
+            if (peer.getUserID().equals(userID))
+                return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public void onDestroy(){
+        server.interrupt();
+        Log.d(TAG, "Service destroyed");
     }
 
 }

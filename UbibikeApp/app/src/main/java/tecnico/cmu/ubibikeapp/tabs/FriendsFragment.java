@@ -16,7 +16,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 
+import tecnico.cmu.ubibikeapp.MainActivity;
 import tecnico.cmu.ubibikeapp.R;
 import tecnico.cmu.ubibikeapp.UserActivity;
 import tecnico.cmu.ubibikeapp.network.API;
@@ -32,6 +34,7 @@ public class FriendsFragment extends ListFragment {
     private ArrayAdapter<String> adapter;
     private ArrayList<String> contacts = new ArrayList<String>();
     ListView listView;
+    private Hashtable<String, String> usernameToUserID = new Hashtable<>();
 
 
     @Override
@@ -52,26 +55,33 @@ public class FriendsFragment extends ListFragment {
 
         listView = (ListView)getListView().findViewById(android.R.id.list);
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getActivity(), UserActivity.class);
+                String username = contacts.get((int) id);
+                String userID = usernameToUserID.get(username);
+                intent.putExtra("username", username);
+                intent.putExtra("userID", userID);
+                startActivity(intent);
+            }
+        });
+
         API api = new API();
         api.getUsers(new ResponseCallback() {
             @Override
             public void onDataReceived(JSONObject response) {
-                Log.d(TAG, "Users: "+ response);
                 try {
                     JSONArray users = response.getJSONArray("users");
                     contacts.clear();
                     for(int u=0; u<users.length(); u++){
-                        contacts.add(((JSONObject)users.get(u)).getString("username"));
+                        JSONObject user = (JSONObject) users.get(u);
+                        String username = user.getString("username");
+                        String userID = user.getString("_id");
+                        contacts.add(username);
+                        usernameToUserID.put(username, userID);
                     }
                     adapter.notifyDataSetChanged();
-
-                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            Intent intent = new Intent(getActivity(), UserActivity.class);
-                            startActivity(intent);
-                        }
-                    });
 
                 } catch (JSONException e) {
                     e.printStackTrace();

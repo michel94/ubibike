@@ -2,10 +2,13 @@ package tecnico.cmu.ubibikeapp;
 
 
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -31,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
 
     private CollectionPagerAdapter mCollectionPagerAdapter;
     private ViewPager mViewPager;
+    private WDService wdservice;
+    private final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,16 +84,46 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
 
+        Intent intent = new Intent(getApplicationContext(), WDService.class);
         Log.d("Main", "Starting service");
-        ComponentName req = startService(new Intent(getApplicationContext(), WDService.class));
-        if(req == null)
-            Log.d("Main", "Failed");
+        ComponentName req = startService(intent);
+
     }
+
+    protected void onStart(){
+        super.onStart();
+        Intent intent = new Intent(getApplicationContext(), WDService.class);
+        bindService(intent, serviceConn, Context.BIND_AUTO_CREATE);
+
+    }
+
+    protected void onStop(){
+        super.onStop();
+        unbindService(serviceConn);
+    }
+
+    private ServiceConnection serviceConn = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className,
+                                       IBinder serviceBinder) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            WDService.LocalBinder binder = (WDService.LocalBinder) serviceBinder;
+            wdservice = binder.getService();
+            wdservice.testMethod("On Main Activity");
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            wdservice = null;
+        }
+    };
+
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -180,5 +215,15 @@ public class MainActivity extends AppCompatActivity {
         public int getCount() {
             return NR_PAGES;
         }
+    }
+
+    public WDService getWDService(){
+        return wdservice;
+    }
+
+    public void onDestroy(){
+        super.onDestroy();
+        Log.d(TAG, "Destroying Main Activity");
+        stopService(new Intent(getApplicationContext(), WDService.class));
     }
 }
