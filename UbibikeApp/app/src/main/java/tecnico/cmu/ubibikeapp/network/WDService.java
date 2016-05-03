@@ -10,6 +10,7 @@ import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketManager;
 import pt.inesc.termite.wifidirect.SimWifiP2pDeviceList;
 import pt.inesc.termite.wifidirect.SimWifiP2pManager.PeerListListener;
 import pt.inesc.termite.wifidirect.SimWifiP2pManager.GroupInfoListener;
+import tecnico.cmu.ubibikeapp.model.Message;
 
 import android.app.Service;
 import android.content.ComponentName;
@@ -22,7 +23,9 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.os.Binder;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.Messenger;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -45,6 +48,9 @@ public class WDService extends Service implements
     private boolean mBound = false;
     private WDEventReceiver mReceiver;
     private Location currentLocation;
+
+    private MessageHandler messageHandler = null;
+    private String messageUserID = null;
 
     private ArrayList<Peer> peerList = new ArrayList<Peer>();
 
@@ -231,6 +237,60 @@ public class WDService extends Service implements
 
         return false;
     }
+
+    private Peer getPeerByID(String userID){
+        for(Peer peer : peerList) {
+            //Log.d(TAG, peer.getUserID() + " " + peer.getUsername());
+            if (peer.getUserID().equals(userID))
+                return peer;
+        }
+        return null;
+    }
+
+    public boolean sendMessage(String userID, String text, final RequestCallback callback){
+        Peer peer = getPeerByID(userID);
+        if(peer == null)
+            return false;
+        peer.sendMessage(text, new ResponseCallback() {
+            @Override
+            public void onDataReceived(JSONObject response) {
+                if(callback != null)
+                    callback.onFinish(true);
+            }
+            @Override
+            public void onError(Exception e) {
+                if(callback != null)
+                    callback.onFinish(false);
+            }
+        });
+        return true;
+    }
+
+    public void bindMessageHandler(MessageHandler messageHandler, String userId){
+        Log.d(TAG, "Bound message handler: " + (messageHandler != null) + " to user " + userId );
+        this.messageHandler = messageHandler;
+        this.messageUserID = userId;
+    }
+
+    public void unbindMessageHandler(MessageHandler messageHandler) {
+        this.messageHandler = null;
+        this.messageUserID = null;
+    }
+
+    public boolean handleMessage(String userID, final String message){
+        Log.d(TAG, "Received message from " + userID + ": " + message);
+        if(messageHandler != null && userID.equals(messageUserID)) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    messageHandler.onMessage(message);
+                }
+            });
+            return true;
+        }
+        return false;
+    }
+
 
     @Override
     public void onDestroy(){

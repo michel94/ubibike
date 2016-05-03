@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import pt.inesc.termite.wifidirect.SimWifiP2pDevice;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocket;
@@ -37,6 +39,10 @@ public class WDTask extends AsyncTask<String, String, JSONObject> {
             this.data = new JSONObject();
         try {
             this.data.put("_methodName", method);
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String time = sdf.format(new Date());
+            this.data.put("time", time);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -54,14 +60,14 @@ public class WDTask extends AsyncTask<String, String, JSONObject> {
             SimWifiP2pSocket socket = new SimWifiP2pSocket(ip, port);
             OutputStream stream = socket.getOutputStream();//.write(data.getBytes());
             stream.write( (data.toString() + "\n").getBytes());
-            stream.close();
+            //stream.close();
 
             InputStream in = new BufferedInputStream(socket.getInputStream());
             String s = stream2String(in);
             JSONObject response = new JSONObject(s);
 
-            in.close();
-            socket.close();
+            //in.close();
+            //socket.close();
 
             Log.d(TAG, "Response: " + data.toString());
 

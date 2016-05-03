@@ -46,7 +46,10 @@ public class Peer {
         JSONObject data = new JSONObject();
         try {
             data.put("message", text);
-            data.put("username", Utils.getUsername(service));
+            data.put("usernameSrc", Utils.getUsername(service));
+            data.put("userIDSrc", Utils.getUserID(service));
+            data.put("usernameDest", username);
+            data.put("userIDDest", userID);
 
             new WDTask(device, "sendMessage", data, callback).execute();
         } catch (JSONException e) {

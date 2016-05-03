@@ -31,16 +31,22 @@ public class PeerAPIBackend {
     }
 
     public JSONObject sendMessage(JSONObject data) throws JSONException {
-        Location location = service.getLocation();
 
-        Handler handler = new Handler(Looper.getMainLooper());
-        final String message = data.getString("username") + ": " + data.getString("message");
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(service, "Received message from " + message, Toast.LENGTH_SHORT).show();
-            }
-        });
+        String srcID = data.getString("userIDSrc");
+        String message = data.getString("message");
+
+        if(!service.handleMessage(srcID, message)){
+            Handler handler = new Handler(Looper.getMainLooper());
+            final String toastInfo = data.getString("usernameSrc") + ": " + data.getString("message");
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(service, "Received message from " + toastInfo, Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        }
+
 
         JSONObject response = new JSONObject();
         response.put("success", true);

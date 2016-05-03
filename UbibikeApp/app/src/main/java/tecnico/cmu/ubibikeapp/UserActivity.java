@@ -19,6 +19,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import tecnico.cmu.ubibikeapp.model.Message;
+import tecnico.cmu.ubibikeapp.network.MessageHandler;
+import tecnico.cmu.ubibikeapp.network.RequestCallback;
 import tecnico.cmu.ubibikeapp.network.WDService;
 
 public class UserActivity extends Activity {
@@ -33,6 +35,8 @@ public class UserActivity extends Activity {
     private WDService wdservice;
     private String userID, username;
     private boolean onlineStatus;
+
+    private MessageHandler messageHandler;
 
     @Override
     public void onResume(){
@@ -49,10 +53,13 @@ public class UserActivity extends Activity {
         super.onStart();
         Intent intent = new Intent(getApplicationContext(), WDService.class);
         bindService(intent, serviceConn, Context.BIND_AUTO_CREATE);
+
+
     }
 
     protected void onStop(){
         super.onStop();
+        messageHandler.unbind();
         unbindService(serviceConn);
     }
 
@@ -104,9 +111,14 @@ public class UserActivity extends Activity {
     }
 
     private boolean sendChatMessage() {
-        chatArrayAdapter.add(new Message(side, chatText.getText().toString()));
-        chatText.setText("");
-        side = !side;
+
+        wdservice.sendMessage(userID, chatText.getText().toString(), new RequestCallback() {
+            @Override
+            public void onFinish(boolean success) {
+                chatArrayAdapter.add(new Message(true, chatText.getText().toString()));
+                chatText.setText("");
+            }
+        });
         return true;
     }
 
@@ -128,6 +140,14 @@ public class UserActivity extends Activity {
                 TextView statusIndic = (TextView) findViewById(R.id.statusIndic);
                 statusIndic.setText("Offline");
             }
+
+            messageHandler = new MessageHandler(wdservice){
+                @Override
+                public void onMessage(String text) {
+                    chatArrayAdapter.add(new Message(false, text));
+                }
+            };
+            messageHandler.bind(userID);
 
         }
 
