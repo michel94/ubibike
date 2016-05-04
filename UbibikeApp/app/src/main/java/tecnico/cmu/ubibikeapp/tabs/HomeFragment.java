@@ -29,7 +29,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(
                 R.layout.home_fragment, container, false);
-
+        Log.d(TAG, "ON CREATE VIEW");
         getUserStatistics(rootView);
 
         ((TextView) rootView.findViewById(R.id.current_bike)).setText("Bicicleta exemplo");
@@ -61,7 +61,12 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onError(Exception e) {
-
+                ResponseUser.User user = Utils.getUserStats(getActivity());
+                Log.d(TAG, "USER " + user.toString());
+                ((TextView) rootView.findViewById(R.id.points)).setText(user.getPoints() + "");
+                TextView distance = ((TextView) rootView.findViewById(R.id.distance));
+                distance.setText(user.getDistance() + " " +distance.getText());
+                Utils.saveUserStats(getActivity(), user);
             }
         });
     }

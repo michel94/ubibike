@@ -6,17 +6,17 @@ import java.util.Date;
  * Created by Fredy Felisberto on 4/21/2016.
  */
 public class Attribute {
-    int id;
+    String id;
     String pontos;
     float dista;
     String tempo;
     Date data;
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -52,7 +52,7 @@ public class Attribute {
         this.data = data;
     }
 
-    public Attribute(int id, String pontos, float dista, String tempo, Date data) {
+    public Attribute(String id, String pontos, float dista, String tempo, Date data) {
         this.id = id;
         this.pontos = pontos;
         this.dista = dista;
@@ -60,7 +60,8 @@ public class Attribute {
         this.data = data;
     }
 
-    public Attribute(String pontos, String tempo) {
+    public Attribute(String id, String pontos, String tempo) {
+        this.id = id;
         this.pontos = pontos;
         this.tempo = tempo;
     }

@@ -16,6 +16,15 @@ var userSchema = new Schema({
     trajectories: []
 });
 
+var trajectorySchema = new Schema({
+    username: String,
+    coordinates: [],
+    points: Number,
+    distance: Number,
+    beginDate: Date,
+    endDate: Date
+})
+
 var bikeSchema = new Schema({
 	station: Id
 });
@@ -28,5 +37,6 @@ var stationSchema = new Schema({
 User = mongoose.model('User', userSchema);
 Bike = mongoose.model('Bike', bikeSchema);
 Station = mongoose.model('Station', stationSchema);
+Trajectory = mongoose.model('Trajectory', trajectorySchema);
 
-module.exports = {db: db, User: User, Bike: Bike, Station: Station};
+module.exports = {db: db, User: User, Bike: Bike, Station: Station, Trajectory: Trajectory};

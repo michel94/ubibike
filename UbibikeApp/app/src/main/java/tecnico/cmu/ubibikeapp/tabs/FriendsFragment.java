@@ -41,7 +41,7 @@ public class FriendsFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.users_layout, container, false);
-
+        Log.d(TAG, "ON CREATE VIEW");
                 adapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_list_item_1,
                 contacts);
@@ -74,6 +74,7 @@ public class FriendsFragment extends ListFragment {
                 try {
                     JSONArray users = response.getJSONArray("users");
                     contacts.clear();
+                    Log.d(TAG, "Users: "+ users);
                     for(int u=0; u<users.length(); u++){
                         JSONObject user = (JSONObject) users.get(u);
                         String username = user.getString("username");

@@ -5,6 +5,10 @@ import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import tecnico.cmu.ubibikeapp.model.ResponseUser;
 import tecnico.cmu.ubibikeapp.network.ResponseCallback;
 
@@ -69,6 +73,16 @@ public class Utils {
         } else {
             return new ResponseUser().getUser();
         }
+    }
+
+    public static Date convertStringToDate(String dateString) throws ParseException{
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        return format.parse(dateString);
+    }
+
+    public static String convertDateToString(Date date) {
+        SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        return dateformat.format(date);
     }
 
 }

@@ -26,17 +26,20 @@ public class RestTask extends AsyncTask<String, String, JSONObject>{
     private ResponseCallback callback;
     private Exception exception = null;
     private JSONObject data = null;
+    private String httpMethod;
     private static int TIMEOUT = 3 * 1000;
 
-    public RestTask(String restUrl, ResponseCallback callback, JSONObject data){
+    public RestTask(String httpMethod, String restUrl, ResponseCallback callback, JSONObject data){
         this.restUrl = restUrl;
         this.callback = callback;
         this.data = data;
+        this.httpMethod = httpMethod;
     }
 
-    public RestTask(String restUrl, ResponseCallback callback){
+    public RestTask(String httpMethod, String restUrl, ResponseCallback callback){
         this.restUrl = restUrl;
         this.callback = callback;
+        this.httpMethod = httpMethod;
     }
 
     private String stream2String(java.io.InputStream is) {
@@ -50,25 +53,31 @@ public class RestTask extends AsyncTask<String, String, JSONObject>{
             URL url = new URL(restUrl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setConnectTimeout(TIMEOUT);
-            conn.setDoOutput(true);
+            Log.d("REST TASK", "HTTP METHOD: " + httpMethod);
+
+            if(!httpMethod.equals("GET")){
+                conn.setDoOutput(true);
+                conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                conn.setRequestProperty("Accept", "application/json");
+            }
             conn.setDoInput(true);
-            conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-            conn.setRequestProperty("Accept", "application/json");
-            conn.setRequestMethod("POST");
+            conn.setRequestMethod(httpMethod);
 
-            OutputStream wr = conn.getOutputStream();
-            if(data != null)
+            if(data != null){
+                OutputStream wr = conn.getOutputStream();
                 wr.write(data.toString().getBytes("UTF-8"));
+                wr.close();
 
-            wr.close();
+            }
+
 
             InputStream in = new BufferedInputStream(conn.getInputStream());
             String s = stream2String(in);
+
             JSONObject response = new JSONObject(s);
 
             in.close();
             conn.disconnect();
-
             return response;
         } catch (IOException e) {
             //e.printStackTrace();
