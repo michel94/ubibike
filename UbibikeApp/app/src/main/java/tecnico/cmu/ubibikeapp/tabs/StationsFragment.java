@@ -33,17 +33,21 @@ import tecnico.cmu.ubibikeapp.R;
 /**
  * Created by david on 31-03-2016.
  */
-public class ProfileFragment extends Fragment {
+public class StationsFragment extends Fragment {
     private GoogleMap googleMap;
     TextView textView;
     String name;
+    ArrayList<Marker> markers = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_collection_object, container, false);
-        View root = inflater.inflate(R.layout.activity_booking, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_stations, container, false);
+        //View rootView = inflater.inflate(R.layout.activity_booking, container, false);
+        /*
+        View rootView = inflater.inflate(R.layout.fragment_stations, container, false);
+        //View root = inflater.inflate(R.layout.activity_booking, container, false);*/
 
-        textView =(TextView)root.findViewById(R.id.stationame);
+        textView = (TextView)rootView.findViewById(R.id.stationame);
 
         LocationManager lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
@@ -67,9 +71,10 @@ public class ProfileFragment extends Fragment {
                  LatLng position = new LatLng(testLocations.get(i).latitude, testLocations.get(i).longitude);
                  MarkerOptions options = new MarkerOptions().position(position).title("Estacao " + (i + 1) + "/" + 4 + " I RESERVAR ---");
 
-                googleMap.addMarker(options);
+                Marker m = googleMap.addMarker(options);
                 builder.include(position);
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position, 12));
+                markers.add(m);
             }
 
             googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -103,4 +108,11 @@ public class ProfileFragment extends Fragment {
 
         return latLng;
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
     }
+
+}

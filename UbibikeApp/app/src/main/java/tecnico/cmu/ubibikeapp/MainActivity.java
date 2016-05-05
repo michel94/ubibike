@@ -5,7 +5,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -19,7 +18,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import java.util.ArrayList;
 
@@ -28,7 +26,7 @@ import tecnico.cmu.ubibikeapp.network.WDService;
 import tecnico.cmu.ubibikeapp.tabs.BikeActivityFragment;
 import tecnico.cmu.ubibikeapp.tabs.FriendsFragment;
 import tecnico.cmu.ubibikeapp.tabs.HomeFragment;
-import tecnico.cmu.ubibikeapp.tabs.ProfileFragment;
+import tecnico.cmu.ubibikeapp.tabs.StationsFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,8 +38,23 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
+        String username = Utils.getUsername(this);
+        String password = Utils.getPassword(this);
+        if(username == null){
+            Log.d("Main", "username not defined!");
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }
+        Intent intent = new Intent(getApplicationContext(), WDService.class);
+        Log.d("Main", "Starting service");
+        ComponentName req = startService(intent);
+
+        setContentView(R.layout.activity_main);
+    }
+
+    private void loadTabs(){
         final ActionBar actionBar = getSupportActionBar();
         mCollectionPagerAdapter =
                 new CollectionPagerAdapter(
@@ -52,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         actionBar.setDisplayShowHomeEnabled(false);
 
         mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager.setOffscreenPageLimit(4);
         mViewPager.setAdapter(mCollectionPagerAdapter);
         mViewPager.setOnPageChangeListener(
                 new ViewPager.OnPageChangeListener() {
@@ -72,22 +86,7 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
 
-
         setTabListener(actionBar);
-
-        String username = Utils.getUsername(this);
-        String password = Utils.getPassword(this);
-        if(username == null){
-            Log.d("Main", "username not defined!");
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-            finish();
-        }
-
-        Intent intent = new Intent(getApplicationContext(), WDService.class);
-        Log.d("Main", "Starting service");
-        ComponentName req = startService(intent);
-
     }
 
     protected void onStart(){
@@ -111,6 +110,8 @@ public class MainActivity extends AppCompatActivity {
             WDService.LocalBinder binder = (WDService.LocalBinder) serviceBinder;
             wdservice = binder.getService();
             wdservice.testMethod("On Main Activity");
+
+            loadTabs();
         }
 
         @Override
@@ -199,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
                     fragment = new FriendsFragment();
                     break;
                 case 3:
-                    fragment = new ProfileFragment();
+                    fragment = new StationsFragment();
                     break;
                 default:
                     return null;

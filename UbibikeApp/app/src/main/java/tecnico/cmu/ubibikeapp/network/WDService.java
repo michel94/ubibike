@@ -29,11 +29,14 @@ import android.os.Looper;
 import android.os.Messenger;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class WDService extends Service implements
         PeerListListener, GroupInfoListener, LocationListener {
@@ -49,8 +52,8 @@ public class WDService extends Service implements
     private WDEventReceiver mReceiver;
     private Location currentLocation;
 
-    private MessageHandler messageHandler = null;
-    private String messageUserID = null;
+    private DataHandler dataHandler = null;
+    private String dataUserID = null;
 
     private ArrayList<Peer> peerList = new ArrayList<Peer>();
 
@@ -190,6 +193,10 @@ public class WDService extends Service implements
     public void onGroupInfoAvailable(SimWifiP2pDeviceList devices,
                                      SimWifiP2pInfo groupInfo) {
 
+        ArrayList<Peer> oldPeerList = new ArrayList<Peer>(peerList.size());
+        Log.d(TAG, "OldPeerlist size: " + peerList.size());
+        for(Peer peer : peerList)
+            oldPeerList.add(peer);
         peerList.clear();
 
         // compile list of network members
@@ -206,7 +213,26 @@ public class WDService extends Service implements
             peerList.add(peer);
         }
 
+        handlePeerChanges(oldPeerList);
+
         Log.d(TAG, "Current group peers: " + peersStr.toString());
+    }
+
+    private void handlePeerChanges(ArrayList<Peer> oldPeerList) {
+        if(dataHandler == null)
+            return;
+
+        for(Peer peer : oldPeerList){
+            if(!peerList.contains(peer))
+                if(dataUserID != null || dataUserID.equals(peer.getUserID()))
+                    dataHandler.onStatusChanged(false, peer);
+        }
+        for(Peer peer : peerList){
+            if(!oldPeerList.contains(peer))
+                if(dataUserID != null || dataUserID.equals(peer.getUserID()))
+                    dataHandler.onStatusChanged(true, peer);
+        }
+        Log.d(TAG, "OldPeerlist size: " + peerList.size());
     }
 
     private void testPeer(SimWifiP2pDevice device){
@@ -228,9 +254,7 @@ public class WDService extends Service implements
     }
 
     public boolean isUserAvailable(String userID){
-        //Log.d(TAG, "isUser " + userID + " Available?");
         for(Peer peer : peerList) {
-            //Log.d(TAG, peer.getUserID() + " " + peer.getUsername());
             if (peer.getUserID().equals(userID))
                 return true;
         }
@@ -245,6 +269,10 @@ public class WDService extends Service implements
                 return peer;
         }
         return null;
+    }
+
+    public ArrayList<Peer> getPeerList(){
+        return peerList;
     }
 
     public boolean sendMessage(String userID, String text, final RequestCallback callback){
@@ -266,29 +294,45 @@ public class WDService extends Service implements
         return true;
     }
 
-    public void bindMessageHandler(MessageHandler messageHandler, String userId){
-        Log.d(TAG, "Bound message handler: " + (messageHandler != null) + " to user " + userId );
-        this.messageHandler = messageHandler;
-        this.messageUserID = userId;
+    public void bindDataHandler(DataHandler dataHandler, String userId){
+        Log.d(TAG, "Bound message handler: " + (dataHandler != null) + " to user " + userId );
+        this.dataHandler = dataHandler;
+        this.dataUserID = userId;
     }
 
-    public void unbindMessageHandler(MessageHandler messageHandler) {
-        this.messageHandler = null;
-        this.messageUserID = null;
+    public void unbindDataHandler(DataHandler messageHandler) {
+        this.dataHandler = null;
+        this.dataUserID = null;
     }
 
-    public boolean handleMessage(String userID, final String message){
+    public void sendToast(final String message){
+        Handler handler = new Handler(Looper.getMainLooper());
+        final WDService service = this;
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(service, message, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void handleMessage(final String message, String userID, final String username){
         Log.d(TAG, "Received message from " + userID + ": " + message);
-        if(messageHandler != null && userID.equals(messageUserID)) {
+
+        if(dataHandler != null && (dataUserID == null || dataUserID.equals(userID)) ) {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
-                    messageHandler.onMessage(message);
+                    if(!dataHandler.onMessage(message)){
+                        sendToast("Received message from " + username + ": " + message);
+                    }
                 }
             });
-            return true;
+        }else{
+            Log.d(TAG, "Send the f*cking toast");
+            sendToast("Received message from " + username + ": " + message);
         }
-        return false;
     }
 
 

@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import com.google.gson.Gson;
 
 import tecnico.cmu.ubibikeapp.model.ResponseUser;
+import tecnico.cmu.ubibikeapp.model.User;
 import tecnico.cmu.ubibikeapp.network.ResponseCallback;
 
 /**
@@ -51,7 +52,7 @@ public class Utils {
         editor.apply();
     }
 
-    public static void saveUserStats(Context context, ResponseUser.User user){
+    public static void saveUserStats(Context context, User user){
         Gson gson = new Gson();
         String userStats = gson.toJson(user);
         SharedPreferences preferences = context.getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
@@ -60,11 +61,11 @@ public class Utils {
         editor.apply();
     }
 
-    public static ResponseUser.User getUserStats(Context context){
+    public static User getUserStats(Context context){
         SharedPreferences preferences = context.getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
         if(preferences != null){
             Gson gson = new Gson();
-            ResponseUser.User user = gson.fromJson(preferences.getString("user_statistics", null), ResponseUser.User.class);
+            User user = gson.fromJson(preferences.getString("user_statistics", null), User.class);
             return (user == null) ? new ResponseUser().getUser() : user;
         } else {
             return new ResponseUser().getUser();

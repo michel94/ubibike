@@ -19,7 +19,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import tecnico.cmu.ubibikeapp.model.Message;
-import tecnico.cmu.ubibikeapp.network.MessageHandler;
+import tecnico.cmu.ubibikeapp.network.DataHandler;
+import tecnico.cmu.ubibikeapp.network.Peer;
 import tecnico.cmu.ubibikeapp.network.RequestCallback;
 import tecnico.cmu.ubibikeapp.network.WDService;
 
@@ -36,7 +37,7 @@ public class UserActivity extends Activity {
     private String userID, username;
     private boolean onlineStatus;
 
-    private MessageHandler messageHandler;
+    private DataHandler dataHandler;
 
     @Override
     public void onResume(){
@@ -59,7 +60,7 @@ public class UserActivity extends Activity {
 
     protected void onStop(){
         super.onStop();
-        messageHandler.unbind();
+        dataHandler.unbind();
         unbindService(serviceConn);
     }
 
@@ -122,6 +123,16 @@ public class UserActivity extends Activity {
         return true;
     }
 
+    private void updateStatus(){
+        if(onlineStatus) {
+            TextView statusIndic = (TextView) findViewById(R.id.statusIndic);
+            statusIndic.setText("Online");
+        }else{
+            TextView statusIndic = (TextView) findViewById(R.id.statusIndic);
+            statusIndic.setText("Offline");
+        }
+    }
+
     private ServiceConnection serviceConn = new ServiceConnection() {
 
         @Override
@@ -132,22 +143,25 @@ public class UserActivity extends Activity {
             wdservice = binder.getService();
             wdservice.testMethod("On User Activity");
 
-            onlineStatus = wdservice.isUserAvailable(userID); // also, subscribe to changes
-            if(onlineStatus) {
-                TextView statusIndic = (TextView) findViewById(R.id.statusIndic);
-                statusIndic.setText("Online");
-            }else{
-                TextView statusIndic = (TextView) findViewById(R.id.statusIndic);
-                statusIndic.setText("Offline");
-            }
+            onlineStatus = wdservice.isUserAvailable(userID);
+            updateStatus();
 
-            messageHandler = new MessageHandler(wdservice){
+            dataHandler = new DataHandler(wdservice){
                 @Override
-                public void onMessage(String text) {
+                public boolean onMessage(String text) {
                     chatArrayAdapter.add(new Message(false, text));
+
+                    return true;
+                }
+                @Override
+                public boolean onStatusChanged(boolean online, Peer peer){
+                    onlineStatus = online;
+                    updateStatus();
+
+                    return true;
                 }
             };
-            messageHandler.bind(userID);
+            dataHandler.bind(userID);
 
         }
 
