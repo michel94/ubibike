@@ -34,10 +34,14 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private WDService wdservice;
     private final String TAG = "MainActivity";
+    public static FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        fragmentManager = getSupportFragmentManager();
+        Log.d(TAG, "FragmentManager: " + (fragmentManager != null));
 
         String username = Utils.getUsername(this);
         String password = Utils.getPassword(this);
@@ -55,7 +59,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadTabs(){
+
         final ActionBar actionBar = getSupportActionBar();
+
+
         mCollectionPagerAdapter =
                 new CollectionPagerAdapter(
                         getSupportFragmentManager());
@@ -142,7 +149,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setTabListener(ActionBar actionBar) {
-        // Add 3 tabs, specifying the tab's text and TabListener
 
         // Create a tab listener that is called when the user changes tabs.
         ActionBar.TabListener tabListener = new ActionBar.TabListener() {
@@ -164,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
         icons.add(getResources().getDrawable(R.drawable.ic_directions_bike_white_36dp));
         icons.add(getResources().getDrawable(R.drawable.ic_people_white_36dp));
         icons.add(getResources().getDrawable(R.drawable.ic_person_white_36dp));
-
+        actionBar.removeAllTabs();
 
         for (Drawable icon: icons) {
             actionBar.addTab(

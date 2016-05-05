@@ -338,6 +338,8 @@ public class WDService extends Service implements
 
     @Override
     public void onDestroy(){
+        wifiOff();
+        unregisterReceiver(mReceiver);
         server.interrupt();
         Log.d(TAG, "Service destroyed");
     }
