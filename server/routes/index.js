@@ -70,16 +70,17 @@ router.post('/login', function(req, res, next){
 		})
 });
 
-router.get('/stations', function(req, res, next){
+router.post('/stations', function(req, res, next){
 	Station.find({}, {}, function(e, docs){
 		res.json({stations: docs});
 	});
 });
 
-router.get('/stationInfo', function(req, res, next){
+router.post('/stationInfo', function(req, res, next){
 	var data = req.body;
+	console.log("StationId: ", data.stationId);
 	Station.findById(data.stationId, function(e, station){
-		Bikes.find({station: stationId}, {}, function(e, bikes){
+		Bike.find({station: data.stationId}, {}, function(e, bikes){
 			res.json({station: station, bikes: bikes});
 		})
 	});

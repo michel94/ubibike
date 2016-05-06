@@ -46,4 +46,16 @@ public class API {
         } catch (JSONException e){}
         new RestTask(serverUrl + "userStats", callback, data).execute();
     }
+
+    public void getStations(ResponseCallback callback) {
+        new RestTask(serverUrl + "stations", callback).execute();
+    }
+
+    public void getStationInfo(String stationId, ResponseCallback callback){
+        JSONObject data = new JSONObject();
+        try {
+            data.put("stationId", stationId);
+        } catch (JSONException e){}
+        new RestTask(serverUrl + "stationInfo", callback, data).execute();
+    }
 }

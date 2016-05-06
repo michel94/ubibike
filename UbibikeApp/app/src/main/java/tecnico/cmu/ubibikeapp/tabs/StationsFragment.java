@@ -5,7 +5,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -25,12 +24,19 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-import tecnico.cmu.ubibikeapp.Booking;
-import tecnico.cmu.ubibikeapp.MainActivity;
+import tecnico.cmu.ubibikeapp.BookingActivity;
 import tecnico.cmu.ubibikeapp.R;
+import tecnico.cmu.ubibikeapp.model.Station;
+import tecnico.cmu.ubibikeapp.network.API;
+import tecnico.cmu.ubibikeapp.network.ResponseCallback;
 
 
 /**
@@ -41,7 +47,10 @@ public class StationsFragment extends Fragment {
     private GoogleMap googleMap;
     TextView textView;
     String name;
-    ArrayList<Marker> markers = new ArrayList<>();
+    ArrayList<Marker> markers = new ArrayList<Marker>();
+    ArrayList<Station> stations = new ArrayList<Station>();
+    HashMap<String, Station> markerIdToStation = new HashMap<>();
+    private String selectedMarker = "";
     /*
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -80,7 +89,7 @@ public class StationsFragment extends Fragment {
             googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker marker) {
-                    Intent intent = new Intent(getActivity(), Booking.class);
+                    Intent intent = new Intent(getActivity(), BookingActivity.class);
 
                     startActivity(intent);
                     return false;
@@ -137,6 +146,41 @@ public class StationsFragment extends Fragment {
         }
     }
 
+    void drawMarkers(){
+        final LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        Log.d(TAG, "N Stations: " + stations.size());
+        for (int i = 0; i < stations.size(); i++) {
+            LatLng location = stations.get(i).getLocation();
+            String name = stations.get(i).getName();
+            MarkerOptions options = new MarkerOptions().position(location).title(name);
+
+            Marker marker = googleMap.addMarker(options);
+            builder.include(location);
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 12));
+            markers.add(marker);
+            markerIdToStation.put(marker.getId(), stations.get(i));
+        }
+
+        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+
+                if(selectedMarker.equals(marker.getId())){
+                    Intent intent = new Intent(getActivity(), BookingActivity.class);
+                    Station station = markerIdToStation.get(marker.getId());
+                    intent.putExtra("stationName", station.getName());
+                    intent.putExtra("stationId", station.getId());
+
+                    startActivity(intent);
+                }
+                selectedMarker = marker.getId();
+
+                return false;
+
+            }
+        });
+    }
+
     private void setUpMap() {
         LocationManager lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
@@ -154,7 +198,40 @@ public class StationsFragment extends Fragment {
             googleMap = ((MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.map)).getMap();
         }
 
-        List<LatLng> testLocations = genTestLocations();
+        API api = new API();
+        api.getStations(new ResponseCallback() {
+            @Override
+            public void onDataReceived(JSONObject response) {
+                try {
+                    JSONArray st = response.getJSONArray("stations");
+                    Log.d(TAG, st.toString());
+                    stations.clear();
+                    for(int i=0; i<st.length(); i++){
+                        JSONObject s = (JSONObject) st.get(i);
+                        JSONObject loc = s.getJSONObject("location");
+                        LatLng location = new LatLng(loc.getDouble("latitude"), loc.getDouble("longitude"));
+                        Station station = new Station((String) s.get("_id"), (String) s.get("name"), location);
+                        Log.d(TAG, "Station ID: "+ station.getId());
+
+                        stations.add(station);
+                    }
+                    drawMarkers();
+                } catch (JSONException e) {
+                    // TODO: Show error
+                    e.printStackTrace();
+                }
+
+            }
+            @Override
+            public void onError(Exception e) {
+                // TODO: Show network error
+
+            }
+        });
+
+
+
+        /*List<LatLng> testLocations = genTestLocations();
         final LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
         for (int i = 0; i < testLocations.size(); i++) {
@@ -170,12 +247,14 @@ public class StationsFragment extends Fragment {
         googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                Intent intent = new Intent(getActivity(), Booking.class);
+                Intent intent = new Intent(getActivity(), BookingActivity.class);
 
                 startActivity(intent);
                 return false;
             }
         });
+
+        */
     }
 
     @Override

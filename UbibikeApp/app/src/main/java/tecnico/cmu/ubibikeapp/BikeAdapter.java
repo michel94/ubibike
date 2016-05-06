@@ -9,17 +9,19 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import tecnico.cmu.ubibikeapp.model.Bike;
+
 /**
  * Created by Fredy Felisberto on 5/1/2016.
  */
-public class BikeAdapter extends ArrayAdapter<BikeMain> {
+public class BikeAdapter extends ArrayAdapter<Bike> {
 
 
     public BikeAdapter(Context context, int resource) {
         super(context, resource);
     }
 
-    public BikeAdapter(Context context, int resource, List<BikeMain> Mylist) {
+    public BikeAdapter(Context context, int resource, List<Bike> Mylist) {
         super(context, R.layout.biketable, Mylist);
     }
 
@@ -33,7 +35,7 @@ public class BikeAdapter extends ArrayAdapter<BikeMain> {
         View v = convertView;
 
 
-        BikeMain attr = getItem(position);
+        Bike attr = getItem(position);
 
         if (attr != null) {
             TextView t1 = (TextView) v.findViewById(R.id.bikename);
