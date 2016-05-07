@@ -45,4 +45,8 @@ public class Bike {
     public void setReserved(boolean reserved) {
         this.reserved = reserved;
     }
+
+    public String toString(){
+        return this.name;
+    }
 }

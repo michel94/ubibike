@@ -28,6 +28,18 @@ public class Utils {
         editor.apply();
     }
 
+    public static String getCurrentBike(Context context){
+        SharedPreferences preferences = context.getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
+        return (preferences != null) ? preferences.getString("bikeID", null) : null;
+    }
+
+    public static void setCurrentBike(Context context, String bikeID) {
+        SharedPreferences preferences = context.getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("bikeID", bikeID);
+        editor.apply();
+    }
+
     public static String getUsername(Context context){
         SharedPreferences preferences = context.getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
         return (preferences != null) ? preferences.getString("username", null) : null;
@@ -71,6 +83,7 @@ public class Utils {
             return new ResponseUser().getUser();
         }
     }
+
 
 }
 

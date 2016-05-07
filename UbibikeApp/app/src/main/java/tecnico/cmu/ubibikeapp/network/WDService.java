@@ -10,8 +10,9 @@ import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketManager;
 import pt.inesc.termite.wifidirect.SimWifiP2pDeviceList;
 import pt.inesc.termite.wifidirect.SimWifiP2pManager.PeerListListener;
 import pt.inesc.termite.wifidirect.SimWifiP2pManager.GroupInfoListener;
-import tecnico.cmu.ubibikeapp.model.Message;
+import tecnico.cmu.ubibikeapp.Utils;
 
+import android.Manifest;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
@@ -19,24 +20,25 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Messenger;
-import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
-import org.json.JSONException;
+import com.google.android.gms.maps.model.LatLng;
+
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class WDService extends Service implements
         PeerListListener, GroupInfoListener, LocationListener {
@@ -57,14 +59,24 @@ public class WDService extends Service implements
 
     private ArrayList<Peer> peerList = new ArrayList<Peer>();
 
+    private MoveManager moveManager;
+    private LocalStorage localStorage;
+
     @Override
     public void onCreate() {
-
+        LocationManager lManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, "Get Location updates failed!");
+            return;
+        }
+        lManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 1, this);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
+        localStorage = new LocalStorage(this);
+        moveManager = new MoveManager(localStorage);
+        moveManager.setCurrentBike(Utils.getCurrentBike(this));
         // initialize the WDSim API
         SimWifiP2pSocketManager.Init(getApplicationContext());
 
@@ -154,11 +166,17 @@ public class WDService extends Service implements
 
     @Override
     public void onLocationChanged(Location location) {
+        Log.d(TAG, "Received new location: " + location.getLatitude() + ", " + location.getLongitude());
         currentLocation = location;
+        moveManager.onLocationChanged(new LatLng(location.getLatitude(), location.getLongitude()));
     }
 
     public Location getLocation(){
         return currentLocation;
+    }
+
+    public MoveManager getMoveManager(){
+        return moveManager;
     }
 
     @Override
@@ -182,11 +200,14 @@ public class WDService extends Service implements
 
         StringBuilder peersStr = new StringBuilder();
 
-        // compile list of devices in range
+        ArrayList<String> names = new ArrayList<>();
         for (SimWifiP2pDevice device : peers.getDeviceList()) {
             String devstr = "" + device.deviceName + " (" + device.getVirtIp() + ")\n";
             peersStr.append(devstr);
+            names.add(device.deviceName);
         }
+        moveManager.updatePeerList(names);
+
     }
 
     @Override
@@ -206,7 +227,6 @@ public class WDService extends Service implements
             String devstr = "" + deviceName + " (" +
                     ((device == null)?"??":device.getVirtIp()) + ")\n";
             peersStr.append(devstr);
-            //testPeer(device);
 
             final Peer peer = new Peer(this, device);
             peer.identify();
@@ -235,24 +255,6 @@ public class WDService extends Service implements
         Log.d(TAG, "OldPeerlist size: " + peerList.size());
     }
 
-    private void testPeer(SimWifiP2pDevice device){
-        Peer peer = new Peer(this, device);
-        peer.sendMessage("Ayy lmao", new ResponseCallback() {
-            @Override
-            public void onDataReceived(JSONObject response) {
-                Log.d(TAG, "Response received: " + response.toString());
-            }
-            @Override
-            public void onError(Exception e) {
-                // Parse json to find out if there is an error
-            }
-        });
-    }
-
-    public void testMethod(String l){
-        Log.d(TAG, "Called service method: " + l);
-    }
-
     public boolean isUserAvailable(String userID){
         for(Peer peer : peerList) {
             if (peer.getUserID().equals(userID))
@@ -264,7 +266,6 @@ public class WDService extends Service implements
 
     private Peer getPeerByID(String userID){
         for(Peer peer : peerList) {
-            //Log.d(TAG, peer.getUserID() + " " + peer.getUsername());
             if (peer.getUserID().equals(userID))
                 return peer;
         }
@@ -311,8 +312,7 @@ public class WDService extends Service implements
 
         handler.post(new Runnable() {
             @Override
-            public void run() {
-                Toast.makeText(service, message, Toast.LENGTH_SHORT).show();
+            public void run() {Toast.makeText(service, message, Toast.LENGTH_SHORT).show();
             }
         });
     }

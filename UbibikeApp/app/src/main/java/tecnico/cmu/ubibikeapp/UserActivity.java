@@ -141,7 +141,6 @@ public class UserActivity extends Activity {
             // We've bound to LocalService, cast the IBinder and get LocalService instance
             WDService.LocalBinder binder = (WDService.LocalBinder) serviceBinder;
             wdservice = binder.getService();
-            wdservice.testMethod("On User Activity");
 
             onlineStatus = wdservice.isUserAvailable(userID);
             updateStatus();

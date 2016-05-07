@@ -13,7 +13,8 @@ var userSchema = new Schema({
     name: {type: String, default: 'undefined'},
     score: Number,
     distance: Number,
-    trajectories: []
+    trajectories: [],
+    currentBike: {type: Id, default: null}
 });
 
 var bikeSchema = new Schema({

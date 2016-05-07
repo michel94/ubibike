@@ -58,4 +58,26 @@ public class API {
         } catch (JSONException e){}
         new RestTask(serverUrl + "stationInfo", callback, data).execute();
     }
+
+    public void requestBike(String userId, String bikeId, ResponseCallback callback){
+        JSONObject data = new JSONObject();
+        try {
+            data.put("user", userId);
+            data.put("bike", bikeId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        new RestTask(serverUrl + "requestBike", callback, data).execute();
+    }
+
+    public void returnBike(String userId, ResponseCallback callback){
+        JSONObject data = new JSONObject();
+        try {
+            data.put("user", userId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        new RestTask(serverUrl + "requestBike", callback, data).execute();
+    }
+
 }
