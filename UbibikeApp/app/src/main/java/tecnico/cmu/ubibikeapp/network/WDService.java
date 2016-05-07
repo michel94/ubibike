@@ -70,6 +70,7 @@ public class WDService extends Service implements
             return;
         }
         lManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 1, this);
+
     }
 
     @Override
@@ -77,6 +78,7 @@ public class WDService extends Service implements
         localStorage = new LocalStorage(this);
         moveManager = new MoveManager(localStorage);
         moveManager.setCurrentBike(Utils.getCurrentBike(this));
+
         // initialize the WDSim API
         SimWifiP2pSocketManager.Init(getApplicationContext());
 

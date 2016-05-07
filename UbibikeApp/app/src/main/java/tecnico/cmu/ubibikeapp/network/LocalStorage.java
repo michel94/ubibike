@@ -1,6 +1,7 @@
 package tecnico.cmu.ubibikeapp.network;
 
 import android.content.Context;
+import android.content.IntentFilter;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -15,13 +16,20 @@ import java.util.ServiceConfigurationError;
 /**
  * Created by michel on 5/6/16.
  */
-public class LocalStorage {
+public class LocalStorage implements NetStatusReceiver.NetworkListener{
     private static final String TAG = "LocalStorage";
     Context context;
     public JSONArray pendingData;
+    private boolean connected;
+
     public LocalStorage(Context context){
         pendingData = new JSONArray(); // TODO: load from shared preferences
         this.context = context;
+
+        NetStatusReceiver netStatusReceiver = new NetStatusReceiver(this);
+        IntentFilter netFilter = new IntentFilter();
+        netFilter.addAction(android.net.ConnectivityManager.CONNECTIVITY_ACTION);
+        context.registerReceiver(netStatusReceiver, netFilter);
     }
 
     public void putMessage(){
@@ -62,6 +70,12 @@ public class LocalStorage {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onConnection(boolean connected) {
+        Log.d(TAG, "Updated network status. Connected: " + connected);
+        this.connected = connected;
     }
 
     /*public void putTransactions(ArrayList<Transaction> transactions){
