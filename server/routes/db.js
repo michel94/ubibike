@@ -19,6 +19,7 @@ var userSchema = new Schema({
 
 var trajectorySchema = new Schema({
     username: String,
+    user: 
     coordinates: [],
     points: Number,
     distance: Number,
@@ -49,6 +50,7 @@ Station = mongoose.model('Station', stationSchema);
 Trajectory = mongoose.model('Trajectory', trajectorySchema);
 
 function populateDB(){
+
 	var stations = [{name: "Station 1", location: [38.7738718, -9.0958291]},
 					{name: "Station 2", location: [38.7354228, -9.1466685]},
 					{name: "Station 3", location: [38.7334772, -9.1366397]},
