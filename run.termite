@@ -1,0 +1,11 @@
+ls emus
+newdevice a
+newdevice b
+assignaddr e1
+assignaddr e2
+binddevice a e1
+binddevice b e2
+commit
+move a (b)
+creategroup a (b)
+commit
