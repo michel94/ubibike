@@ -28,7 +28,7 @@ import tecnico.cmu.ubibikeapp.network.WDService;
 import tecnico.cmu.ubibikeapp.tabs.BikeActivityFragment;
 import tecnico.cmu.ubibikeapp.tabs.FriendsFragment;
 import tecnico.cmu.ubibikeapp.tabs.HomeFragment;
-import tecnico.cmu.ubibikeapp.tabs.ProfileFragment;
+import tecnico.cmu.ubibikeapp.tabs.StationsFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,13 +36,35 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private WDService wdservice;
     private final String TAG = "MainActivity";
+    public static FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        fragmentManager = getSupportFragmentManager();
+        Log.d(TAG, "FragmentManager: " + (fragmentManager != null));
+
+        String username = Utils.getUsername(this);
+        String password = Utils.getPassword(this);
+        if(username == null){
+            Log.d("Main", "username not defined!");
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }
+        Intent intent = new Intent(getApplicationContext(), WDService.class);
+        Log.d("Main", "Starting service");
+        ComponentName req = startService(intent);
+
         setContentView(R.layout.activity_main);
+    }
+
+    private void loadTabs(){
 
         final ActionBar actionBar = getSupportActionBar();
+
+
         mCollectionPagerAdapter =
                 new CollectionPagerAdapter(
                         getSupportFragmentManager());
@@ -52,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
         actionBar.setDisplayShowHomeEnabled(false);
 
         mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager.setOffscreenPageLimit(4);
         mViewPager.setAdapter(mCollectionPagerAdapter);
         mViewPager.setOnPageChangeListener(
                 new ViewPager.OnPageChangeListener() {
@@ -110,7 +133,8 @@ public class MainActivity extends AppCompatActivity {
             // We've bound to LocalService, cast the IBinder and get LocalService instance
             WDService.LocalBinder binder = (WDService.LocalBinder) serviceBinder;
             wdservice = binder.getService();
-            wdservice.testMethod("On Main Activity");
+
+            loadTabs();
         }
 
         @Override
@@ -163,7 +187,8 @@ public class MainActivity extends AppCompatActivity {
         icons.add(getResources().getDrawable(R.drawable.ic_directions_bike_white_36dp));
         icons.add(getResources().getDrawable(R.drawable.ic_people_white_36dp));
         icons.add(getResources().getDrawable(R.drawable.ic_person_white_36dp));
-
+        if(actionBar.getTabCount() == 4)
+            return;
 
         for (Drawable icon: icons) {
             actionBar.addTab(
@@ -199,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
                     fragment = new FriendsFragment();
                     break;
                 case 3:
-                    fragment = new ProfileFragment();
+                    fragment = new StationsFragment();
                     break;
                 default:
                     return null;

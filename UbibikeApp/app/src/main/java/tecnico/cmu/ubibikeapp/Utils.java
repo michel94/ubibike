@@ -2,15 +2,11 @@ package tecnico.cmu.ubibikeapp;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.location.Location;
 
 import com.google.gson.Gson;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import tecnico.cmu.ubibikeapp.model.ResponseUser;
+import tecnico.cmu.ubibikeapp.model.User;
 import tecnico.cmu.ubibikeapp.network.ResponseCallback;
 
 /**
@@ -34,6 +30,20 @@ public class Utils {
 
     public static String getUsername(){
         SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
+    public static String getCurrentBike(Context context){
+        SharedPreferences preferences = context.getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
+        return (preferences != null) ? preferences.getString("bikeID", null) : null;
+    }
+
+    public static void setCurrentBike(Context context, String bikeID) {
+        SharedPreferences preferences = context.getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("bikeID", bikeID);
+        editor.apply();
+    }
+
+    public static String getUsername(Context context){
+        SharedPreferences preferences = context.getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
         return (preferences != null) ? preferences.getString("username", null) : null;
     }
 
@@ -56,7 +66,7 @@ public class Utils {
         editor.apply();
     }
 
-    public static void saveUserStats(ResponseUser.User user){
+    public static void saveUserStats(User user){
         Gson gson = new Gson();
         String userStats = gson.toJson(user);
         SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
@@ -65,11 +75,11 @@ public class Utils {
         editor.apply();
     }
 
-    public static ResponseUser.User getUserStats(){
-        SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
+    public static User getUserStats(Context context){
+        SharedPreferences preferences = context.getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
         if(preferences != null){
             Gson gson = new Gson();
-            ResponseUser.User user = gson.fromJson(preferences.getString("user_statistics", null), ResponseUser.User.class);
+            User user = gson.fromJson(preferences.getString("user_statistics", null), User.class);
             return (user == null) ? new ResponseUser().getUser() : user;
         } else {
             return new ResponseUser().getUser();

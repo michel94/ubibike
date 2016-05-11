@@ -22,6 +22,8 @@ import tecnico.cmu.ubibikeapp.MainActivity;
 import tecnico.cmu.ubibikeapp.R;
 import tecnico.cmu.ubibikeapp.UserActivity;
 import tecnico.cmu.ubibikeapp.network.API;
+import tecnico.cmu.ubibikeapp.network.DataHandler;
+import tecnico.cmu.ubibikeapp.network.Peer;
 import tecnico.cmu.ubibikeapp.network.ResponseCallback;
 
 /**
@@ -35,13 +37,14 @@ public class FriendsFragment extends ListFragment {
     private ArrayList<String> contacts = new ArrayList<String>();
     ListView listView;
     private Hashtable<String, String> usernameToUserID = new Hashtable<>();
+    private DataHandler dataHandler;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.users_layout, container, false);
-        Log.d(TAG, "ON CREATE VIEW");
+        View rootView = inflater.inflate(R.layout.fragment_users, container, false);
+
                 adapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_list_item_1,
                 contacts);
@@ -77,6 +80,7 @@ public class FriendsFragment extends ListFragment {
                     Log.d(TAG, "Users: "+ users);
                     for(int u=0; u<users.length(); u++){
                         JSONObject user = (JSONObject) users.get(u);
+                        Log.d(TAG, "Users: " + user.toString());
                         String username = user.getString("username");
                         String userID = user.getString("_id");
                         contacts.add(username);
@@ -97,6 +101,48 @@ public class FriendsFragment extends ListFragment {
         });
 
 
+        /*WDService service = ((MainActivity) getActivity()).getWDService();
+
+        ArrayList<Peer> peerList = service.getPeerList();
+        for(Peer peer : peerList) {
+            String username = peer.getUsername();
+            if(!contacts.contains(username)) {
+                contacts.add(username);
+                usernameToUserID.put(username, peer.getUserID());
+            }
+        }
+        adapter.notifyDataSetChanged();*/
+
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        Log.d(TAG, "Focus");
+        MainActivity act = (MainActivity)getActivity();
+        dataHandler = new DataHandler(act.getWDService()) {
+            @Override
+            public boolean onStatusChanged(boolean online, Peer peer) {
+                if(online){
+                    contacts.add(peer.getUsername());
+                    usernameToUserID.put(peer.getUsername(), peer.getUserID());
+                }else{
+                    contacts.remove(peer.getUsername());
+                }
+                adapter.notifyDataSetChanged();
+                return true;
+            }
+        };
+        dataHandler.bind();
+
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        dataHandler.unbind();
+        dataHandler = null;
+        Log.d(TAG, "Lost focus");
     }
 
 }

@@ -71,7 +71,7 @@
         <activity android:name=".UserActivity" />
         <activity android:name=".left" />
         <activity android:name=".right" />
-        <activity android:name=".Booking"></activity>
+        <activity android:name=".BookingActivity"></activity>
     </application>
 
 </manifest>

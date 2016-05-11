@@ -1,8 +1,6 @@
 package tecnico.cmu.ubibikeapp.tabs;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,10 +12,10 @@ import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
-import tecnico.cmu.ubibikeapp.LocationTrackerActivity;
 import tecnico.cmu.ubibikeapp.R;
 import tecnico.cmu.ubibikeapp.Utils;
 import tecnico.cmu.ubibikeapp.model.ResponseUser;
+import tecnico.cmu.ubibikeapp.model.User;
 import tecnico.cmu.ubibikeapp.network.API;
 import tecnico.cmu.ubibikeapp.network.ResponseCallback;
 
@@ -31,8 +29,8 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(
-                R.layout.home_fragment, container, false);
-        Log.d(TAG, "ON CREATE VIEW");
+                R.layout.fragment_home, container, false);
+
         getUserStatistics(rootView);
 
         ((TextView) rootView.findViewById(R.id.current_bike)).setText("Bicicleta exemplo");
@@ -56,8 +54,8 @@ public class HomeFragment extends Fragment {
             public void onDataReceived(JSONObject response) {
                 Log.d(TAG, "RECEIVED: " + response);
                 Gson gson = new Gson();
-                ResponseUser responseUser = gson.fromJson(response.toString(),ResponseUser.class);
-                ResponseUser.User user;
+                ResponseUser responseUser = gson.fromJson(response.toString(), ResponseUser.class);
+                User user;
                 if(responseUser.isSuccess()){
                     user = responseUser.getUser();
                 } else {

@@ -10,8 +10,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import tecnico.cmu.ubibikeapp.Utils;
-import tecnico.cmu.ubibikeapp.model.ResponseUser;
-import tecnico.cmu.ubibikeapp.model.ResponseUser.User;
 
 /**
  * Created by michel on 5/1/16.
@@ -32,21 +30,11 @@ public class PeerAPIBackend {
 
     public JSONObject sendMessage(JSONObject data) throws JSONException {
 
-        String srcID = data.getString("userIDSrc");
         String message = data.getString("message");
+        String srcID = data.getString("userIDSrc");
+        String srcUsername = data.getString("usernameSrc");
 
-        if(!service.handleMessage(srcID, message)){
-            Handler handler = new Handler(Looper.getMainLooper());
-            final String toastInfo = data.getString("usernameSrc") + ": " + data.getString("message");
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(service, "Received message from " + toastInfo, Toast.LENGTH_SHORT).show();
-                }
-            });
-
-        }
-
+        service.handleMessage(message, srcID, srcUsername);
 
         JSONObject response = new JSONObject();
         response.put("success", true);
