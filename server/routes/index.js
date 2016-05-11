@@ -181,8 +181,8 @@ router.post('/transactions', function(req, res, next){
 			}else{
 				
 				var l = (docs[0]._id == srcUser) ? [docs[0], docs[1]] : [docs[1], docs[0]];
-				src = l[0];
-				dest = l[1];
+				var src = l[0];
+				var dest = l[1];
 
 				processedTransactions.findOne({srcUser: srcUser, srcMessageId: srcMessageId}, {}, function(e, docs){
 					if(docs.length == 0){ // fresh transaction
