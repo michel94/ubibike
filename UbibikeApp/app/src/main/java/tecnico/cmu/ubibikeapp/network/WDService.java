@@ -77,7 +77,7 @@ public class WDService extends Service implements
     public int onStartCommand(Intent intent, int flags, int startId) {
         localStorage = new LocalStorage(this);
         moveManager = new MoveManager(localStorage);
-        moveManager.setCurrentBike(Utils.getCurrentBike(this));
+        moveManager.setCurrentBike(Utils.getCurrentBike());
 
         // initialize the WDSim API
         SimWifiP2pSocketManager.Init(getApplicationContext());
@@ -246,12 +246,12 @@ public class WDService extends Service implements
 
         for(Peer peer : oldPeerList){
             if(!peerList.contains(peer))
-                if(dataUserID != null || dataUserID.equals(peer.getUserID()))
+                if(dataUserID == null || dataUserID.equals(peer.getUserID()))
                     dataHandler.onStatusChanged(false, peer);
         }
         for(Peer peer : peerList){
             if(!oldPeerList.contains(peer))
-                if(dataUserID != null || dataUserID.equals(peer.getUserID()))
+                if(dataUserID == null || dataUserID.equals(peer.getUserID()))
                     dataHandler.onStatusChanged(true, peer);
         }
         Log.d(TAG, "OldPeerlist size: " + peerList.size());

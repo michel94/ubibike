@@ -180,7 +180,7 @@ router.post('/transactions', function(req, res, next){
 					console.log("Cannot complete transaction: dest user " + destUser + " doesn't exist.");
 			}else{
 				
-				var [src, dest] = (docs[0]._id == srcUser) ? [docs[0], docs[1]] : [docs[1], docs[0]];
+				//var [src, dest] = (docs[0]._id == srcUser) ? [docs[0], docs[1]] : [docs[1], docs[0]];
 
 				processedTransactions.findOne({srcUser: srcUser, srcMessageId: srcMessageId}, {}, function(e, docs){
 					if(docs.length == 0){ // fresh transaction

@@ -3,11 +3,13 @@ package tecnico.cmu.ubibikeapp.network;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import tecnico.cmu.ubibikeapp.MyData;
+
 /**
  * Created by michel on 4/12/16.
  */
 public class API {
-    private final String serverIp = "192.168.1.66";
+    private final String serverIp = MyData.SERVER_IP;
 
     private final int port = 3000;
     private final String serverUrl = "http://" + serverIp +  ":" + port + "/";
@@ -61,7 +63,7 @@ public class API {
     }
 
     public void getStations(ResponseCallback callback) {
-        new RestTask(serverUrl + "stations", callback).execute();
+        new RestTask(GET, serverUrl + "stations", callback).execute();
     }
 
     public void getStationInfo(String stationId, ResponseCallback callback){
@@ -69,7 +71,7 @@ public class API {
         try {
             data.put("stationId", stationId);
         } catch (JSONException e){}
-        new RestTask(serverUrl + "stationInfo", callback, data).execute();
+        new RestTask(POST, serverUrl + "stationInfo", callback, data).execute();
     }
 
     public void requestBike(String userId, String bikeId, ResponseCallback callback){
@@ -80,7 +82,7 @@ public class API {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        new RestTask(serverUrl + "requestBike", callback, data).execute();
+        new RestTask(POST, serverUrl + "requestBike", callback, data).execute();
     }
 
     public void returnBike(String userId, ResponseCallback callback){
@@ -90,7 +92,7 @@ public class API {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        new RestTask(serverUrl + "requestBike", callback, data).execute();
+        new RestTask(POST, serverUrl + "requestBike", callback, data).execute();
     }
 
 }

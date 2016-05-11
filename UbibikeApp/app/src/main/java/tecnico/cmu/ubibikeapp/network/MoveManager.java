@@ -47,6 +47,7 @@ public class MoveManager {
                 String bikeId = peer.substring(5);
                 if(currentBikeId.equals(bikeId)){
                     bikeInRange = true; // bike picked up
+                    //TODO Notify the user of the pick up
                     Log.d(TAG, "My bike " + bikeId + " in range");
                 }
             }else if(peer.startsWith("station_")){
@@ -57,6 +58,7 @@ public class MoveManager {
         if(hadBike && !bikeInRange && stationInRange != null){ // drop off condition: bike was in range, but is no longer, and there is a station nearby.
             Log.d(TAG, "Finished trip in station " + stationInRange);
             currentBikeId = null;
+            //TODO Notify the drop off
             finishTrip();
         }
 

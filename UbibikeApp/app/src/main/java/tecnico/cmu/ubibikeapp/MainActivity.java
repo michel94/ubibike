@@ -45,8 +45,8 @@ public class MainActivity extends AppCompatActivity {
         fragmentManager = getSupportFragmentManager();
         Log.d(TAG, "FragmentManager: " + (fragmentManager != null));
 
-        String username = Utils.getUsername(this);
-        String password = Utils.getPassword(this);
+        String username = Utils.getUsername();
+        String password = Utils.getPassword();
         if(username == null){
             Log.d("Main", "username not defined!");
             Intent intent = new Intent(this, LoginActivity.class);
@@ -107,10 +107,10 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
 
-        Intent intent = new Intent(getApplicationContext(), WDService.class);
+        /*Intent intent = new Intent(getApplicationContext(), WDService.class);
         Log.d("Main", "Starting service");
         ComponentName req = startService(intent);
-
+        */
     }
 
     protected void onStart(){
@@ -187,6 +187,7 @@ public class MainActivity extends AppCompatActivity {
         icons.add(getResources().getDrawable(R.drawable.ic_directions_bike_white_36dp));
         icons.add(getResources().getDrawable(R.drawable.ic_people_white_36dp));
         icons.add(getResources().getDrawable(R.drawable.ic_person_white_36dp));
+
         if(actionBar.getTabCount() == 4)
             return;
 

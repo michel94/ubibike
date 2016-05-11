@@ -1,6 +1,8 @@
 package tecnico.cmu.ubibikeapp.tabs;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +14,7 @@ import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
+import tecnico.cmu.ubibikeapp.LocationTrackerActivity;
 import tecnico.cmu.ubibikeapp.R;
 import tecnico.cmu.ubibikeapp.Utils;
 import tecnico.cmu.ubibikeapp.model.ResponseUser;
@@ -70,7 +73,7 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onError(Exception e) {
-                ResponseUser.User user = Utils.getUserStats();
+                User user = Utils.getUserStats();
                 Log.d(TAG, "USER " + user.toString());
                 ((TextView) rootView.findViewById(R.id.points)).setText(user.getPoints() + "");
                 TextView distance = ((TextView) rootView.findViewById(R.id.distance));

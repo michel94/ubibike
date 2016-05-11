@@ -72,14 +72,14 @@ public class BookingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(selected != null && wdservice != null)
-                    api.requestBike(Utils.getUserID(v.getContext()), selected.getBikeId(), new ResponseCallback() {
+                    api.requestBike(Utils.getUserID(), selected.getBikeId(), new ResponseCallback() {
                         @Override
                         public void onDataReceived(JSONObject response) {
                             try {
                                 Log.d(TAG, "Response: " + response.toString());
                                 if(response.getBoolean("success") == true) {
                                     Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT).show();
-                                    Utils.setCurrentBike(getApplicationContext(), selected.getBikeId());
+                                    Utils.setCurrentBike(selected.getBikeId());
                                     wdservice.getMoveManager().setCurrentBike(selected.getBikeId());
                                 }
 

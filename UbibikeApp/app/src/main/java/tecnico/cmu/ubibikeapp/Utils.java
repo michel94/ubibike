@@ -5,6 +5,10 @@ import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import tecnico.cmu.ubibikeapp.model.ResponseUser;
 import tecnico.cmu.ubibikeapp.model.User;
 import tecnico.cmu.ubibikeapp.network.ResponseCallback;
@@ -28,22 +32,20 @@ public class Utils {
         editor.apply();
     }
 
-    public static String getUsername(){
+    public static String getCurrentBike(){
         SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
-    public static String getCurrentBike(Context context){
-        SharedPreferences preferences = context.getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
         return (preferences != null) ? preferences.getString("bikeID", null) : null;
     }
 
-    public static void setCurrentBike(Context context, String bikeID) {
-        SharedPreferences preferences = context.getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
+    public static void setCurrentBike(String bikeID) {
+        SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("bikeID", bikeID);
         editor.apply();
     }
 
-    public static String getUsername(Context context){
-        SharedPreferences preferences = context.getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
+    public static String getUsername(){
+        SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
         return (preferences != null) ? preferences.getString("username", null) : null;
     }
 
@@ -75,8 +77,8 @@ public class Utils {
         editor.apply();
     }
 
-    public static User getUserStats(Context context){
-        SharedPreferences preferences = context.getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
+    public static User getUserStats(){
+        SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
         if(preferences != null){
             Gson gson = new Gson();
             User user = gson.fromJson(preferences.getString("user_statistics", null), User.class);
@@ -86,7 +88,7 @@ public class Utils {
         }
     }
 
-    public static Date convertStringToDate(String dateString) throws ParseException{
+    public static Date convertStringToDate(String dateString) throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         return format.parse(dateString);
     }
