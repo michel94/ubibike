@@ -1,0 +1,16 @@
+
+ls emus
+assignaddr e1
+newdevice a
+binddevice a e1
+
+newdevice bike_572bb8d2d6178f6527c8dde0
+newdevice station_4
+
+move a (bike_572bb8d2d6178f6527c8dde0)
+commit
+
+// add locations "geo fix 45.45 45.45"
+move station_4 (a)
+move bike_572bb8d2d6178f6527c8dde0 ()
+commit
