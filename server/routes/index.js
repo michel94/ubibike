@@ -77,7 +77,7 @@ router.post('/login', function(req, res, next){
 		})
 });
 
-router.post('/stations', function(req, res, next){
+router.get('/stations', function(req, res, next){
 	Station.find({}, {}, function(e, docs){
 		res.json({stations: docs});
 	});
@@ -168,7 +168,7 @@ router.post('/transactions', function(req, res, next){
 		var srcUser = transactions[i].srcUser;
 		var destUser = transactions[i].destUser;
 		var srcMessageId = transactions[i].srcMessageId;
-		var quant = transactions[i].quantity;
+		var quantity = transactions[i].quantity;
 
 		User.find({_id: {$in: [srcUser, destUser] }}, function(e, docs){
 			if(docs.length == 0){

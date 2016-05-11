@@ -32,3 +32,4 @@ captures/
 
 #File with my ip!!
 UbibikeApp/app/src/main/java/tecnico/cmu/ubibikeapp/network/MyData.java
+UbibikeApp/app/src/main/java/tecnico/cmu/ubibikeapp/MyData.java

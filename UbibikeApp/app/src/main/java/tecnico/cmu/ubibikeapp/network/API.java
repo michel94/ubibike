@@ -3,7 +3,7 @@ package tecnico.cmu.ubibikeapp.network;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import tecnico.cmu.ubibikeapp.MyData;
+import tecnico.cmu.ubibikeapp.network.MyData;
 
 /**
  * Created by michel on 4/12/16.

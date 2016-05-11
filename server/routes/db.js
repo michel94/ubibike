@@ -19,7 +19,7 @@ var userSchema = new Schema({
 
 var trajectorySchema = new Schema({
     username: String,
-    user: 
+    user: Id,
     coordinates: [],
     points: Number,
     distance: Number,
