@@ -1,6 +1,8 @@
 package tecnico.cmu.ubibikeapp.tabs;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +14,7 @@ import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
+import tecnico.cmu.ubibikeapp.LocationTrackerActivity;
 import tecnico.cmu.ubibikeapp.R;
 import tecnico.cmu.ubibikeapp.Utils;
 import tecnico.cmu.ubibikeapp.model.ResponseUser;
@@ -34,13 +37,21 @@ public class HomeFragment extends Fragment {
 
         ((TextView) rootView.findViewById(R.id.current_bike)).setText("Bicicleta exemplo");
 
+        final FloatingActionButton button = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), LocationTrackerActivity.class);
+                startActivity(intent);
+            }
+        });
+
         return rootView;
     }
 
     private void getUserStatistics(final View rootView){
         API api = new API();
 
-        api.getUserStats(Utils.getUsername(getActivity()), new ResponseCallback() {
+        api.getUserStats(Utils.getUsername(), new ResponseCallback() {
             @Override
             public void onDataReceived(JSONObject response) {
                 Log.d(TAG, "RECEIVED: " + response);
@@ -50,23 +61,23 @@ public class HomeFragment extends Fragment {
                 if(responseUser.isSuccess()){
                     user = responseUser.getUser();
                 } else {
-                    user = Utils.getUserStats(getActivity());
+                    user = Utils.getUserStats();
                 }
                 Log.d(TAG, "USER " + user.toString());
                 ((TextView) rootView.findViewById(R.id.points)).setText(user.getPoints() + "");
                 TextView distance = ((TextView) rootView.findViewById(R.id.distance));
                 distance.setText(user.getDistance() + " " +distance.getText());
-                Utils.saveUserStats(getActivity(), user);
+                Utils.saveUserStats(user);
             }
 
             @Override
             public void onError(Exception e) {
-                ResponseUser.User user = Utils.getUserStats(getActivity());
+                ResponseUser.User user = Utils.getUserStats();
                 Log.d(TAG, "USER " + user.toString());
                 ((TextView) rootView.findViewById(R.id.points)).setText(user.getPoints() + "");
                 TextView distance = ((TextView) rootView.findViewById(R.id.distance));
                 distance.setText(user.getDistance() + " " +distance.getText());
-                Utils.saveUserStats(getActivity(), user);
+                Utils.saveUserStats(user);
             }
         });
     }

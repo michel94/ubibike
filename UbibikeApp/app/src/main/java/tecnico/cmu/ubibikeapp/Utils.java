@@ -2,6 +2,7 @@ package tecnico.cmu.ubibikeapp;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.location.Location;
 
 import com.google.gson.Gson;
 
@@ -19,53 +20,53 @@ public class Utils {
 
     private static final String UBI_PREFS = "UbibikePreferences";
 
-    public static String getUserID(Context context){
-        SharedPreferences preferences = context.getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
+    public static String getUserID(){
+        SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
         return (preferences != null) ? preferences.getString("userID", null) : null;
     }
 
-    public static void setUserID(Context context, String userID) {
-        SharedPreferences preferences = context.getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
+    public static void setUserID(String userID) {
+        SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("userID", userID);
         editor.apply();
     }
 
-    public static String getUsername(Context context){
-        SharedPreferences preferences = context.getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
+    public static String getUsername(){
+        SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
         return (preferences != null) ? preferences.getString("username", null) : null;
     }
 
-    public static void setUsername(Context context, String username){
-        SharedPreferences preferences = context.getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
+    public static void setUsername(String username){
+        SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("username", username);
         editor.apply();
     }
 
-    public static String getPassword(Context context){
-        SharedPreferences preferences = context.getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
+    public static String getPassword(){
+        SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
         return (preferences != null) ? preferences.getString("password", null) : null;
     }
 
-    public static void setPassword(Context context, String password){
-        SharedPreferences preferences = context.getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
+    public static void setPassword(String password){
+        SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("password", password);
         editor.apply();
     }
 
-    public static void saveUserStats(Context context, ResponseUser.User user){
+    public static void saveUserStats(ResponseUser.User user){
         Gson gson = new Gson();
         String userStats = gson.toJson(user);
-        SharedPreferences preferences = context.getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("user_statistics", userStats);
         editor.apply();
     }
 
-    public static ResponseUser.User getUserStats(Context context){
-        SharedPreferences preferences = context.getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
+    public static ResponseUser.User getUserStats(){
+        SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
         if(preferences != null){
             Gson gson = new Gson();
             ResponseUser.User user = gson.fromJson(preferences.getString("user_statistics", null), ResponseUser.User.class);
@@ -85,5 +86,23 @@ public class Utils {
         return dateformat.format(date);
     }
 
+    public static void setIsRequestingLocationUpdates(boolean isRequestingLocationUpdates) {
+        SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean("requesting_location", isRequestingLocationUpdates);
+        editor.apply();
+    }
+
+    public static boolean isRequestingLocationUpdates(){
+        SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
+        return (preferences != null) && preferences.getBoolean("requesting_location", false);
+    }
+
+    /*public static void saveLastLocation(Location mLastLocation) {
+        SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.put("user_statistics", userStats);
+        editor.apply();
+    }*/
 }
 

@@ -75,8 +75,8 @@ public class MainActivity extends AppCompatActivity {
 
         setTabListener(actionBar);
 
-        String username = Utils.getUsername(this);
-        String password = Utils.getPassword(this);
+        String username = Utils.getUsername();
+        String password = Utils.getPassword();
         if(username == null){
             Log.d("Main", "username not defined!");
             Intent intent = new Intent(this, LoginActivity.class);
