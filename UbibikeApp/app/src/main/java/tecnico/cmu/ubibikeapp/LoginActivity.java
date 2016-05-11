@@ -90,9 +90,9 @@ public class LoginActivity extends AppCompatActivity{
                     if(response.getBoolean("success")) {
                         Log.d("login", "correct credentials");
 
-                        Utils.setUsername(getApplicationContext(), username);
-                        Utils.setPassword(getApplicationContext(), password);
-                        Utils.setUserID(getApplicationContext(), (String) response.get("userID"));
+                        Utils.setUsername(username);
+                        Utils.setPassword(password);
+                        Utils.setUserID((String) response.get("userID"));
 
 
                         Intent intent = new Intent(self, MainActivity.class);

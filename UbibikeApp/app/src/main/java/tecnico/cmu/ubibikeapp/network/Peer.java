@@ -34,7 +34,7 @@ public class Peer {
             JSONObject data = new JSONObject();
             JSONObject transfer = new JSONObject();
             transfer.put("quantity", quantity);
-            transfer.put("source", Utils.getUserID(service));
+            transfer.put("source", Utils.getUserID());
             data.put("transfer", transfer);
 
             new WDTask(device, "sendPoints", data, callback).execute();
@@ -46,8 +46,8 @@ public class Peer {
         JSONObject data = new JSONObject();
         try {
             data.put("message", text);
-            data.put("usernameSrc", Utils.getUsername(service));
-            data.put("userIDSrc", Utils.getUserID(service));
+            data.put("usernameSrc", Utils.getUsername());
+            data.put("userIDSrc", Utils.getUserID());
             data.put("usernameDest", username);
             data.put("userIDDest", userID);
 

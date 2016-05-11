@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -18,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import java.util.ArrayList;
 
@@ -93,7 +95,22 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
 
+
         setTabListener(actionBar);
+
+        String username = Utils.getUsername();
+        String password = Utils.getPassword();
+        if(username == null){
+            Log.d("Main", "username not defined!");
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
+        Intent intent = new Intent(getApplicationContext(), WDService.class);
+        Log.d("Main", "Starting service");
+        ComponentName req = startService(intent);
+
     }
 
     protected void onStart(){
@@ -148,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setTabListener(ActionBar actionBar) {
+        // Add 3 tabs, specifying the tab's text and TabListener
 
         // Create a tab listener that is called when the user changes tabs.
         ActionBar.TabListener tabListener = new ActionBar.TabListener() {

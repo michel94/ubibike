@@ -52,8 +52,8 @@ public class PeerAPIBackend {
     public JSONObject getIdentity() throws JSONException {
         JSONObject response = new JSONObject();
         response.put("type", "user");
-        response.put("userID", Utils.getUserID(service));
-        response.put("username", Utils.getUsername(service));
+        response.put("userID", Utils.getUserID());
+        response.put("username", Utils.getUsername());
 
         return response;
 

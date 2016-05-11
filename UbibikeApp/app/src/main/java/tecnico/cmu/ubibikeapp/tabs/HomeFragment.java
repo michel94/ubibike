@@ -35,13 +35,21 @@ public class HomeFragment extends Fragment {
 
         ((TextView) rootView.findViewById(R.id.current_bike)).setText("Bicicleta exemplo");
 
+        final FloatingActionButton button = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), LocationTrackerActivity.class);
+                startActivity(intent);
+            }
+        });
+
         return rootView;
     }
 
     private void getUserStatistics(final View rootView){
         API api = new API();
 
-        api.getUserStats(Utils.getUsername(getActivity()), new ResponseCallback() {
+        api.getUserStats(Utils.getUsername(), new ResponseCallback() {
             @Override
             public void onDataReceived(JSONObject response) {
                 Log.d(TAG, "RECEIVED: " + response);
@@ -51,23 +59,23 @@ public class HomeFragment extends Fragment {
                 if(responseUser.isSuccess()){
                     user = responseUser.getUser();
                 } else {
-                    user = Utils.getUserStats(getActivity());
+                    user = Utils.getUserStats();
                 }
                 Log.d(TAG, "USER " + user.toString());
                 ((TextView) rootView.findViewById(R.id.points)).setText(user.getPoints() + "");
                 TextView distance = ((TextView) rootView.findViewById(R.id.distance));
-                distance.setText(user.getDistance() + " " + distance.getText());
-                Utils.saveUserStats(getActivity(), user);
+                distance.setText(user.getDistance() + " " +distance.getText());
+                Utils.saveUserStats(user);
             }
 
             @Override
             public void onError(Exception e) {
-                User user = Utils.getUserStats(getActivity());
+                ResponseUser.User user = Utils.getUserStats();
                 Log.d(TAG, "USER " + user.toString());
                 ((TextView) rootView.findViewById(R.id.points)).setText(user.getPoints() + "");
                 TextView distance = ((TextView) rootView.findViewById(R.id.distance));
-                distance.setText(user.getDistance() + " " + distance.getText());
-                Utils.saveUserStats(getActivity(), user);
+                distance.setText(user.getDistance() + " " +distance.getText());
+                Utils.saveUserStats(user);
             }
         });
     }

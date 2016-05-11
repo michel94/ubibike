@@ -77,6 +77,7 @@ public class FriendsFragment extends ListFragment {
                 try {
                     JSONArray users = response.getJSONArray("users");
                     contacts.clear();
+                    Log.d(TAG, "Users: "+ users);
                     for(int u=0; u<users.length(); u++){
                         JSONObject user = (JSONObject) users.get(u);
                         Log.d(TAG, "Users: " + user.toString());
@@ -90,6 +91,7 @@ public class FriendsFragment extends ListFragment {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+
 
             }
             @Override

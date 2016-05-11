@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Chronometer
+        android:id="@+id/bikeChronometer"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="50dp"
+        android:gravity="center_horizontal"
+        android:textSize="50sp"/>
+
+    <TextView
+        android:id="@+id/distance_tracked"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/bikeChronometer"
+        android:textSize="50sp"
+        android:gravity="center_horizontal"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Latitude"
+        android:id="@+id/textView2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/distance_tracked"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/latitude_text"
+        android:layout_gravity="center_horizontal"
+        android:layout_alignTop="@+id/textView2"
+        android:layout_alignLeft="@+id/longitude_text"
+        android:layout_alignStart="@+id/longitude_text" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Longitude"
+        android:id="@+id/textView3"
+        android:layout_alignTop="@+id/longitude_text"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/longitude_text"
+        android:layout_gravity="center_horizontal"
+        android:layout_below="@+id/latitude_text"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:id="@+id/start_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start"
+        android:gravity="center_horizontal"
+        android:layout_centerVertical="true"
+        android:layout_alignLeft="@+id/longitude_text"
+        android:layout_alignStart="@+id/longitude_text"
+        android:layout_below="@id/longitude_text"
+        android:layout_marginTop="50dp"/>
+
+</RelativeLayout>

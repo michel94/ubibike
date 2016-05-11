@@ -17,6 +17,15 @@ var userSchema = new Schema({
     currentBike: {type: Id, default: null}
 });
 
+var trajectorySchema = new Schema({
+    username: String,
+    coordinates: [],
+    points: Number,
+    distance: Number,
+    beginDate: Date,
+    endDate: Date
+})
+
 var bikeSchema = new Schema({
 	station: Id,
 	name: String,
@@ -37,6 +46,7 @@ var processedTransactions = new Schema({
 User = mongoose.model('User', userSchema);
 Bike = mongoose.model('Bike', bikeSchema);
 Station = mongoose.model('Station', stationSchema);
+Trajectory = mongoose.model('Trajectory', trajectorySchema);
 
 function populateDB(){
 	var stations = [{name: "Station 1", location: [38.7738718, -9.0958291]},
@@ -53,7 +63,7 @@ function populateDB(){
 		var s = stations[i];
 		var station = new Station({
 			name: s.name,
-			location: {latitude: s.location[0], longitude: s.location[1]} 
+			location: {latitude: s.location[0], longitude: s.location[1]}
 		});
 		console.log(i);
 		station.save(function(e, nstation){
@@ -65,7 +75,7 @@ function populateDB(){
 				station: nstation._id
 			});
 			bike.save();
-			
+
 		});
 	}
 }
@@ -77,4 +87,4 @@ Station.count(function (err, count) {
     }
 });
 
-module.exports = {db: db, User: User, Bike: Bike, Station: Station};
+module.exports = {db: db, User: User, Bike: Bike, Station: Station, Trajectory: Trajectory};

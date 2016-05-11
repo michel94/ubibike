@@ -21,4 +21,9 @@
     <string name="current_bike">Current Bike:</string>
     <string name="stats_points">Points</string>
     <string name="distance_label">Distance: </string>
+
+    <string name="stop_button_text">STOP</string>
+    <string name="start_button_text">START</string>
+    <string name="pause_button_text">PAUSE</string>
+
 </resources>
