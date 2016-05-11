@@ -13,6 +13,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.ServiceConfigurationError;
 
+import tecnico.cmu.ubibikeapp.Utils;
+import tecnico.cmu.ubibikeapp.model.Transfer;
+
 /**
  * Created by michel on 5/6/16.
  */
@@ -34,6 +37,22 @@ public class LocalStorage implements NetStatusReceiver.NetworkListener{
 
     public void putMessage(){
 
+    }
+
+    public void putTransfer(Transfer transfer){ // returns a jsonobject with the transfer, stores it in the pending data
+        JSONObject data = new JSONObject();
+        try {
+            data = transfer.toJson();
+            data.put("messageId", Utils.getNewMessageId());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        pendingData.put(data);
+    }
+
+    public JSONArray getPendingData(){
+        return pendingData;
     }
 
     public void putTrip(ArrayList<LatLng> trajectory, int points){
@@ -59,7 +78,7 @@ public class LocalStorage implements NetStatusReceiver.NetworkListener{
 
     }
 
-    public void extendTrips(JSONArray trips){
+    public void extendData(JSONArray trips){
         String first = pendingData.toString();
         first = first.substring(0, first.length()-1);
         String second = trips.toString();
@@ -78,7 +97,4 @@ public class LocalStorage implements NetStatusReceiver.NetworkListener{
         this.connected = connected;
     }
 
-    /*public void putTransactions(ArrayList<Transaction> transactions){
-
-    }*/
 }

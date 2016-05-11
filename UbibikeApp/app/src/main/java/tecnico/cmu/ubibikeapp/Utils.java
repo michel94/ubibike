@@ -110,6 +110,22 @@ public class Utils {
         return (preferences != null) && preferences.getBoolean("requesting_location", false);
     }
 
+    public static int getNewMessageId(){
+        SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
+        int id = (preferences != null) ? preferences.getInt("message_counter", 0) : 0;
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("message_counter", id+1);
+        editor.apply();
+
+        return id;
+    }
+
+    public static void incrementMessageCounter(String password){
+        SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
+
+    }
+
+
     /*public static void saveLastLocation(Location mLastLocation) {
         SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();

@@ -278,6 +278,10 @@ public class WDService extends Service implements
         return peerList;
     }
 
+    public LocalStorage getLocalStorage(){
+        return localStorage;
+    }
+
     public boolean sendMessage(String userID, String text, final RequestCallback callback){
         Peer peer = getPeerByID(userID);
         if(peer == null)
