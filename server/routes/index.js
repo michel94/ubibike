@@ -164,7 +164,9 @@ router.post('/returnBike', function(req, res, next){
 */
 router.post('/transactions', function(req, res, next){
 	var data = req.body;
-	for(var i=0; i<data.transactions.length; i++){
+    console.log(data);
+    res.json({success: true})
+	/*for(var i=0; i<data.transactions.length; i++){
 		var srcUser = transactions[i].srcUser;
 		var destUser = transactions[i].destUser;
 		var srcMessageId = transactions[i].srcMessageId;
@@ -199,7 +201,7 @@ router.post('/transactions', function(req, res, next){
 
 		});
 		res.json({success: true});
-	}
+	}*/
 });
 
 

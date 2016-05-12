@@ -2,6 +2,7 @@ package tecnico.cmu.ubibikeapp.tabs;
 
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -141,8 +142,9 @@ public class StationsFragment extends Fragment {
             Log.d(TAG, "SupportMapFrag: " + (mapFrag != null));
             googleMap = mapFrag.getMap();
             // Check if we were successful in obtaining the map.
-            if (googleMap != null)
+            if (googleMap != null){
                 setUpMap();
+            }
         }
     }
 
@@ -185,8 +187,10 @@ public class StationsFragment extends Fragment {
         LocationManager lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             return;
         }
+
         googleMap.setMyLocationEnabled(true);
 
 
@@ -225,7 +229,7 @@ public class StationsFragment extends Fragment {
             @Override
             public void onError(Exception e) {
                 // TODO: Show network error
-
+                Log.d(TAG, "Error " + e);
             }
         });
 

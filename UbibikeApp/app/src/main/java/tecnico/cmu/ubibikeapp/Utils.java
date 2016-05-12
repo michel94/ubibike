@@ -5,6 +5,10 @@ import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -132,5 +136,44 @@ public class Utils {
         editor.put("user_statistics", userStats);
         editor.apply();
     }*/
+
+    public static JSONArray getPendingData(){
+        SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
+        if(preferences != null){
+            Gson gson = new Gson();
+            JSONArray array;
+            array = gson.fromJson(preferences.getString("pending_data", null), JSONArray.class);
+            if(array == null){
+                array = new JSONArray();
+            }
+            return array;
+        } else {
+            return new JSONArray();
+        }
+    }
+
+    public static void savePendingData(JSONArray pendingData){
+        JSONArray currentData = getPendingData();
+        for(int i = 0; i!= pendingData.length(); i++) {
+            try {
+                currentData.put(pendingData.get(i));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        Gson gson = new Gson();
+        String pendingString = gson.toJson(currentData);
+        editor.putString("pending_data", pendingString);
+        editor.apply();
+    }
+
+    public static void clearPendingData(){
+        SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("pending_data", "");
+        editor.apply();
+    }
 }
 

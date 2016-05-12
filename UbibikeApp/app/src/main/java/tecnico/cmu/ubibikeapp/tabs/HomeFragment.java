@@ -1,9 +1,13 @@
 package tecnico.cmu.ubibikeapp.tabs;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,8 +45,6 @@ public class HomeFragment extends Fragment {
         final FloatingActionButton button = (FloatingActionButton) rootView.findViewById(R.id.fab);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), LocationTrackerActivity.class);
-                startActivity(intent);
             }
         });
 

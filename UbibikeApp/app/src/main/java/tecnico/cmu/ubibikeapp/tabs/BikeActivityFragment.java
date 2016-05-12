@@ -27,6 +27,7 @@ import tecnico.cmu.ubibikeapp.R;
 import tecnico.cmu.ubibikeapp.TrajectoryActivity;
 import tecnico.cmu.ubibikeapp.model.Attribute;
 import tecnico.cmu.ubibikeapp.model.ResponseTrajectory;
+import tecnico.cmu.ubibikeapp.model.Trajectory;
 import tecnico.cmu.ubibikeapp.network.API;
 import tecnico.cmu.ubibikeapp.network.ResponseCallback;
 
@@ -79,7 +80,7 @@ public class BikeActivityFragment extends Fragment {
                 Log.d(TAG, "Full response " + response.toString());
                 ResponseTrajectory responseTrajectory = gson.fromJson(response.toString(), ResponseTrajectory.class);
                 if(responseTrajectory.isSuccess()){
-                    for(ResponseTrajectory.Trajectory trajectory: responseTrajectory.getTrajectories()){
+                    for(Trajectory trajectory: responseTrajectory.getTrajectories()){
                         String duration;
                         try {
                             duration = trajectory.getDuration();

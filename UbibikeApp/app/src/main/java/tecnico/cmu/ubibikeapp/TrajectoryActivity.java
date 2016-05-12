@@ -15,7 +15,9 @@ import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
+import tecnico.cmu.ubibikeapp.model.Coordinate;
 import tecnico.cmu.ubibikeapp.model.ResponseTrajectory;
+import tecnico.cmu.ubibikeapp.model.Trajectory;
 import tecnico.cmu.ubibikeapp.network.API;
 import tecnico.cmu.ubibikeapp.network.ResponseCallback;
 
@@ -59,9 +61,9 @@ public class TrajectoryActivity extends AppCompatActivity
 
                 if(responseTrajectory.isSuccess()){
                     PolylineOptions polylineOptions = new PolylineOptions();
-                    ResponseTrajectory.Trajectory trajectory = responseTrajectory.getTrajectories().get(0);
+                    Trajectory trajectory = responseTrajectory.getTrajectories().get(0);
                     Log.d(TAG, trajectory.toString());
-                    for(ResponseTrajectory.Trajectory.Coordinate coordinate: trajectory.getCoordinates()){
+                    for(Coordinate coordinate: trajectory.getCoordinates()){
                         Log.d(TAG, "Adding coordinate: " + coordinate.getPosition());
                         polylineOptions.add(coordinate.getPosition());
                     }

@@ -2,6 +2,7 @@ package tecnico.cmu.ubibikeapp.network;
 
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -102,6 +103,16 @@ public class API {
             e.printStackTrace();
         }
         new RestTask(POST, serverUrl + "requestBike", callback, data).execute();
+    }
+
+    public void sendTransactions(JSONArray trip, ResponseCallback callback){
+        JSONObject data = new JSONObject();
+        try {
+            data.put("transactions", trip);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        new RestTask(POST, serverUrl + "transactions", callback, data).execute();
     }
 
 }

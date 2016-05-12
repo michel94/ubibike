@@ -7,7 +7,6 @@ mongoose.connect('mongodb://localhost:27017/ubibike');
 var Schema = mongoose.Schema;
 var Id = Schema.Types.ObjectId;
 
-
 var userSchema = new Schema({
     username: String,
     password: String,
@@ -45,6 +44,7 @@ var processedTransactions = new Schema({
 User = mongoose.model('User', userSchema);
 Bike = mongoose.model('Bike', bikeSchema);
 Station = mongoose.model('Station', stationSchema);
+Trajectory = mongoose.model('Trajectory', trajectorySchema);
 
 function populateDB(){
 
@@ -58,7 +58,7 @@ function populateDB(){
 				{name: "bike 3", reservedBy: null},
 				{name: "bike 4", reservedBy: null}];
 
-	var users = [{username: "user1", password: "pass", name: "Quim",  score: 10, distance: 0, trajectories: [{coordinates: [{lat: 34.43, lng: 54.45}, {lat: 34.47, lng: 54.46}, {lat: 34.38, lng: 54.48}], points: 10, distance: 5000, beginDate: new Date(), endDate: new Date()}], currentBike: null}, 
+	var users = [{username: "user1", password: "pass", name: "Quim",  score: 10, distance: 0, trajectories: [{coordinates: [{lat: 34.43, lng: 54.45}, {lat: 34.47, lng: 54.46}, {lat: 34.38, lng: 54.48}], points: 10, distance: 5000, beginDate: new Date(), endDate: new Date()}], currentBike: null},
 				 {username: "user2", password: "pass", name: "Ze", 	  score: 8 , distance: 0, trajectories: [{coordinates: [{lat: 34.43, lng: 54.45}, {lat: 34.47, lng: 54.46}, {lat: 34.38, lng: 54.48}], points: 8, distance: 10000, beginDate: new Date(), endDate: new Date()}], currentBike: null},
 				 {username: "user3", password: "pass", name: "Manel", score: 12, distance: 0, trajectories: [{coordinates: [{lat: 34.43, lng: 54.45}, {lat: 34.47, lng: 54.46}, {lat: 34.38, lng: 54.48}], points: 12, distance: 8000, beginDate: new Date(), endDate: new Date()}], currentBike: null} ];
 
@@ -88,9 +88,9 @@ function populateDB(){
 	}
 }
 
-Station.remove({}, function() {});
-User.remove({}, function() {});
-Bike.remove({}, function() {});
+//Station.remove({}, function() {});
+//User.remove({}, function() {});
+//Bike.remove({}, function() {});
 
 Station.count(function (err, count) {
     if (count == 0) {
