@@ -13,19 +13,16 @@ var userSchema = new Schema({
     name: {type: String, default: 'undefined'},
     score: Number,
     distance: Number,
-    trajectories: [],
-    currentBike: {type: Id, default: null}
+    currentBike: {type: Id, default: null},
+    trajectories: [{
+	    coordinates: [{lat: Number, lng: Number}],
+	    points: Number,
+	    distance: Number,
+	    beginDate: String,
+	    endDate: String,
+	    _id: String
+	}]
 });
-
-var trajectorySchema = new Schema({
-    username: String,
-    user: Id,
-    coordinates: [],
-    points: Number,
-    distance: Number,
-    beginDate: Date,
-    endDate: Date
-})
 
 var bikeSchema = new Schema({
 	station: Id,
@@ -47,7 +44,6 @@ var processedTransactions = new Schema({
 User = mongoose.model('User', userSchema);
 Bike = mongoose.model('Bike', bikeSchema);
 Station = mongoose.model('Station', stationSchema);
-Trajectory = mongoose.model('Trajectory', trajectorySchema);
 
 function populateDB(){
 
@@ -59,15 +55,16 @@ function populateDB(){
 	var bikes =	[{name: "bike 1", reservedBy: null},
 				{name: "bike 2", reservedBy: null},
 				{name: "bike 3", reservedBy: null},
-				{name: "bike 4", reservedBy: null},
-				{name: "bike 1", reservedBy: null},
-				{name: "bike 2", reservedBy: null},
-				{name: "bike 3", reservedBy: null},
-				{name: "bike 4", reservedBy: null},
-				{name: "bike 1", reservedBy: null},
-				{name: "bike 2", reservedBy: null},
-				{name: "bike 3", reservedBy: null},
 				{name: "bike 4", reservedBy: null}];
+
+	var users = [{username: "user1", password: "pass", name: "Quim",  score: 10, distance: 80, trajectories: [{coordinates: [{lat: 34.43, lng: 54.45}, {lat: 34.47, lng: 54.46}, {lat: 34.38, lng: 54.48}], points: 10, distance: 5000, beginDate: "2016-05-22T15:27:49.125Z", endDate: "2016-05-23T15:27:49.125Z"}], currentBike: null},
+				 {username: "user2", password: "pass", name: "Ze", 	  score: 8 , distance: 50, trajectories: [{coordinates: [{lat: 34.43, lng: 54.45}, {lat: 34.47, lng: 54.46}, {lat: 34.38, lng: 54.48}], points: 8, distance: 10000, beginDate: "2016-05-11T15:27:49.125Z", endDate: "2016-05-11T19:27:49.125Z"}], currentBike: null},
+				 {username: "user3", password: "pass", name: "Manel", score: 12, distance: 30, trajectories: [{coordinates: [{lat: 34.43, lng: 54.45}, {lat: 34.47, lng: 54.46}, {lat: 34.38, lng: 54.48}], points: 12, distance: 8000, beginDate: "2016-04-22T15:30:49.125Z", endDate: "2016-05-22T22:27:49.125Z"}], currentBike: null} ];
+
+	for(var i=0; i<users.length; i++){
+		var user = new User(users[i]);
+		user.save();
+	}
 
 	for(var i=0; i<stations.length; i++){
 		var s = stations[i];
@@ -85,25 +82,20 @@ function populateDB(){
 				station: nstation._id
 			});
 			bike.save();
-			bike = new Bike({
-				name: "rrandom bike",
-				reservedBy: null,
-				station: nstation._id
-			});
-			bike.save();
 
 		});
 	}
 }
 
-Station.remove({}, function(e, r){console.log(e, r)});
+Station.remove({}, function() {});
+User.remove({}, function() {});
+Bike.remove({}, function() {});
 
 Station.count(function (err, count) {
-	console.log(count)
-	if (count == 0) {
+    if (count == 0) {
     	console.log("Empty collection");
         populateDB();
     }
 });
 
-module.exports = {db: db, User: User, Bike: Bike, Station: Station, Trajectory: Trajectory};
+module.exports = {db: db, User: User, Bike: Bike, Station: Station};

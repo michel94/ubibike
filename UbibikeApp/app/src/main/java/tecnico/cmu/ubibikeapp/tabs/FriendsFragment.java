@@ -133,7 +133,7 @@ public class FriendsFragment extends ListFragment {
                 return true;
             }
         };
-        dataHandler.bind();
+            dataHandler.bind();
 
     }
 

@@ -8,17 +8,18 @@ import org.json.JSONObject;
 
 import pt.inesc.termite.wifidirect.SimWifiP2pDevice;
 import tecnico.cmu.ubibikeapp.Utils;
+import tecnico.cmu.ubibikeapp.model.Transfer;
 
 /**
  * Created by michel on 5/1/16.
  */
 public class Peer {
     private SimWifiP2pDevice device;
-    private Service service;
+    private WDService service;
     private String userID, username;
     private final String TAG = "Peer";
 
-    public Peer(Service service, SimWifiP2pDevice device){
+    public Peer(WDService service, SimWifiP2pDevice device){
         this.service = service;
         this.device = device;
         userID = "";
@@ -31,13 +32,16 @@ public class Peer {
 
     public void sendPoints(int quantity, ResponseCallback callback){
         try {
-            JSONObject data = new JSONObject();
-            JSONObject transfer = new JSONObject();
-            transfer.put("quantity", quantity);
-            transfer.put("source", Utils.getUserID());
-            data.put("transfer", transfer);
+            Transfer transfer = new Transfer(Utils.getUserID(), userID, quantity);
+            LocalStorage storage = service.getLocalStorage();
+            storage.putTransfer(transfer);
 
-            new WDTask(device, "sendPoints", data, callback).execute();
+            JSONObject jData = new JSONObject();
+            JSONObject jTransfer = transfer.toJson();
+            jData.put("transfer", jTransfer);
+            jData.put("pending", storage.getPendingData());
+
+            new WDTask(device, "sendPoints", jData, callback).execute();
         } catch (JSONException e) {;}
 
     }

@@ -22,6 +22,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import tecnico.cmu.ubibikeapp.network.WDService;
 
@@ -53,11 +55,15 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
-        Intent intent = new Intent(getApplicationContext(), WDService.class);
-        Log.d("Main", "Starting service");
-        ComponentName req = startService(intent);
+
+        if(!getIntent().getBooleanExtra("loading_from_notifications", false)){
+            Intent intent = new Intent(getApplicationContext(), WDService.class);
+            Log.d("Main", "Starting service");
+            ComponentName req = startService(intent);
+        }
 
         setContentView(R.layout.activity_main);
+
     }
 
     private void loadTabs(){

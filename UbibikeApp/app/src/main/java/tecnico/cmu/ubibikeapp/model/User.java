@@ -7,15 +7,15 @@ public class User {
     private String username;
     private String password;
     private int distance;
-    private int points;
+    private int score;
     private int id;
     private ArrayList<Trajectory> trajectories;
 
-    public User(String username, String password, int distance, int points, ArrayList<Trajectory> trajectories) {
+    public User(String username, String password, int distance, int score, ArrayList<Trajectory> trajectories) {
         this.username = username;
         this.password = password;
         this.distance = distance;
-        this.points = points;
+        this.score = score;
         this.trajectories = trajectories;
     }
 
@@ -23,7 +23,7 @@ public class User {
         username = "";
         password = "";
         distance = 0;
-        points = 0;
+        score = 0;
         trajectories = new ArrayList<>();
     }
 
@@ -51,12 +51,12 @@ public class User {
         this.distance = distance;
     }
 
-    public int getPoints() {
-        return points;
+    public int getScore() {
+        return score;
     }
 
-    public void setPoints(int points) {
-        this.points = points;
+    public void setScore(int score) {
+        this.score = score;
     }
 
     public ArrayList<Trajectory> getTrajectories() {
@@ -69,7 +69,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "Username " + username + "/ points: " + points + "/ distance: " + distance;
+        return "Username " + username + "/ score: " + score + "/ distance: " + distance;
     }
 
     private class Trajectory {

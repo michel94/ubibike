@@ -46,5 +46,9 @@ public class ResponseUser {
         this.user = user;
     }
 
+    @Override
+    public String toString() {
+        return "Sucess: " + success + ", Message: " + message + ", User: " + user;
+    }
 }
 
