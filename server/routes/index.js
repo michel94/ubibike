@@ -35,9 +35,9 @@ router.post('/userStats', function(req, res, next){
     User.find({username: data.username}, {}, function(e, doc){
         console.log(doc);
         if(doc == null || doc.length == 0){
-            res.json({sucess: false, message: "Username doesn't exist"})
+            res.json({success: false, message: "Username doesn't exist"})
         } else {
-            res.json(doc[0]);
+            res.json({success:true, user: doc[0]});
         }
     })
 })
@@ -217,7 +217,7 @@ router.post('/trajectories/create', function(req, res, next){
         endDate: data.endDate
     });
     
-    trajectory.save(function(err) {
+    trajectory.save(function(err) { 
         if(err) console.log(err);
         else
             res.json({sucess: true,
@@ -238,7 +238,7 @@ router.get('/trajectories/listByUser', function(req, res, next){
             var trajectories = [];
             for(var i=0; i!= doc.length; i++){
                 trajectories.push({
-                    "_id": doc[i]._id,
+                    "_id": doc[i].beginDate,
                     "points": doc[i].points,
                     "beginDate": doc[i].beginDate,
                     "endDate": doc[i].endDate
@@ -257,16 +257,17 @@ router.post('/trajectories/info', function(req, res, next){
         if(user == null || user.length == 0){
             res.json({success: false, message: "Wrong trajectory id", trajectories: []});
         } else {
-
+            var docs = user.trajectories;
+            for(var i=0; i<docs.length; i++) {
+                if(docs[i].beginDate == data._id){
+                    console.log("BEIN DATE: " + docs[i]._id);
+                    docs[i]._id = data._id;
+                    res.json({success: true, message: "", trajectories: [docs[i]]});
+                    return;
+                }
+            }
+            res.json({success:false, message: "Not trajectory found"});
         }
-        var docs = user.trajectories;
-        for(var i=0; i<docs.length; i++)
-        	if(docs[i].beginDate.toString() == data._id){
-        		docs[i]._id = docs[i].beginDate.toString();
-            	res.json({success: true, message: "", trajectories: [docs[i]]});
-            	return;
-        	}
-        
     });
 })
 
@@ -284,7 +285,7 @@ router.post('/trajectories', function(req, res, next){
 	        var trajectories = [];
 	        for(var i=0; i != r.length; i++){
 	            trajectories.push({
-	                "_id": r[i].beginDate.toString(),
+	                "_id": r[i].beginDate,
 	                "points": r[i].points,
 	                "beginDate": r[i].beginDate,
 	                "endDate": r[i].endDate
