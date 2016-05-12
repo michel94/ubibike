@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import tecnico.cmu.ubibikeapp.model.Message;
 import tecnico.cmu.ubibikeapp.network.DataHandler;
@@ -80,6 +81,7 @@ public class UserActivity extends Activity {
 
         buttonSend = (ImageButton) findViewById(R.id.send_button);
         listView = (ListView) findViewById(R.id.messages_view);
+        int pointscomefromDB=0;
 
 
         chatArrayAdapter = new MessageAdapter(getApplicationContext(), R.layout.activity_right);
@@ -144,15 +146,40 @@ public class UserActivity extends Activity {
                 final EditText editText = (EditText) findViewById(R.id.editponts);
                 final ListView listView =(ListView)findViewById(R.id.messages_view);
                 final Button button = (Button)findViewById(R.id.ok);
+                final TextView textView = (TextView)findViewById(R.id.qtdpts);
                 // TODO: Aqui
 
-                editText.setVisibility(EditText.INVISIBLE);
+                // Pontos come from DataBD
+                int tosend=Integer.parseInt(editText.getText().toString());
+                int ValueClinteside =Integer.parseInt(textView.getText().toString());
+
+                if(tosend<ValueClinteside){
+                    //Enviar dados
+
+//                    wdservice.sendMessage(userID, editText.getText().toString(), new RequestCallback() {
+//                    @Override
+//                    public void onFinish(boolean success) {
+//                        chatArrayAdapter.add(new Message(true, editText.getText().toString()));
+//                        editText.setText("");
+//                   }
+//                });
+                String remaining = String.valueOf(ValueClinteside-tosend);
+                textView.setText(remaining);
+                editText.setText(" ");
+
+                    editText.setVisibility(EditText.INVISIBLE);
                 listView.setVisibility(ListView.VISIBLE);
                 button.setVisibility(Button.INVISIBLE);
                 chatText.setVisibility(EditText.VISIBLE);
                 buttonSend.setVisibility(ImageButton.VISIBLE);
 
-            }
+                }else {
+
+                Toast toast = Toast.makeText(getApplicationContext(), "Pontos insuficientes !", Toast.LENGTH_SHORT);
+                toast.show();
+
+                }
+           }
         });
         // fredy
     }
