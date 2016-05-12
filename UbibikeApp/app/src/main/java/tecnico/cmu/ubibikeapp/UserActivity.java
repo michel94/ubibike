@@ -167,7 +167,7 @@ public class UserActivity extends Activity {
                 textView.setText(remaining);
                 editText.setText(" ");
 
-                    editText.setVisibility(EditText.INVISIBLE);
+                editText.setVisibility(EditText.INVISIBLE);
                 listView.setVisibility(ListView.VISIBLE);
                 button.setVisibility(Button.INVISIBLE);
                 chatText.setVisibility(EditText.VISIBLE);
