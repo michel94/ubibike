@@ -49,7 +49,7 @@ public class BikeActivityFragment extends Fragment {
         //CriarListaActivity();
 
         listView = (ListView)rootView.findViewById(R.id.idlist);
-        criarListaActivity(listView , view);
+        criarListaActivity(listView, view);
         //if(yourItem!=null) System.out.println(CriarListaActivity());
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -71,11 +71,12 @@ public class BikeActivityFragment extends Fragment {
 
         API api = new API();
         final List<Attribute> trajectoriesList = new ArrayList<>();
+
         api.getAllTrajectories(new ResponseCallback() {
             @Override
             public void onDataReceived(JSONObject response) {
                 Gson gson = new Gson();
-                Log.d(TAG, response.toString());
+                Log.d(TAG, "Full response " + response.toString());
                 ResponseTrajectory responseTrajectory = gson.fromJson(response.toString(), ResponseTrajectory.class);
                 if(responseTrajectory.isSuccess()){
                     for(ResponseTrajectory.Trajectory trajectory: responseTrajectory.getTrajectories()){
@@ -99,7 +100,7 @@ public class BikeActivityFragment extends Fragment {
 
             @Override
             public void onError(Exception e) {
-                Log.d(TAG, "Trajectories Response is API ERROR");
+                Log.d(TAG, "Trajectories Response is API ERROR " + e.getMessage());
             }
         });
     }

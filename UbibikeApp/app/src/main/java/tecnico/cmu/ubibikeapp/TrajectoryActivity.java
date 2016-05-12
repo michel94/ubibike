@@ -49,12 +49,14 @@ public class TrajectoryActivity extends AppCompatActivity
 
     private void getTrajectoryFromServer(final GoogleMap map){
         API api = new API();
+
         api.getTrajectory(trajectoryID, new ResponseCallback() {
             @Override
             public void onDataReceived(JSONObject response) {
                 Gson gson = new Gson();
                 Log.d(TAG, response.toString());
                 ResponseTrajectory responseTrajectory = gson.fromJson(response.toString(), ResponseTrajectory.class);
+
                 if(responseTrajectory.isSuccess()){
                     PolylineOptions polylineOptions = new PolylineOptions();
                     ResponseTrajectory.Trajectory trajectory = responseTrajectory.getTrajectories().get(0);

@@ -11,9 +11,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
 import java.util.ServiceConfigurationError;
 
 import tecnico.cmu.ubibikeapp.Utils;
+import tecnico.cmu.ubibikeapp.model.Message;
 import tecnico.cmu.ubibikeapp.model.Transfer;
 
 /**
@@ -24,6 +27,7 @@ public class LocalStorage implements NetStatusReceiver.NetworkListener{
     Context context;
     public JSONArray pendingData;
     private boolean connected;
+    private Hashtable<String, List<Message>> messages;
 
     public LocalStorage(Context context){
         pendingData = new JSONArray(); // TODO: load from shared preferences
@@ -35,8 +39,12 @@ public class LocalStorage implements NetStatusReceiver.NetworkListener{
         context.registerReceiver(netStatusReceiver, netFilter);
     }
 
-    public void putMessage(){
+    public List<Message> getMessages(String userId){
+        return messages.get(userId);
+    }
 
+    public void putMessage(Message message){
+        messages.get(message.getFrom()).add(message);
     }
 
     public void putTransfer(Transfer transfer){ // returns a jsonobject with the transfer, stores it in the pending data
@@ -95,6 +103,7 @@ public class LocalStorage implements NetStatusReceiver.NetworkListener{
     public void onConnection(boolean connected) {
         Log.d(TAG, "Updated network status. Connected: " + connected);
         this.connected = connected;
+
     }
 
 }

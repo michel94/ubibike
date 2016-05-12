@@ -225,10 +225,10 @@ router.post('/trajectories/create', function(req, res, next){
     
 })
 
-router.post('/trajectories/listByUser', function(req, res, next){
+router.get('/trajectories/listByUser', function(req, res, next){
     console.log(req.body);
     var data = req.body;
-	Trajectory.find({username: data.username}, {}, function(e, doc){
+	User.find({username: data.username}, {}, function(e, doc){
         console.log(doc);
         if(doc == null || doc.length == 0){
             res.json({sucess: false, message: "Username doesn't exist"})
@@ -248,34 +248,51 @@ router.post('/trajectories/listByUser', function(req, res, next){
 });
 
 router.post('/trajectories/info', function(req, res, next){
-    console.log(req.body);
     var data = req.body;
-    Trajectory.findOne({_id: data._id}, {}, function(e, doc){
-        console.log(doc);
-        if(doc == null || doc.length == 0){
-            res.json({sucess: false, message: "Wrong trajectory id"})
+    console.log(req.body);
+    User.findById(data.user, {}, function(e, user){
+        console.log(user);
+        if(user == null || user.length == 0){
+            res.json({success: false, message: "Wrong trajectory id", trajectories: []});
         } else {
-            res.json({success:true, trajectories: [doc]});
+
         }
+        var docs = user.trajectories;
+        for(var i=0; i<docs.length; i++)
+        	if(docs[i].beginDate.toString() == data._id){
+        		docs[i]._id = docs[i].beginDate.toString();
+            	res.json({success: true, message: "", trajectories: [docs[i]]});
+            	return;
+        	}
+        
     });
 })
 
-router.get('/trajectories', function(req, res, next){
+router.post('/trajectories', function(req, res, next){
+	console.log("Trajectories");
     console.log(req.body);
     var data = req.body;
-    Trajectory.find({},{}, function(e, docs){
-        console.log(docs);
-        var trajectories = [];
-        for(var i=0; i!= docs.length; i++){
-            trajectories.push({
-                "_id": docs[i]._id,
-                "points": docs[i].points,
-                "beginDate": docs[i].beginDate,
-                "endDate": docs[i].endDate
-            })
+    User.findById(data.user, function(e, doc){
+        console.log(doc);
+        if(!doc || doc.length == 0){
+        	res.json({success: false})
+        	console.log("Response 0");
+        }else{
+	        var r = doc.trajectories;
+	        var trajectories = [];
+	        for(var i=0; i != r.length; i++){
+	            trajectories.push({
+	                "_id": r[i].beginDate.toString(),
+	                "points": r[i].points,
+	                "beginDate": r[i].beginDate,
+	                "endDate": r[i].endDate
+	            })
+	        }
+			res.json({success: true, trajectories: trajectories});
         }
-        res.json({success: true, trajectories: trajectories})
-    })
+        
+    });
+
 })
 
 module.exports = router;

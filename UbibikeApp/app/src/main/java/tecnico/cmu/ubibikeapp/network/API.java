@@ -1,8 +1,11 @@
 package tecnico.cmu.ubibikeapp.network;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import tecnico.cmu.ubibikeapp.Utils;
 import tecnico.cmu.ubibikeapp.network.MyData;
 
 /**
@@ -53,13 +56,19 @@ public class API {
     public void getTrajectory(String id, ResponseCallback callback){
         JSONObject data = new JSONObject();
         try {
+            data.put("user", Utils.getUserID());
             data.put("_id", id);
-        } catch (JSONException e){}
+            } catch (JSONException e){}
         new RestTask(POST, serverUrl + "trajectories/info", callback, data).execute();
     }
 
     public void getAllTrajectories(ResponseCallback callback){
-        new RestTask(GET, serverUrl + "trajectories", callback).execute();
+        JSONObject data = new JSONObject();
+        try {
+            data.put("user", Utils.getUserID());
+        } catch (JSONException e){}
+        Log.d("getTraj", data.toString() + " " + Utils.getUserID());
+        new RestTask(POST, serverUrl + "trajectories", callback, data).execute();
     }
 
     public void getStations(ResponseCallback callback) {

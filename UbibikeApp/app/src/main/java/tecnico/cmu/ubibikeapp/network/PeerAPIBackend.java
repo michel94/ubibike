@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import tecnico.cmu.ubibikeapp.Utils;
 import tecnico.cmu.ubibikeapp.model.Transfer;
+import tecnico.cmu.ubibikeapp.model.User;
 
 /**
  * Created by michel on 5/1/16.
@@ -29,6 +30,8 @@ public class PeerAPIBackend {
         Transfer transfer = new Transfer(data.getJSONObject("transfer"));
         Log.d(TAG, "New transfer: from " + transfer.getSrcUser() + " to " + transfer.getDestUser() + " with " + transfer.getQuantity() + " points");
         // TODO: Do something with points: update local storage, redraw view...
+        User user = Utils.getUserStats();
+        user.setPoints(user.getPoints() + transfer.getQuantity());
 
         JSONArray jPending = data.getJSONArray("pending");
         LocalStorage storage = service.getLocalStorage();
