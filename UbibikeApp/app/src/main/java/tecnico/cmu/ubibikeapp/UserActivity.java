@@ -8,11 +8,11 @@ import android.content.ServiceConnection;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -49,6 +49,9 @@ public class UserActivity extends Activity {
         }*/
 
     }
+
+
+
 
     public void onStart(){
         super.onStart();
@@ -109,7 +112,52 @@ public class UserActivity extends Activity {
                 listView.setSelection(chatArrayAdapter.getCount() - 1);
             }
         });
+
+
+
+
+        //fredy
+        final ImageButton trofeu = (ImageButton) findViewById(R.id.tropID);
+
+         trofeu.setOnClickListener(new ImageButton.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final EditText editText = (EditText) findViewById(R.id.editponts);
+                final ListView listView =(ListView)findViewById(R.id.messages_view);
+                final Button button = (Button)findViewById(R.id.ok);
+
+                // TODO: Aqui
+
+                editText.setVisibility(EditText.VISIBLE);
+                listView.setVisibility(ListView.INVISIBLE);
+                button.setVisibility(Button.VISIBLE);
+                chatText.setVisibility(EditText.INVISIBLE);
+                buttonSend.setVisibility(ImageButton.INVISIBLE);
+            }
+        });
+
+
+        final Button sendclose = (Button) findViewById(R.id.ok);
+        sendclose.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final EditText editText = (EditText) findViewById(R.id.editponts);
+                final ListView listView =(ListView)findViewById(R.id.messages_view);
+                final Button button = (Button)findViewById(R.id.ok);
+                // TODO: Aqui
+
+                editText.setVisibility(EditText.INVISIBLE);
+                listView.setVisibility(ListView.VISIBLE);
+                button.setVisibility(Button.INVISIBLE);
+                chatText.setVisibility(EditText.VISIBLE);
+                buttonSend.setVisibility(ImageButton.VISIBLE);
+
+            }
+        });
+        // fredy
     }
+
+
 
     private boolean sendChatMessage() {
 

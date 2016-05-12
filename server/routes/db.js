@@ -59,6 +59,14 @@ function populateDB(){
 	var bikes =	[{name: "bike 1", reservedBy: null},
 				{name: "bike 2", reservedBy: null},
 				{name: "bike 3", reservedBy: null},
+				{name: "bike 4", reservedBy: null},
+				{name: "bike 1", reservedBy: null},
+				{name: "bike 2", reservedBy: null},
+				{name: "bike 3", reservedBy: null},
+				{name: "bike 4", reservedBy: null},
+				{name: "bike 1", reservedBy: null},
+				{name: "bike 2", reservedBy: null},
+				{name: "bike 3", reservedBy: null},
 				{name: "bike 4", reservedBy: null}];
 
 	for(var i=0; i<stations.length; i++){
@@ -77,13 +85,22 @@ function populateDB(){
 				station: nstation._id
 			});
 			bike.save();
+			bike = new Bike({
+				name: "rrandom bike",
+				reservedBy: null,
+				station: nstation._id
+			});
+			bike.save();
 
 		});
 	}
 }
 
+Station.remove({}, function(e, r){console.log(e, r)});
+
 Station.count(function (err, count) {
-    if (count == 0) {
+	console.log(count)
+	if (count == 0) {
     	console.log("Empty collection");
         populateDB();
     }

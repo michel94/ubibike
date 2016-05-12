@@ -18,26 +18,11 @@
 
             <TextView
                 android:id="@+id/bikename"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Bicycle Name"
                 android:textColor="#FF909090"
                 android:textSize="30sp" />
-        </LinearLayout>
-
-        <LinearLayout android:layout_height="wrap_content" android:orientation="horizontal"
-            android:layout_width="wrap_content" android:layout_weight="1" android:layout_marginRight="4dp">
-
-            <TextView
-                android:layout_height="wrap_content" android:layout_width="wrap_content"
-                android:textStyle="bold" android:textSize="30sp"
-                android:text=""/>
-
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textIsSelectable="false"/>
-
         </LinearLayout>
 
         <View

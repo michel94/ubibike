@@ -14,20 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@color/cardview_light_background"
         >
-
-        <ImageButton
-            android:layout_column="1"
-            android:padding="8dip"
-            android:background="@color/cardview_light_background"
-            android:src="@drawable/back"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginLeft="10dp"
-            />
-
 
         <TextView
             android:layout_width="wrap_content"
@@ -52,10 +39,10 @@
 
 
         <ListView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/bikelist"
-            android:layout_gravity="left|top" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:listSelector="@drawable/selec"
+            android:id="@+id/bikelist" />
     </FrameLayout>
 
     <FrameLayout
@@ -135,3 +122,4 @@
 
 
 </LinearLayout>
+
