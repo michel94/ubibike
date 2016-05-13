@@ -158,9 +158,6 @@ public class UserActivity extends Activity {
 
                                 //TODO Enviar pontos
 
-
-                                chatArrayAdapter.add(new Message(true, getpontos.getText().toString()));
-
                             //TODO: Enviar pontos
                                 String remaining = String.valueOf(availabe-ValueClinteside);
                                 qtdpts.setText(remaining);
