@@ -171,9 +171,11 @@ router.post('/transactions', function(req, res, next){
     console.log(JSON.stringify(data));
     //res.json({success: true})
     var transactions = data.transactions;
-    var error = true;
+    var error = false;
     for(var i=0 ; i<transactions.length; i++){
         var item = transactions[i];
+        if(item == null)
+        	continue;
         if(item.type == "trip"){
             var trajectory = JSON.parse(item.trajectory);
             if(trajectory.coordinates.length != 0){
@@ -189,48 +191,57 @@ router.post('/transactions', function(req, res, next){
             } else {
                 error = true;
             }
+        } else if (item.type == "transfer"){
+			var srcUser = transactions[i].srcUser;
+			var destUser = transactions[i].destUser;
+			var srcMessageId = transactions[i].messageId;
+			var quantity = transactions[i].quantity;
+			console.log("transfer here: " + srcMessageId + " " + srcUser);
+
+			User.find({_id: {$in: [srcUser, destUser] }}, function(e, docs){
+				if(docs.length == 0){
+					console.log("Cannot complete transaction: src user " + srcUser + " and dest user " + destUser + " don't exist.");
+				}else if(docs.length == 1){
+					if(docs[0]._id == destUser)
+						console.log("Cannot complete transaction: src user " + srcUser + " doesn't exist.");
+					else
+						console.log("Cannot complete transaction: dest user " + destUser + " doesn't exist.");
+				}else{
+					
+					var l = (docs[0]._id == srcUser) ? [docs[0], docs[1]] : [docs[1], docs[0]];
+					var src = l[0];
+					var dest = l[1];
+
+					Transaction.findOne({srcUser: srcUser, srcMessageId: srcMessageId}, {}, function(e, doc){
+						if(doc == null){ // fresh transaction
+							src.score -= quantity;
+							dest.score += quantity;
+							if(src.score < 0 || dest.score < 0)
+								return;
+							src.save();
+							dest.save();
+							var t = new Transaction({srcUser: srcUser, srcMessageId: srcMessageId});
+							t.save();
+						}else{ // old transaction
+							console.log("Old transaction, ignoring");
+
+						}
+					});
+				}
+
+			});
+        	
         }
     }
     
+
+
     if(error){
         res.json({success: false, message: "an error occured"});
     } else {
         res.json({success: true});
     }
 	/*for(var i=0; i<data.transactions.length; i++){
-		var srcUser = transactions[i].srcUser;
-		var destUser = transactions[i].destUser;
-		var srcMessageId = transactions[i].srcMessageId;
-		var quantity = transactions[i].quantity;
-
-		User.find({_id: {$in: [srcUser, destUser] }}, function(e, docs){
-			if(docs.length == 0){
-				console.log("Cannot complete transaction: src user " + srcUser + " and dest user " + destUser + " don't exist.");
-			}else if(docs.length == 1){
-				if(docs[0]._id == destUser)
-					console.log("Cannot complete transaction: src user " + srcUser + " doesn't exist.");
-				else
-					console.log("Cannot complete transaction: dest user " + destUser + " doesn't exist.");
-			}else{
-				
-				var l = (docs[0]._id == srcUser) ? [docs[0], docs[1]] : [docs[1], docs[0]];
-				var src = l[0];
-				var dest = l[1];
-
-				processedTransactions.findOne({srcUser: srcUser, srcMessageId: srcMessageId}, {}, function(e, docs){
-					if(docs.length == 0){ // fresh transaction
-						src.score -= quantity;
-						dest.score += quantity;
-						src.save();
-						dest.save();
-					}else{ // old transaction
-						console.log("Old transaction, ignoring");
-
-					}
-				});
-			}
-
-		});
 		res.json({success: true});
 	}*/
 });

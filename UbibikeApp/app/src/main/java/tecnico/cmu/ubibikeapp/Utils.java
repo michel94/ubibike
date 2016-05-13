@@ -121,16 +121,11 @@ public class Utils {
         int id = (preferences != null) ? preferences.getInt("message_counter", 0) : 0;
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("message_counter", id+1);
+        Log.d(TAG, String.valueOf(id));
         editor.apply();
 
         return id;
     }
-
-    public static void incrementMessageCounter(String password){
-        SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
-
-    }
-
 
     /*public static void saveLastLocation(Location mLastLocation) {
         SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);

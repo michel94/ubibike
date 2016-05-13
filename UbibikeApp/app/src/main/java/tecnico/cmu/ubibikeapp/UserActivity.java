@@ -167,7 +167,7 @@ public class UserActivity extends Activity {
                         });
 
 
-/*
+                        /*
                         getpontos.setVisibility(EditText.INVISIBLE);
                         listView.setVisibility(ListView.VISIBLE);
                         button.setVisibility(Button.INVISIBLE);
