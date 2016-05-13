@@ -72,8 +72,10 @@ public class HomeFragment extends Fragment {
                     } else {
                         currentBike = "Bike: " + bikeFromServer;
                     }
+                } else if (bikeFromPrefs.equals("no_bike")){
+                    currentBike = "-";
                 } else {
-                    currentBike = "Bike " + bikeFromPrefs;
+                    currentBike = "Bike: " + bikeFromPrefs;
                 }
                 mCurrentBike.setText(currentBike);
                 Utils.saveUserStats(user);
