@@ -2,10 +2,12 @@ package tecnico.cmu.ubibikeapp;
 
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -13,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -49,7 +52,7 @@ public class BookingActivity extends AppCompatActivity {
         stationId = extra.getString("stationId");
         Log.d(TAG, "station name: " + stationName + ", stationId: " + stationId);
 
-
+        ((TextView) findViewById(R.id.stationame)).setText(stationName);
 
 
         listView = (ListView)findViewById(R.id.bikelist);
@@ -63,7 +66,6 @@ public class BookingActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 view.setSelected(true);
                 selected = bikes.get(position);
-                Log.d(TAG, "Please");
             }
         });
 
@@ -71,16 +73,31 @@ public class BookingActivity extends AppCompatActivity {
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(selected != null && wdservice != null)
+                String currentBike = Utils.getCurrentBike();
+                boolean hasBike = false;
+                if(currentBike!=null){
+                    if(currentBike.equals("no_bike")){
+                        hasBike = false;
+                    } else {
+                        hasBike = true;
+                    }
+                } else {
+                    hasBike = false;
+                }
+
+                if(selected != null && wdservice != null && !hasBike) {
                     api.requestBike(Utils.getUserID(), selected.getBikeId(), new ResponseCallback() {
                         @Override
                         public void onDataReceived(JSONObject response) {
                             try {
                                 Log.d(TAG, "Response: " + response.toString());
-                                if(response.getBoolean("success") == true) {
+                                if (response.getBoolean("success") == true) {
                                     Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT).show();
                                     Utils.setCurrentBike(selected.getBikeId());
                                     wdservice.getMoveManager().setCurrentBike(selected.getBikeId());
+                                    showSelectBikeDialog(false);
+                                } else {
+                                    showServerErrorDialog();
                                 }
 
                             } catch (JSONException e) {
@@ -93,6 +110,11 @@ public class BookingActivity extends AppCompatActivity {
                             Log.d(TAG, "error");
                         }
                     });
+                } else if(hasBike) {
+                    showAlreadyHaveBikeDialog();
+                } else {
+                    showSelectBikeDialog(true);
+                }
             }
         });
 
@@ -150,4 +172,56 @@ public class BookingActivity extends AppCompatActivity {
         }
     };
 
+    private void showSelectBikeDialog(boolean error){
+        if(error){
+            AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+            alertDialog.setTitle("Error!");
+            alertDialog.setMessage("You must select a bike");
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            alertDialog.show();
+        } else {
+            AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+            alertDialog.setTitle("Bike requested!");
+            alertDialog.setMessage("You requested the bike: " + selected.getName());
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            alertDialog.show();
+        }
+
+    }
+
+    private void showServerErrorDialog(){
+        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        alertDialog.setTitle("Error");
+        alertDialog.setMessage("An error occured while communicating with the server! Please try again.");
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+    }
+
+    private void showAlreadyHaveBikeDialog(){
+        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        alertDialog.setTitle("Error!");
+        alertDialog.setMessage("Error requesting a bike because you already have one.");
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+    }
 }
