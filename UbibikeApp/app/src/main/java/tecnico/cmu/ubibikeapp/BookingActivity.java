@@ -50,8 +50,6 @@ public class BookingActivity extends AppCompatActivity {
         Log.d(TAG, "station name: " + stationName + ", stationId: " + stationId);
 
 
-
-
         listView = (ListView)findViewById(R.id.bikelist);
         bikes = new ArrayList<>();
 
@@ -64,6 +62,7 @@ public class BookingActivity extends AppCompatActivity {
                 view.setSelected(true);
                 selected = bikes.get(position);
                 Log.d(TAG, "Please");
+
             }
         });
 
