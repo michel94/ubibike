@@ -102,10 +102,11 @@ public class API {
         JSONObject data = new JSONObject();
         try {
             data.put("user", userId);
+            data.put("station", Utils.getCurrentStation());
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        new RestTask(POST, serverUrl + "requestBike", callback, data).execute();
+        new RestTask(POST, serverUrl + "returnBike", callback, data).execute();
     }
 
     public void sendTransactions(JSONArray trip, ResponseCallback callback){

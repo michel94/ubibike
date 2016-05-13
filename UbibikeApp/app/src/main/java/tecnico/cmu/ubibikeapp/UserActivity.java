@@ -40,7 +40,7 @@ public class UserActivity extends Activity {
     private WDService wdservice;
     private String userID, username;
     private boolean onlineStatus;
-    int availabe=0,ValueClinteside=0;
+    int available=0, ValueClinteside=0;
 
     private DataHandler dataHandler;
 
@@ -82,7 +82,7 @@ public class UserActivity extends Activity {
 
         buttonSend = (ImageButton) findViewById(R.id.send_button);
         listView = (ListView) findViewById(R.id.messages_view);
-        
+
          final TextView qtdpts = (TextView)findViewById(R.id.qtdpts);
          String s=String.valueOf(Utils.getUserStats().getScore());
          qtdpts.setText(s);
@@ -148,32 +148,34 @@ public class UserActivity extends Activity {
                 final ListView listView =(ListView)findViewById(R.id.messages_view);
                 final Button button = (Button)findViewById(R.id.ok);
 
-              if(getpontos.getText().length()!=0) {
+                if(getpontos.getText().length()!=0) {
 
-                   availabe=Integer.parseInt(qtdpts.getText().toString());
-                   ValueClinteside=Integer.parseInt(getpontos.getText().toString());
+                    available = Integer.parseInt(qtdpts.getText().toString());
+                    int value =Integer.parseInt(getpontos.getText().toString());
 
-                            if((ValueClinteside<availabe)) {
-
-                                //TODO Enviar pontos
-
-                            //TODO: Enviar pontos
-                                String remaining = String.valueOf(availabe-ValueClinteside);
-                                qtdpts.setText(remaining);
-                                getpontos.setText(" ");
-
-                                getpontos.setVisibility(EditText.INVISIBLE);
-                                listView.setVisibility(ListView.VISIBLE);
-                                button.setVisibility(Button.INVISIBLE);
-                                chatText.setVisibility(EditText.VISIBLE);
-                                buttonSend.setVisibility(ImageButton.VISIBLE);
-
-                            }else {
-
-                                Toast toast = Toast.makeText(getApplicationContext(), "Pontos insuficientes !", Toast.LENGTH_SHORT);
-                                toast.show();
-
+                    if((value <= available)) {
+                        wdservice.sendPoints(userID, value, new RequestCallback() {
+                            @Override
+                            public void onFinish(boolean success) {
+                                if (success) {
+                                    Log.d(TAG, "Points sent");
+                                    //EditText et = (EditText) findViewById(R.id.editponts);
+                                    //et.setText(Utils.getUserStats().getScore());
+                                    Log.d(TAG, "Points: " + Utils.getUserStats().getScore());
+                                }
                             }
+                        });
+
+
+                        /*
+                        getpontos.setVisibility(EditText.INVISIBLE);
+                        listView.setVisibility(ListView.VISIBLE);
+                        button.setVisibility(Button.INVISIBLE);
+                        chatText.setVisibility(EditText.VISIBLE);
+                        buttonSend.setVisibility(ImageButton.VISIBLE);*/
+
+                    }
+
                 } else {
                     Toast toasts = Toast.makeText(getApplicationContext(), "Inserir pontos a enviar !", Toast.LENGTH_SHORT);
                     toasts.show();

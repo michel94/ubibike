@@ -35,14 +35,16 @@ var stationSchema = new Schema({
 	name: String
 });
 
-var processedTransactions = new Schema({
+var transactionSchema = new Schema({
 	srcUser: Id,
 	srcMessageId: Number
 });
 
+
 User = mongoose.model('User', userSchema);
 Bike = mongoose.model('Bike', bikeSchema);
 Station = mongoose.model('Station', stationSchema);
+Transaction = mongoose.model('Transaction', transactionSchema);
 
 function populateDB(){
 
@@ -86,9 +88,9 @@ function populateDB(){
 	}
 }
 
-//Station.remove({}, function() {});
-//User.remove({}, function() {});
-//Bike.remove({}, function() {});
+/*Station.remove({}, function() {});
+User.remove({}, function() {});
+Bike.remove({}, function() {});*/
 
 Station.count(function (err, count) {
     if (count == 0) {
@@ -97,4 +99,4 @@ Station.count(function (err, count) {
     }
 });
 
-module.exports = {db: db, User: User, Bike: Bike, Station: Station};
+module.exports = {db: db, User: User, Bike: Bike, Station: Station, Transaction: Transaction};

@@ -121,16 +121,11 @@ public class Utils {
         int id = (preferences != null) ? preferences.getInt("message_counter", 0) : 0;
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("message_counter", id+1);
+        Log.d(TAG, String.valueOf(id));
         editor.apply();
 
         return id;
     }
-
-    public static void incrementMessageCounter(String password){
-        SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
-
-    }
-
 
     /*public static void saveLastLocation(Location mLastLocation) {
         SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
@@ -141,28 +136,27 @@ public class Utils {
 
     public static JSONArray getPendingData(){
         SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
-        if(preferences != null){
-            Gson gson = new Gson();
-            JSONArray array;
-            array = gson.fromJson(preferences.getString("pending_data", null), JSONArray.class);
-            if(array == null){
-                array = new JSONArray();
+        if(preferences != null) {
+            String array = preferences.getString("pending_data", null);
+            if (array == null) {
+                return new JSONArray();
+            } else {
+                try {
+                    return new JSONArray(array);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
-            return array;
-        } else {
-            return new JSONArray();
         }
+        return new JSONArray();
     }
+
 
     public static void savePendingData(JSONArray pendingData){
         //JSONArray currentData = getPendingData();
-
         SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-        Gson gson = new Gson();
-        String pendingString = gson.toJson(pendingData);
-        Log.d(TAG, pendingString);
-        editor.putString("pending_data", pendingString);
+        editor.putString("pending_data", pendingData.toString());
         editor.apply();
     }
 
@@ -189,6 +183,18 @@ public class Utils {
             return new JSONObject();
 
         }
+    }
+
+    public static String getCurrentStation(){
+        SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
+        return (preferences!=null) ? preferences.getString("current_station", null) : "";
+    }
+
+    public static void setCurrentStation(String currentStation) {
+        SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("current_station", currentStation);
+        editor.apply();
     }
 }
 

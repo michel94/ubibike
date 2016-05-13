@@ -52,59 +52,7 @@ public class StationsFragment extends Fragment {
     ArrayList<Station> stations = new ArrayList<Station>();
     HashMap<String, Station> markerIdToStation = new HashMap<>();
     private String selectedMarker = "";
-    /*
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_stations, container, false);
 
-        textView = (TextView)rootView.findViewById(R.id.stationame);
-
-        LocationManager lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-
-        if (ActivityCompat.checkSelfPermission(rootView.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(rootView.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-        }
-        Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        // crashing, pls remove:
-        //final double longitude = location.getLongitude();
-        //final double latitude = location.getLatitude();
-
-        try {
-            if (googleMap == null) {
-                googleMap = ((MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.map)).getMap();
-            }
-
-            List<LatLng> testLocations = genTestLocations();
-            final LatLngBounds.Builder builder = new LatLngBounds.Builder();
-
-            for (int i = 0; i < testLocations.size(); i++) {
-                 LatLng position = new LatLng(testLocations.get(i).latitude, testLocations.get(i).longitude);
-                 MarkerOptions options = new MarkerOptions().position(position).title("Estacao " + (i + 1) + "/" + 4 + " I RESERVAR ---");
-
-                Marker m = googleMap.addMarker(options);
-                builder.include(position);
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position, 12));
-                markers.add(m);
-            }
-
-            googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                @Override
-                public boolean onMarkerClick(Marker marker) {
-                    Intent intent = new Intent(getActivity(), BookingActivity.class);
-
-                    startActivity(intent);
-                    return false;
-                }
-            });
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return  rootView;
-    }
-    */
-
-    //DEBUG METHOD
     public List<LatLng> genTestLocations() {
         List<LatLng> latLng = new ArrayList<>();
 
@@ -135,7 +83,6 @@ public class StationsFragment extends Fragment {
         return rootView;
     }
 
-    /***** Sets up the map if it is possible to do so *****/
     public void setUpMapIfNeeded() {
         if (googleMap == null) {
             // Try to obtain the map from the SupportMapFragment.
@@ -234,32 +181,6 @@ public class StationsFragment extends Fragment {
             }
         });
 
-
-
-        /*List<LatLng> testLocations = genTestLocations();
-        final LatLngBounds.Builder builder = new LatLngBounds.Builder();
-
-        for (int i = 0; i < testLocations.size(); i++) {
-            LatLng position = new LatLng(testLocations.get(i).latitude, testLocations.get(i).longitude);
-            MarkerOptions options = new MarkerOptions().position(position).title("Estacao " + (i + 1) + "/" + 4 + " I RESERVAR ---");
-
-            Marker m = googleMap.addMarker(options);
-            builder.include(position);
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position, 12));
-            markers.add(m);
-        }
-
-        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                Intent intent = new Intent(getActivity(), BookingActivity.class);
-
-                startActivity(intent);
-                return false;
-            }
-        });
-
-        */
     }
 
     @Override
@@ -276,10 +197,6 @@ public class StationsFragment extends Fragment {
                 setUpMap();
         }
     }
-
-    /**** The mapfragment's id must be removed from the FragmentManager
-     **** or else if the same it is passed on the next time then
-     **** app will crash ****/
 
     @Override
     public void onPause() {

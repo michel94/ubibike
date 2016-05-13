@@ -111,7 +111,7 @@ User.find({}, {}, function(e, docs){
 
 function hasBike(userId, callback){
 	User.findById(userId, function(e, user){
-		callback(user, user.currentBike != null);
+        callback(user, user.currentBike != null);
 	});
 }
 
@@ -141,14 +141,16 @@ router.post('/requestBike', function(req, res, next){
 
 router.post('/returnBike', function(req, res, next){
 	var data = req.body;
+    console.log("\n" + JSON.stringify(data) + "\n");
 	console.log("User " + data.user +  " is returning his bike to station " + data.station);
 	hasBike(data.user, function(user, has){
 		if(has){
-			Bike.findById(data.bike, function(e, bike){
+            console.log("User "  + JSON.stringify(user))
+			Bike.findById(user.currentBike, function(e, bike){
 				if(bike){
 					user.currentBike = null;
 					bike.reservedBy = null;
-					bike.station = station;
+					bike.station = data.station;
 					user.save();
 					bike.save();
 				}else{
@@ -169,54 +171,77 @@ router.post('/transactions', function(req, res, next){
     console.log(JSON.stringify(data));
     //res.json({success: true})
     var transactions = data.transactions;
+    var error = false;
     for(var i=0 ; i<transactions.length; i++){
         var item = transactions[i];
+        if(item == null)
+        	continue;
         if(item.type == "trip"){
-            var trajectory = item.trajectory;
-            User.findByIdAndUpdate(trajectory.user_id, {$push: {"trajectories" : trajectory}}, { safe: true, upsert: true}, function(err, model){
-                if(err){
-                    console.log(err);
-                    res.json({success: false, message: err});
-                } else {
-                    res.json({success: true, message: model});
-                }
-            })
+            var trajectory = JSON.parse(item.trajectory);
+            if(trajectory.coordinates.length != 0){
+                    User.findByIdAndUpdate(trajectory.user_id, {$push: {"trajectories" : trajectory}}, 
+                                           { safe: true, upsert: true}, function(err, model){
+                    if(err){
+                        console.log(err);
+                        error = true;
+                    } else {
+                        error = false;
+                    }
+                })    
+            } else {
+                error = true;
+            }
+        } else if (item.type == "transfer"){
+			var srcUser = transactions[i].srcUser;
+			var destUser = transactions[i].destUser;
+			var srcMessageId = transactions[i].messageId;
+			var quantity = transactions[i].quantity;
+			console.log("transfer here: " + srcMessageId + " " + srcUser);
+
+			User.find({_id: {$in: [srcUser, destUser] }}, function(e, docs){
+				if(docs.length == 0){
+					console.log("Cannot complete transaction: src user " + srcUser + " and dest user " + destUser + " don't exist.");
+				}else if(docs.length == 1){
+					if(docs[0]._id == destUser)
+						console.log("Cannot complete transaction: src user " + srcUser + " doesn't exist.");
+					else
+						console.log("Cannot complete transaction: dest user " + destUser + " doesn't exist.");
+				}else{
+					
+					var l = (docs[0]._id == srcUser) ? [docs[0], docs[1]] : [docs[1], docs[0]];
+					var src = l[0];
+					var dest = l[1];
+
+					Transaction.findOne({srcUser: srcUser, srcMessageId: srcMessageId}, {}, function(e, doc){
+						if(doc == null){ // fresh transaction
+							src.score -= quantity;
+							dest.score += quantity;
+							if(src.score < 0 || dest.score < 0)
+								return;
+							src.save();
+							dest.save();
+							var t = new Transaction({srcUser: srcUser, srcMessageId: srcMessageId});
+							t.save();
+						}else{ // old transaction
+							console.log("Old transaction, ignoring");
+
+						}
+					});
+				}
+
+			});
+        	
         }
     }
+    
+
+
+    if(error){
+        res.json({success: false, message: "an error occured"});
+    } else {
+        res.json({success: true});
+    }
 	/*for(var i=0; i<data.transactions.length; i++){
-		var srcUser = transactions[i].srcUser;
-		var destUser = transactions[i].destUser;
-		var srcMessageId = transactions[i].srcMessageId;
-		var quantity = transactions[i].quantity;
-
-		User.find({_id: {$in: [srcUser, destUser] }}, function(e, docs){
-			if(docs.length == 0){
-				console.log("Cannot complete transaction: src user " + srcUser + " and dest user " + destUser + " don't exist.");
-			}else if(docs.length == 1){
-				if(docs[0]._id == destUser)
-					console.log("Cannot complete transaction: src user " + srcUser + " doesn't exist.");
-				else
-					console.log("Cannot complete transaction: dest user " + destUser + " doesn't exist.");
-			}else{
-				
-				var l = (docs[0]._id == srcUser) ? [docs[0], docs[1]] : [docs[1], docs[0]];
-				var src = l[0];
-				var dest = l[1];
-
-				processedTransactions.findOne({srcUser: srcUser, srcMessageId: srcMessageId}, {}, function(e, docs){
-					if(docs.length == 0){ // fresh transaction
-						src.score -= quantity;
-						dest.score += quantity;
-						src.save();
-						dest.save();
-					}else{ // old transaction
-						console.log("Old transaction, ignoring");
-
-					}
-				});
-			}
-
-		});
 		res.json({success: true});
 	}*/
 });

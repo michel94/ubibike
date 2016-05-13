@@ -39,6 +39,7 @@ import pt.inesc.termite.wifidirect.service.SimWifiP2pService;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketManager;
 import tecnico.cmu.ubibikeapp.Utils;
 import tecnico.cmu.ubibikeapp.model.Message;
+import tecnico.cmu.ubibikeapp.model.User;
 
 public class WDService extends Service implements
         PeerListListener, GroupInfoListener, LocationListener {
@@ -309,14 +310,19 @@ public class WDService extends Service implements
     }
 
 
-    public boolean sendPoints(String userID, int pontAmount, final RequestCallback callback){
+    public boolean sendPoints(String userID, final int points, final RequestCallback callback){
         Peer peer = getPeerByID(userID);
         if(peer == null)
             return false;
 
-        peer.sendPoints(pontAmount, new ResponseCallback() {
+        peer.sendPoints(points, new ResponseCallback() {
             @Override
             public void onDataReceived(JSONObject response){
+                int score = Utils.getUserStats().getScore();
+                score -= points;
+                User user = Utils.getUserStats();
+                user.setScore(score);
+                Utils.saveUserStats(user);
                 if (callback != null)
                     callback.onFinish(true);
             }

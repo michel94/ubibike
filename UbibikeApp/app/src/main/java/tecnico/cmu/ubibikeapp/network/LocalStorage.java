@@ -118,7 +118,7 @@ public class LocalStorage implements NetStatusReceiver.NetworkListener{
             e.printStackTrace();
         }
 
-        pendingData.put(data);
+        putOnPending(data);
     }
 
     public JSONArray getPendingData(){
@@ -134,11 +134,15 @@ public class LocalStorage implements NetStatusReceiver.NetworkListener{
 
             Log.d(TAG, "Storing trip with " + trajectory.getPoints() + " earned points: " + trajectory);
 
-            pendingData.put(jTrip);
+            putOnPending(jTrip);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
+    }
+
+    void putOnPending(JSONObject o){
+        pendingData.put(o);
         sendPendingDataToServer();
     }
 
@@ -174,10 +178,13 @@ public class LocalStorage implements NetStatusReceiver.NetworkListener{
     public void extendData(JSONArray trips){
         String first = pendingData.toString();
         first = first.substring(0, first.length()-1);
+        Log.d(TAG, first);
         String second = trips.toString();
-        second = second.substring(0, second.length()-1);
+        second = second.substring(1, second.length());
+        Log.d(TAG, second);
         try {
             pendingData = new JSONArray(first + ", " + second);
+            sendPendingDataToServer();
             Log.d("extendTrips", pendingData.toString());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -193,11 +200,32 @@ public class LocalStorage implements NetStatusReceiver.NetworkListener{
             Log.d(TAG, "Connected, sending pending data to server...");
             sendPendingDataToServer();
         }
+        String currentBike = Utils.getCurrentBike();
+        if(currentBike!=null){
+            if(!currentBike.equals("no_bike")){
+                returnBikeToStation();
+            }
+        }
     }
 
     public void destroy(){
         context.unregisterReceiver(mNetStatusReceiver);
     }
 
+    public void returnBikeToStation(){
+        API api = new API();
+        api.returnBike(Utils.getUserID(), new ResponseCallback() {
+            @Override
+            public void onDataReceived(JSONObject response) {
+                Log.d(TAG, "Return bike: " + response.toString());
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Log.d(TAG, "Return bike error: " + e.toString());
+
+            }
+        });
+    }
 
 }
