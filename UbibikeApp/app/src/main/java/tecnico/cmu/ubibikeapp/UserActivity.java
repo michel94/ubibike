@@ -11,6 +11,14 @@ import android.os.IBinder;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+
+
+
+
+
+
+
 import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,11 +27,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-
 import tecnico.cmu.ubibikeapp.model.Message;
 import tecnico.cmu.ubibikeapp.network.DataHandler;
-import tecnico.cmu.ubibikeapp.network.LocalStorage;
 import tecnico.cmu.ubibikeapp.network.Peer;
 import tecnico.cmu.ubibikeapp.network.RequestCallback;
 import tecnico.cmu.ubibikeapp.network.WDService;
@@ -35,7 +40,7 @@ public class UserActivity extends Activity {
     private MessageAdapter chatArrayAdapter;
     private ListView listView;
     private EditText chatText;
-    private ImageButton buttonSend;
+    private ImageButton buttonSend, keyboard;
     private boolean side = false;
     private WDService wdservice;
     private String userID, username;
@@ -83,9 +88,28 @@ public class UserActivity extends Activity {
         buttonSend = (ImageButton) findViewById(R.id.send_button);
         listView = (ListView) findViewById(R.id.messages_view);
 
+        chatText = (EditText) findViewById(R.id.message);
+        chatText.setFocusable(false);
+
+        keyboard=(ImageButton)findViewById(R.id.keyboard);
+        keyboard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chatText.setFocusable(true);
+                chatText.setFocusableInTouchMode(true);
+                chatText.requestFocus();
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(chatText, InputMethodManager.SHOW_IMPLICIT);
+            }
+        });
+
+
+
+
          final TextView qtdpts = (TextView)findViewById(R.id.qtdpts);
          String s=String.valueOf(Utils.getUserStats().getScore());
          qtdpts.setText(s);
+
 
         chatArrayAdapter = new MessageAdapter(getApplicationContext(), R.layout.activity_right);
         listView.setAdapter(chatArrayAdapter);
@@ -118,8 +142,6 @@ public class UserActivity extends Activity {
             }
         });
 
-
-        //fredy
         final ImageButton trofeu = (ImageButton) findViewById(R.id.tropID);
 
          trofeu.setOnClickListener(new ImageButton.OnClickListener() {
@@ -148,7 +170,7 @@ public class UserActivity extends Activity {
                 final ListView listView =(ListView)findViewById(R.id.messages_view);
                 final Button button = (Button)findViewById(R.id.ok);
 
-                if(getpontos.getText().length()!=0) {
+              if(getpontos.getText().length()!=0) {
 
                     available = Integer.parseInt(qtdpts.getText().toString());
                     int value =Integer.parseInt(getpontos.getText().toString());
@@ -166,6 +188,12 @@ public class UserActivity extends Activity {
                             }
                         });
 
+                            //TODO Enviar pontos
+                                sendPoint();
+                            //TODO: Enviar pontos
+                                String remaining = String.valueOf(availabe-ValueClinteside);
+                                qtdpts.setText(remaining);
+                                getpontos.setText(" ");
 
                         /*
                         getpontos.setVisibility(EditText.INVISIBLE);
@@ -230,6 +258,8 @@ public class UserActivity extends Activity {
                 public boolean onMessage(String text) {
                     Message m = new Message(false, text, userID, Utils.getUserID());
                     chatArrayAdapter.add(m);
+                    wdservice.getLocalStorage().putMessage(m);
+
                     return true;
                 }
                 @Override
@@ -241,17 +271,6 @@ public class UserActivity extends Activity {
                 }
             };
             dataHandler.bind(userID);
-
-            LocalStorage storage = wdservice.getLocalStorage();
-            ArrayList<Message> messages = storage.getMessages(userID);
-            if(messages != null) {
-                Log.d(TAG, "Got messages from " + userID + ", " + messages.size() + " messages");
-                for(Message m : messages) {
-                    m.left = m.getFrom().equals(userID);
-                    chatArrayAdapter.add(m);
-                }
-            }
-
 
         }
 
