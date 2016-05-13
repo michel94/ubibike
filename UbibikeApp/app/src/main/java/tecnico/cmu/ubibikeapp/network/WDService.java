@@ -1,17 +1,5 @@
 package tecnico.cmu.ubibikeapp.network;
 
-import pt.inesc.termite.wifidirect.SimWifiP2pBroadcast;
-import pt.inesc.termite.wifidirect.SimWifiP2pDevice;
-import pt.inesc.termite.wifidirect.SimWifiP2pInfo;
-import pt.inesc.termite.wifidirect.SimWifiP2pManager;
-import pt.inesc.termite.wifidirect.SimWifiP2pManager.Channel;
-import pt.inesc.termite.wifidirect.service.SimWifiP2pService;
-import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketManager;
-import pt.inesc.termite.wifidirect.SimWifiP2pDeviceList;
-import pt.inesc.termite.wifidirect.SimWifiP2pManager.PeerListListener;
-import pt.inesc.termite.wifidirect.SimWifiP2pManager.GroupInfoListener;
-import tecnico.cmu.ubibikeapp.Utils;
-
 import android.Manifest;
 import android.app.Service;
 import android.content.ComponentName;
@@ -19,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -39,6 +26,18 @@ import com.google.android.gms.maps.model.LatLng;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+import pt.inesc.termite.wifidirect.SimWifiP2pBroadcast;
+import pt.inesc.termite.wifidirect.SimWifiP2pDevice;
+import pt.inesc.termite.wifidirect.SimWifiP2pDeviceList;
+import pt.inesc.termite.wifidirect.SimWifiP2pInfo;
+import pt.inesc.termite.wifidirect.SimWifiP2pManager;
+import pt.inesc.termite.wifidirect.SimWifiP2pManager.Channel;
+import pt.inesc.termite.wifidirect.SimWifiP2pManager.GroupInfoListener;
+import pt.inesc.termite.wifidirect.SimWifiP2pManager.PeerListListener;
+import pt.inesc.termite.wifidirect.service.SimWifiP2pService;
+import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketManager;
+import tecnico.cmu.ubibikeapp.Utils;
 
 public class WDService extends Service implements
         PeerListListener, GroupInfoListener, LocationListener {
@@ -304,6 +303,27 @@ public class WDService extends Service implements
             @Override
             public void onError(Exception e) {
                 if(callback != null)
+                    callback.onFinish(false);
+            }
+        });
+        return true;
+    }
+
+
+    public boolean sendPoints(String userID, int pontAmount, final RequestCallback callback){
+        Peer peer = getPeerByID(userID);
+        if(peer == null)
+            return false;
+
+        peer.sendPoints(pontAmount, new ResponseCallback() {
+            @Override
+            public void onDataReceived(JSONObject response){
+                if (callback != null)
+                    callback.onFinish(true);
+            }
+            @Override
+            public void onError(Exception e) {
+                if (callback != null)
                     callback.onFinish(false);
             }
         });
