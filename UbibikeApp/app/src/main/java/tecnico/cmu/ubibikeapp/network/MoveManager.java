@@ -12,6 +12,8 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -101,6 +103,7 @@ public class MoveManager {
         mTrajectory.setPoints(points);
         mTrajectory.setEndDate(Utils.convertDateToString(new Date(System.currentTimeMillis())));
         localStorage.putTrip(mTrajectory);
+        localStorage.returnBikeToStation();
     }
 
     public void onLocationChanged(LatLng newLoc){

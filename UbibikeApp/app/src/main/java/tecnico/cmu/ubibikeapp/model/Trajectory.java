@@ -23,6 +23,7 @@ public class Trajectory {
     private double distance;
     private String beginDate;
     private String endDate;
+    private String bike_id;
 
     public Trajectory(String id, String username, String user_id, ArrayList<Coordinate> coordinates, int points, double distance, String beginDate, String endDate) {
         this._id = id;
@@ -39,6 +40,7 @@ public class Trajectory {
         this.beginDate = beginDate;
         this.distance = 0;
         this.points = 0;
+        this.bike_id = Utils.getCurrentBike();
     }
 
     public String getId() {
@@ -89,6 +91,14 @@ public class Trajectory {
 
     public void setEndDate(String endDate) {
         this.endDate = endDate;
+    }
+
+    public String getBikeId() {
+        return bike_id;
+    }
+
+    public void setBikeId(String bike_id) {
+        this.bike_id = bike_id;
     }
 
     public void addCoordinates(Coordinate coordinate){

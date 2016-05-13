@@ -111,7 +111,7 @@ User.find({}, {}, function(e, docs){
 
 function hasBike(userId, callback){
 	User.findById(userId, function(e, user){
-		callback(user, user.currentBike != null);
+        callback(user, user.currentBike != null);
 	});
 }
 
@@ -141,10 +141,12 @@ router.post('/requestBike', function(req, res, next){
 
 router.post('/returnBike', function(req, res, next){
 	var data = req.body;
+    console.log("\n" + JSON.stringify(data) + "\n");
 	console.log("User " + data.user +  " is returning his bike to station " + data.station);
 	hasBike(data.user, function(user, has){
 		if(has){
-			Bike.findById(data.bike, function(e, bike){
+            console.log("User "  + JSON.stringify(user))
+			Bike.findById(user.currentBike, function(e, bike){
 				if(bike){
 					user.currentBike = null;
 					bike.reservedBy = null;
@@ -169,19 +171,31 @@ router.post('/transactions', function(req, res, next){
     console.log(JSON.stringify(data));
     //res.json({success: true})
     var transactions = data.transactions;
+    var error = true;
     for(var i=0 ; i<transactions.length; i++){
         var item = transactions[i];
         if(item.type == "trip"){
-            var trajectory = item.trajectory;
-            User.findByIdAndUpdate(trajectory.user_id, {$push: {"trajectories" : trajectory}}, { safe: true, upsert: true}, function(err, model){
-                if(err){
-                    console.log(err);
-                    res.json({success: false, message: err});
-                } else {
-                    res.json({success: true, message: model});
-                }
-            })
+            var trajectory = JSON.parse(item.trajectory);
+            if(trajectory.coordinates.length != 0){
+                    User.findByIdAndUpdate(trajectory.user_id, {$push: {"trajectories" : trajectory}}, 
+                                           { safe: true, upsert: true}, function(err, model){
+                    if(err){
+                        console.log(err);
+                        error = true;
+                    } else {
+                        error = false;
+                    }
+                })    
+            } else {
+                error = true;
+            }
         }
+    }
+    
+    if(error){
+        res.json({success: false, message: "an error occured"});
+    } else {
+        res.json({success: true});
     }
 	/*for(var i=0; i<data.transactions.length; i++){
 		var srcUser = transactions[i].srcUser;

@@ -141,28 +141,27 @@ public class Utils {
 
     public static JSONArray getPendingData(){
         SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
-        if(preferences != null){
-            Gson gson = new Gson();
-            JSONArray array;
-            array = gson.fromJson(preferences.getString("pending_data", null), JSONArray.class);
-            if(array == null){
-                array = new JSONArray();
+        if(preferences != null) {
+            String array = preferences.getString("pending_data", null);
+            if (array == null) {
+                return new JSONArray();
+            } else {
+                try {
+                    return new JSONArray(array);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
-            return array;
-        } else {
-            return new JSONArray();
         }
+        return new JSONArray();
     }
+
 
     public static void savePendingData(JSONArray pendingData){
         //JSONArray currentData = getPendingData();
-
         SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-        Gson gson = new Gson();
-        String pendingString = gson.toJson(pendingData);
-        Log.d(TAG, pendingString);
-        editor.putString("pending_data", pendingString);
+        editor.putString("pending_data", pendingData.toString());
         editor.apply();
     }
 

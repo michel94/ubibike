@@ -187,11 +187,32 @@ public class LocalStorage implements NetStatusReceiver.NetworkListener{
             Log.d(TAG, "Connected, sending pending data to server...");
             sendPendingDataToServer();
         }
+        String currentBike = Utils.getCurrentBike();
+        if(currentBike!=null){
+            if(!currentBike.equals("no_bike")){
+                returnBikeToStation();
+            }
+        }
     }
 
     public void destroy(){
         context.unregisterReceiver(mNetStatusReceiver);
     }
 
+    public void returnBikeToStation(){
+        API api = new API();
+        api.returnBike(Utils.getUserID(), new ResponseCallback() {
+            @Override
+            public void onDataReceived(JSONObject response) {
+                Log.d(TAG, "Return bike: " + response.toString());
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Log.d(TAG, "Return bike error: " + e.toString());
+
+            }
+        });
+    }
 
 }

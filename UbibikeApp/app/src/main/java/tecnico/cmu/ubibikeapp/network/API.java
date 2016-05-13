@@ -105,7 +105,7 @@ public class API {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        new RestTask(POST, serverUrl + "requestBike", callback, data).execute();
+        new RestTask(POST, serverUrl + "returnBike", callback, data).execute();
     }
 
     public void sendTransactions(JSONArray trip, ResponseCallback callback){

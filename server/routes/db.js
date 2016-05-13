@@ -86,9 +86,9 @@ function populateDB(){
 	}
 }
 
-//Station.remove({}, function() {});
-//User.remove({}, function() {});
-//Bike.remove({}, function() {});
+Station.remove({}, function() {});
+User.remove({}, function() {});
+Bike.remove({}, function() {});
 
 Station.count(function (err, count) {
     if (count == 0) {
