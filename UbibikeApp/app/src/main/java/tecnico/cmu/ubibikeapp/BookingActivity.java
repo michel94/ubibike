@@ -46,7 +46,7 @@ public class BookingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_booking);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Bundle extra = getIntent().getExtras();
         stationName = extra.getString("stationName");
         stationId = extra.getString("stationId");

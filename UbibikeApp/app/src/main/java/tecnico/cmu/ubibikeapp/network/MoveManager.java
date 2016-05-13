@@ -17,8 +17,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-
-import tecnico.cmu.ubibikeapp.LocationTrackerActivity;
 import tecnico.cmu.ubibikeapp.MainActivity;
 import tecnico.cmu.ubibikeapp.R;
 import tecnico.cmu.ubibikeapp.UbibikeApp;

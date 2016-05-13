@@ -39,7 +39,15 @@ router.post('/userStats', function(req, res, next){
         if(doc == null || doc.length == 0){
             res.json({success: false, message: "Username doesn't exist"})
         } else {
-            res.json({success:true, user: doc[0]});
+            var user = doc[0];
+            var distance = 0;
+            console.log(JSON.stringify(user.trajectories));
+            for(var i=0; i!= user.trajectories.length   ; i++){
+                console.log("\n" + user.trajectories[i])
+                distance += user.trajectories[i].distance;
+            }
+            user.distance = distance;
+            res.json({success:true, user: user});
         }
     })
 })

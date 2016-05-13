@@ -52,7 +52,7 @@ public class TrajectoryActivity extends AppCompatActivity
         mDistance = (TextView) findViewById(R.id.trajectory_distance);
         mPoints = (TextView) findViewById(R.id.trajectory_points);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
