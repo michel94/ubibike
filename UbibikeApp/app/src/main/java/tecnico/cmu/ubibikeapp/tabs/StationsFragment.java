@@ -104,6 +104,7 @@ public class StationsFragment extends Fragment {
     }
     */
 
+    //DEBUG METHOD
     public List<LatLng> genTestLocations() {
         List<LatLng> latLng = new ArrayList<>();
 

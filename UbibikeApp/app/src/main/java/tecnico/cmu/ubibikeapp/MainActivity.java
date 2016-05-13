@@ -41,17 +41,20 @@ public class MainActivity extends AppCompatActivity {
     private WDService wdservice;
     private final String TAG = "MainActivity";
     public static FragmentManager fragmentManager;
+    private int mCurrentTab;
     private FriendsFragment mFriendsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
         mFriendsFragment = new FriendsFragment();
 
 
         fragmentManager = getSupportFragmentManager();
         Log.d(TAG, "FragmentManager: " + (fragmentManager != null));
+        mCurrentTab = 0;
 
         String username = Utils.getUsername();
         String password = Utils.getPassword();
@@ -121,6 +124,8 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
 
+        mViewPager.setCurrentItem(mCurrentTab);
+
         /*Intent intent = new Intent(getApplicationContext(), WDService.class);
         Log.d("Main", "Starting service");
         ComponentName req = startService(intent);
@@ -129,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onStart(){
         super.onStart();
+        Log.d(TAG, "OnSTART");
         Intent intent = new Intent(getApplicationContext(), WDService.class);
         bindService(intent, serviceConn, Context.BIND_AUTO_CREATE);
 
@@ -150,6 +156,7 @@ public class MainActivity extends AppCompatActivity {
             // We've bound to LocalService, cast the IBinder and get LocalService instance
             WDService.LocalBinder binder = (WDService.LocalBinder) serviceBinder;
             wdservice = binder.getService();
+
             loadTabs();
 
 
@@ -170,6 +177,9 @@ public class MainActivity extends AppCompatActivity {
             dataHandler.unbind();
         }
     };
+
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -277,7 +287,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onPause(){
         super.onPause();
-
+        if(mViewPager != null)
+            mCurrentTab = mViewPager.getCurrentItem();
         dataHandler.unbind();
     }
 

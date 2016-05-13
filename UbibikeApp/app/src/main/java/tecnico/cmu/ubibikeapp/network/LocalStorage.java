@@ -70,9 +70,13 @@ public class LocalStorage implements NetStatusReceiver.NetworkListener{
         }
     }
 
-    public void unregisterReceiver(){
-        UbibikeApp.getAppContext().unregisterReceiver(mNetStatusReceiver);
-    }
+    /*public void unregisterReceiver(){
+        try{
+            UbibikeApp.getAppContext().unregisterReceiver(mNetStatusReceiver);
+        } catch (IllegalArgumentException e){
+            e.printStackTrace();
+        }
+    }*/
 
     public List<Message> getMessages(String userId){
         return messages.get(userId);

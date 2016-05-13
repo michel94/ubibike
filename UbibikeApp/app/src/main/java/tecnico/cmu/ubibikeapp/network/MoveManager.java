@@ -41,8 +41,8 @@ public class MoveManager {
 
     public MoveManager(LocalStorage localStorage){
         this.localStorage = localStorage;
-        mTrajectory = new Trajectory(Utils.getUsername(), Utils.getUserID(),
-                new ArrayList<Coordinate>(), Utils.convertDateToString(new Date(System.currentTimeMillis())));
+        mTrajectory = new Trajectory(new ArrayList<Coordinate>(),
+                Utils.convertDateToString(new Date(System.currentTimeMillis())));
     }
 
     public void setCurrentBike(String bikeId){
@@ -95,6 +95,7 @@ public class MoveManager {
     }
 
     private void finishTrip() {
+        Utils.setCurrentBike("no_bike");
         double distance = mTrajectory.getDistance();
         int points = (int)(distance / 100);
         mTrajectory.setPoints(points);
