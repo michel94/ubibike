@@ -174,8 +174,10 @@ public class LocalStorage implements NetStatusReceiver.NetworkListener{
     public void extendData(JSONArray trips){
         String first = pendingData.toString();
         first = first.substring(0, first.length()-1);
+        Log.d(TAG, first);
         String second = trips.toString();
-        second = second.substring(0, second.length()-1);
+        second = second.substring(1, second.length());
+        Log.d(TAG, second);
         try {
             pendingData = new JSONArray(first + ", " + second);
             Log.d("extendTrips", pendingData.toString());
