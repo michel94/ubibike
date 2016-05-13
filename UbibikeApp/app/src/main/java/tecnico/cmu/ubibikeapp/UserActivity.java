@@ -37,6 +37,7 @@ public class UserActivity extends Activity {
     private WDService wdservice;
     private String userID, username;
     private boolean onlineStatus;
+    int availabe=0,ValueClinteside=0;
 
     private DataHandler dataHandler;
 
@@ -50,9 +51,6 @@ public class UserActivity extends Activity {
         }*/
 
     }
-
-
-
 
     public void onStart(){
         super.onStart();
@@ -81,8 +79,12 @@ public class UserActivity extends Activity {
 
         buttonSend = (ImageButton) findViewById(R.id.send_button);
         listView = (ListView) findViewById(R.id.messages_view);
-        int pointscomefromDB=0;
 
+        // Fredy
+         final TextView qtdpts = (TextView)findViewById(R.id.qtdpts);
+         String s=String.valueOf(Utils.getUserStats().getScore());
+         qtdpts.setText(s);
+        //
 
         chatArrayAdapter = new MessageAdapter(getApplicationContext(), R.layout.activity_right);
         listView.setAdapter(chatArrayAdapter);
@@ -143,48 +145,48 @@ public class UserActivity extends Activity {
         sendclose.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final EditText editText = (EditText) findViewById(R.id.editponts);
+                final EditText getpontos = (EditText) findViewById(R.id.editponts);
                 final ListView listView =(ListView)findViewById(R.id.messages_view);
                 final Button button = (Button)findViewById(R.id.ok);
-                final TextView textView = (TextView)findViewById(R.id.qtdpts);
-                // TODO: Aqui
 
-                // Pontos come from DataBD
-                int tosend=Integer.parseInt(editText.getText().toString());
-                int ValueClinteside =Integer.parseInt(textView.getText().toString());
+              if(getpontos.getText().length()!=0) {
 
-                if(tosend<ValueClinteside){
-                    //Enviar dados
+                   availabe=Integer.parseInt(qtdpts.getText().toString());
+                   ValueClinteside=Integer.parseInt(getpontos.getText().toString());
 
-//                    wdservice.sendMessage(userID, editText.getText().toString(), new RequestCallback() {
-//                    @Override
-//                    public void onFinish(boolean success) {
-//                        chatArrayAdapter.add(new Message(true, editText.getText().toString()));
-//                        editText.setText("");
-//                   }
-//                });
-                String remaining = String.valueOf(ValueClinteside-tosend);
-                textView.setText(remaining);
-                editText.setText(" ");
+                            if((ValueClinteside<availabe)) {
 
-                editText.setVisibility(EditText.INVISIBLE);
-                listView.setVisibility(ListView.VISIBLE);
-                button.setVisibility(Button.INVISIBLE);
-                chatText.setVisibility(EditText.VISIBLE);
-                buttonSend.setVisibility(ImageButton.VISIBLE);
+                                //TODO Enviar pontos
 
-                }else {
 
-                Toast toast = Toast.makeText(getApplicationContext(), "Pontos insuficientes !", Toast.LENGTH_SHORT);
-                toast.show();
+                                chatArrayAdapter.add(new Message(true, getpontos.getText().toString()));
 
+                            //TODO: Enviar pontos
+                                String remaining = String.valueOf(availabe-ValueClinteside);
+                                qtdpts.setText(remaining);
+                                getpontos.setText(" ");
+
+                                getpontos.setVisibility(EditText.INVISIBLE);
+                                listView.setVisibility(ListView.VISIBLE);
+                                button.setVisibility(Button.INVISIBLE);
+                                chatText.setVisibility(EditText.VISIBLE);
+                                buttonSend.setVisibility(ImageButton.VISIBLE);
+
+                            }else {
+
+                                Toast toast = Toast.makeText(getApplicationContext(), "Pontos insuficientes !", Toast.LENGTH_SHORT);
+                                toast.show();
+
+                            }
+                } else {
+                    Toast toasts = Toast.makeText(getApplicationContext(), "Inserir pontos a enviar !", Toast.LENGTH_SHORT);
+                    toasts.show();
                 }
+
            }
         });
         // fredy
     }
-
-
 
     private boolean sendChatMessage() {
 

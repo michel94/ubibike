@@ -115,7 +115,6 @@
             android:ems="10"
             android:id="@+id/editponts"
             android:layout_gravity="right"
-            android:hint="New Points........."
             android:visibility="invisible"/>
 
          <Button
