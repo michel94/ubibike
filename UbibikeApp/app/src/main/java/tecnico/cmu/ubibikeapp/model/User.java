@@ -6,7 +6,7 @@ public class User {
 
     private String username;
     private String password;
-    private int distance;
+    private double distance;
     private int score;
     private int id;
     private ArrayList<Trajectory> trajectories;
@@ -44,7 +44,7 @@ public class User {
         this.password = password;
     }
 
-    public int getDistance() {
+    public double getDistance() {
         return distance;
     }
 
