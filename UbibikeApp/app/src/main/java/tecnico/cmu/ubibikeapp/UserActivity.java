@@ -19,8 +19,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 import tecnico.cmu.ubibikeapp.model.Message;
 import tecnico.cmu.ubibikeapp.network.DataHandler;
+import tecnico.cmu.ubibikeapp.network.LocalStorage;
 import tecnico.cmu.ubibikeapp.network.Peer;
 import tecnico.cmu.ubibikeapp.network.RequestCallback;
 import tecnico.cmu.ubibikeapp.network.WDService;
@@ -79,12 +82,10 @@ public class UserActivity extends Activity {
 
         buttonSend = (ImageButton) findViewById(R.id.send_button);
         listView = (ListView) findViewById(R.id.messages_view);
-
-        // Fredy
+        
          final TextView qtdpts = (TextView)findViewById(R.id.qtdpts);
          String s=String.valueOf(Utils.getUserStats().getScore());
          qtdpts.setText(s);
-        //
 
         chatArrayAdapter = new MessageAdapter(getApplicationContext(), R.layout.activity_right);
         listView.setAdapter(chatArrayAdapter);
@@ -116,8 +117,6 @@ public class UserActivity extends Activity {
                 listView.setSelection(chatArrayAdapter.getCount() - 1);
             }
         });
-
-
 
 
         //fredy
@@ -182,17 +181,20 @@ public class UserActivity extends Activity {
 
            }
         });
-        // fredy
     }
+
 
     private boolean sendChatMessage() {
 
         wdservice.sendMessage(userID, chatText.getText().toString(), new RequestCallback() {
             @Override
             public void onFinish(boolean success) {
-                Message m = new Message(true, chatText.getText().toString(), Utils.getUserID(), userID);
-                chatArrayAdapter.add(m);
-                chatText.setText("");
+                if(success){
+                    Message m = new Message(true, chatText.getText().toString(), Utils.getUserID(), userID);
+                    chatArrayAdapter.add(m);
+                    chatText.setText("");
+                    wdservice.getLocalStorage().putMessage(m);
+                }
             }
         });
         return true;
@@ -226,8 +228,6 @@ public class UserActivity extends Activity {
                 public boolean onMessage(String text) {
                     Message m = new Message(false, text, userID, Utils.getUserID());
                     chatArrayAdapter.add(m);
-                    wdservice.getLocalStorage().putMessage(m);
-
                     return true;
                 }
                 @Override
@@ -239,6 +239,17 @@ public class UserActivity extends Activity {
                 }
             };
             dataHandler.bind(userID);
+
+            LocalStorage storage = wdservice.getLocalStorage();
+            ArrayList<Message> messages = storage.getMessages(userID);
+            if(messages != null) {
+                Log.d(TAG, "Got messages from " + userID + ", " + messages.size() + " messages");
+                for(Message m : messages) {
+                    m.left = m.getFrom().equals(userID);
+                    chatArrayAdapter.add(m);
+                }
+            }
+
 
         }
 

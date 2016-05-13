@@ -38,6 +38,7 @@ import pt.inesc.termite.wifidirect.SimWifiP2pManager.PeerListListener;
 import pt.inesc.termite.wifidirect.service.SimWifiP2pService;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketManager;
 import tecnico.cmu.ubibikeapp.Utils;
+import tecnico.cmu.ubibikeapp.model.Message;
 
 public class WDService extends Service implements
         PeerListListener, GroupInfoListener, LocationListener {
@@ -241,8 +242,7 @@ public class WDService extends Service implements
             public void run() {
                 handlePeerChanges(oldPeerList);
             }
-        }, 2000);
-
+        }, 1000);
 
 
         Log.d(TAG, "Current group peers: " + peersStr.toString());
@@ -257,10 +257,9 @@ public class WDService extends Service implements
                 if(dataUserID == null || dataUserID.equals(peer.getUserID()))
                     dataHandler.onStatusChanged(false, peer);
         }
-        for(Peer peer : peerList){
-            if(!oldPeerList.contains(peer))
-                if(dataUserID == null || dataUserID.equals(peer.getUserID()))
-                    dataHandler.onStatusChanged(true, peer);
+        for(Peer peer : peerList){ // if is now online, send always
+            if(dataUserID == null || dataUserID.equals(peer.getUserID()))
+                dataHandler.onStatusChanged(true, peer);
         }
         Log.d(TAG, "OldPeerlist size: " + peerList.size());
     }
@@ -365,16 +364,18 @@ public class WDService extends Service implements
                 }
             });
         }else{
-            Log.d(TAG, "Send the f*cking toast");
             sendToast("Received message from " + username + ": " + message);
         }
+        Message m = new Message(false, message, userID, Utils.getUserID());
+        localStorage.putMessage(m);
+
     }
 
     @Override
     public void onDestroy(){
-        localStorage.saveMessages();
         wifiOff();
         unregisterReceiver(mReceiver);
+        localStorage.saveMessages();
         localStorage.destroy();
         server.interrupt();
         Log.d(TAG, "Service destroyed");

@@ -32,7 +32,7 @@ public class LocalStorage implements NetStatusReceiver.NetworkListener{
     Context context;
     public JSONArray pendingData;
     private boolean connected;
-    private Hashtable<String, List<Message>> messages;
+    private Hashtable<String, ArrayList<Message>> messages;
 
     private NetStatusReceiver mNetStatusReceiver;
 
@@ -52,13 +52,14 @@ public class LocalStorage implements NetStatusReceiver.NetworkListener{
     public void load(){
         messages = new Hashtable<>();
         JSONObject data = Utils.getMessageLog();
+        Log.d(TAG, "Message Log: " + data.toString());
         Iterator<?> keys = data.keys();
 
         while( keys.hasNext() ) {
             String key = (String)keys.next();
             try {
-                JSONArray chat = new JSONArray();
-                chat = data.getJSONArray(key);
+                JSONArray chat = data.getJSONArray(key);
+                messages.put(key, new ArrayList<Message>());
                 for(int i=0; i<chat.length(); i++){
                     messages.get(key).add(new Message(chat.getJSONObject(i)));
                 }
@@ -78,12 +79,16 @@ public class LocalStorage implements NetStatusReceiver.NetworkListener{
         }
     }*/
 
-    public List<Message> getMessages(String userId){
+    public ArrayList<Message> getMessages(String userId){
         return messages.get(userId);
     }
 
     public void putMessage(Message message){
-        messages.get(message.getFrom()).add(message);
+        Log.d(TAG, message.getFrom());
+        String user = message.getFrom().equals(Utils.getUserID()) ? message.getTo() : message.getFrom();
+        if(!messages.containsKey(user))
+            messages.put(user, new ArrayList<Message>());
+        messages.get(user).add(message);
     }
 
     public void saveMessages(){
@@ -95,11 +100,12 @@ public class LocalStorage implements NetStatusReceiver.NetworkListener{
                 chat.put(message.toJson());
             }
             try {
-                data.put("userId", chat);
+                data.put(userId, chat);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
+        Log.d(TAG, "Saving data " + data.toString());
         Utils.setMessageLog(data);
     }
 
