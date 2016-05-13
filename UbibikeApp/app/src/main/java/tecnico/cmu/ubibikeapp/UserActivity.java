@@ -8,15 +8,16 @@ import android.content.ServiceConnection;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import tecnico.cmu.ubibikeapp.model.Message;
 import tecnico.cmu.ubibikeapp.network.DataHandler;
@@ -50,6 +51,9 @@ public class UserActivity extends Activity {
 
     }
 
+
+
+
     public void onStart(){
         super.onStart();
         Intent intent = new Intent(getApplicationContext(), WDService.class);
@@ -77,6 +81,7 @@ public class UserActivity extends Activity {
 
         buttonSend = (ImageButton) findViewById(R.id.send_button);
         listView = (ListView) findViewById(R.id.messages_view);
+        int pointscomefromDB=0;
 
 
         chatArrayAdapter = new MessageAdapter(getApplicationContext(), R.layout.activity_right);
@@ -109,7 +114,77 @@ public class UserActivity extends Activity {
                 listView.setSelection(chatArrayAdapter.getCount() - 1);
             }
         });
+
+
+
+
+        //fredy
+        final ImageButton trofeu = (ImageButton) findViewById(R.id.tropID);
+
+         trofeu.setOnClickListener(new ImageButton.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final EditText editText = (EditText) findViewById(R.id.editponts);
+                final ListView listView =(ListView)findViewById(R.id.messages_view);
+                final Button button = (Button)findViewById(R.id.ok);
+
+                // TODO: Aqui
+
+                editText.setVisibility(EditText.VISIBLE);
+                listView.setVisibility(ListView.INVISIBLE);
+                button.setVisibility(Button.VISIBLE);
+                chatText.setVisibility(EditText.INVISIBLE);
+                buttonSend.setVisibility(ImageButton.INVISIBLE);
+            }
+        });
+
+
+        final Button sendclose = (Button) findViewById(R.id.ok);
+        sendclose.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final EditText editText = (EditText) findViewById(R.id.editponts);
+                final ListView listView =(ListView)findViewById(R.id.messages_view);
+                final Button button = (Button)findViewById(R.id.ok);
+                final TextView textView = (TextView)findViewById(R.id.qtdpts);
+                // TODO: Aqui
+
+                // Pontos come from DataBD
+                int tosend=Integer.parseInt(editText.getText().toString());
+                int ValueClinteside =Integer.parseInt(textView.getText().toString());
+
+                if(tosend<ValueClinteside){
+                    //Enviar dados
+
+//                    wdservice.sendMessage(userID, editText.getText().toString(), new RequestCallback() {
+//                    @Override
+//                    public void onFinish(boolean success) {
+//                        chatArrayAdapter.add(new Message(true, editText.getText().toString()));
+//                        editText.setText("");
+//                   }
+//                });
+                String remaining = String.valueOf(ValueClinteside-tosend);
+                textView.setText(remaining);
+                editText.setText(" ");
+
+                editText.setVisibility(EditText.INVISIBLE);
+                listView.setVisibility(ListView.VISIBLE);
+                button.setVisibility(Button.INVISIBLE);
+                chatText.setVisibility(EditText.VISIBLE);
+                buttonSend.setVisibility(ImageButton.VISIBLE);
+
+                }else {
+
+                Toast toast = Toast.makeText(getApplicationContext(), "Pontos insuficientes !", Toast.LENGTH_SHORT);
+                toast.show();
+
+                }
+           }
+        });
+        // fredy
     }
+
+
 
     private boolean sendChatMessage() {
 
@@ -170,6 +245,8 @@ public class UserActivity extends Activity {
 
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
+            Log.d(TAG, "Unbinding dataHandler");
+            dataHandler.unbind();
             wdservice = null;
         }
     };

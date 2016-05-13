@@ -185,4 +185,9 @@ public class LocalStorage implements NetStatusReceiver.NetworkListener{
         }
     }
 
+    public void destroy(){
+        context.unregisterReceiver(mNetStatusReceiver);
+    }
+
+
 }

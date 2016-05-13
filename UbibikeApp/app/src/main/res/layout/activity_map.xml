@@ -30,15 +30,13 @@
             <TextView
 
                 android:layout_gravity="center"
-                android:id="@+id/idpont"
-                android:text="00"
+                android:id="@+id/trajectory_points"
                 android:textSize="21dp"
                 android:gravity="top|right"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 />
 
             <TextView
-
                 android:layout_gravity="center"
                 android:text="Points"
                 android:textSize="21dp"
@@ -58,15 +56,14 @@
 
             <TextView
                 android:layout_gravity="center"
-                android:id="@+id/idkm"
-                android:text="0"
+                android:id="@+id/trajectory_distance"
                 android:textSize="20dp"
                 android:gravity="top|right"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 />
             <TextView
                 android:layout_gravity="center"
-                android:text="Kilometros"
+                android:text="Kilometers"
                 android:textSize="20dp"
                 android:gravity="top|left"
                 android:textAppearance="?android:attr/textAppearanceLarge"

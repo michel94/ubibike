@@ -83,7 +83,7 @@ public class BikeActivityFragment extends Fragment {
                     for(Trajectory trajectory: responseTrajectory.getTrajectories()){
                         String duration;
                         try {
-                            duration = trajectory.getDuration();
+                            duration = trajectory.getBeginDateSimplified();
                         } catch (ParseException e) {
                             e.printStackTrace();
                             duration = "00:00:00";

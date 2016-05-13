@@ -6,6 +6,7 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -134,5 +135,15 @@ public class Trajectory {
     @Override
     public String toString() {
         return "Trajectory: " + getId() + ", " + getPoints() + ", coordinates: " + getCoordinates();
+    }
+
+    public String getBeginDateSimplified() throws ParseException {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM");
+        String dateString = "";
+        Date date = getBeginDate();
+        dateString = formatter.format(date);
+        return dateString;
+
+
     }
 }
