@@ -150,7 +150,7 @@ router.post('/returnBike', function(req, res, next){
 				if(bike){
 					user.currentBike = null;
 					bike.reservedBy = null;
-					bike.station = station;
+					bike.station = data.station;
 					user.save();
 					bike.save();
 				}else{

@@ -184,5 +184,17 @@ public class Utils {
 
         }
     }
+
+    public static String getCurrentStation(){
+        SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
+        return (preferences!=null) ? preferences.getString("current_station", null) : "";
+    }
+
+    public static void setCurrentStation(String currentStation) {
+        SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("current_station", currentStation);
+        editor.apply();
+    }
 }
 

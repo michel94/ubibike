@@ -102,6 +102,7 @@ public class API {
         JSONObject data = new JSONObject();
         try {
             data.put("user", userId);
+            data.put("station", Utils.getCurrentStation());
         } catch (JSONException e) {
             e.printStackTrace();
         }
