@@ -123,6 +123,7 @@ public class FriendsFragment extends ListFragment {
         dataHandler = new DataHandler(act.getWDService()) {
             @Override
             public boolean onStatusChanged(boolean online, Peer peer) {
+                Log.d(TAG, "New peer " + peer.getUsername());
                 if(online){
                     contacts.add(peer.getUsername());
                     usernameToUserID.put(peer.getUsername(), peer.getUserID());
@@ -133,7 +134,7 @@ public class FriendsFragment extends ListFragment {
                 return true;
             }
         };
-            dataHandler.bind();
+        dataHandler.bind();
 
     }
 

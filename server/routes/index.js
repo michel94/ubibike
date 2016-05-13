@@ -295,6 +295,6 @@ router.post('/trajectories', function(req, res, next){
         
     });
 
-})
+});
 
 module.exports = router;

@@ -44,7 +44,6 @@ var processedTransactions = new Schema({
 User = mongoose.model('User', userSchema);
 Bike = mongoose.model('Bike', bikeSchema);
 Station = mongoose.model('Station', stationSchema);
-Trajectory = mongoose.model('Trajectory', trajectorySchema);
 
 function populateDB(){
 

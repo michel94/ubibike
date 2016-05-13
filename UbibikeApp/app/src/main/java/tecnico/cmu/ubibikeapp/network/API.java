@@ -6,7 +6,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 import tecnico.cmu.ubibikeapp.Utils;
+import tecnico.cmu.ubibikeapp.model.Message;
 import tecnico.cmu.ubibikeapp.network.MyData;
 
 /**
@@ -114,5 +117,7 @@ public class API {
         }
         new RestTask(POST, serverUrl + "transactions", callback, data).execute();
     }
+
+
 
 }

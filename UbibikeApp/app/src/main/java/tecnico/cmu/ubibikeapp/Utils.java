@@ -175,5 +175,23 @@ public class Utils {
         editor.putString("pending_data", "");
         editor.apply();
     }
+
+    public static void setMessageLog(JSONObject messageLog){
+        SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("messageLog", messageLog.toString());
+        editor.apply();
+    }
+
+    public static JSONObject getMessageLog(){
+        SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
+        try {
+        return (preferences != null) ? new JSONObject(preferences.getString("messageLog", "")) : new JSONObject();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return new JSONObject();
+
+        }
+    }
 }
 

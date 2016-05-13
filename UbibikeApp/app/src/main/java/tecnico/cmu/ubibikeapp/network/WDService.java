@@ -216,7 +216,7 @@ public class WDService extends Service implements
     public void onGroupInfoAvailable(SimWifiP2pDeviceList devices,
                                      SimWifiP2pInfo groupInfo) {
 
-        ArrayList<Peer> oldPeerList = new ArrayList<Peer>(peerList.size());
+        final ArrayList<Peer> oldPeerList = new ArrayList<Peer>(peerList.size());
         Log.d(TAG, "OldPeerlist size: " + peerList.size());
         for(Peer peer : peerList)
             oldPeerList.add(peer);
@@ -235,7 +235,16 @@ public class WDService extends Service implements
             peerList.add(peer);
         }
 
-        handlePeerChanges(oldPeerList);
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                handlePeerChanges(oldPeerList);
+            }
+        }, 1000);
+
+
 
         Log.d(TAG, "Current group peers: " + peersStr.toString());
     }
@@ -344,6 +353,7 @@ public class WDService extends Service implements
 
     @Override
     public void onDestroy(){
+        localStorage.saveMessages();
         wifiOff();
         unregisterReceiver(mReceiver);
         server.interrupt();

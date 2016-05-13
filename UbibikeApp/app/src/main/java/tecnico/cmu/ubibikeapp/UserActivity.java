@@ -116,7 +116,8 @@ public class UserActivity extends Activity {
         wdservice.sendMessage(userID, chatText.getText().toString(), new RequestCallback() {
             @Override
             public void onFinish(boolean success) {
-                chatArrayAdapter.add(new Message(true, chatText.getText().toString()));
+                Message m = new Message(true, chatText.getText().toString(), Utils.getUserID(), userID);
+                chatArrayAdapter.add(m);
                 chatText.setText("");
             }
         });
@@ -148,7 +149,9 @@ public class UserActivity extends Activity {
             dataHandler = new DataHandler(wdservice){
                 @Override
                 public boolean onMessage(String text) {
-                    chatArrayAdapter.add(new Message(false, text));
+                    Message m = new Message(false, text, userID, Utils.getUserID());
+                    chatArrayAdapter.add(m);
+                    wdservice.getLocalStorage().putMessage(m);
 
                     return true;
                 }

@@ -13,8 +13,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceConfigurationError;
+import java.util.Set;
 
 import tecnico.cmu.ubibikeapp.UbibikeApp;
 import tecnico.cmu.ubibikeapp.Utils;
@@ -43,6 +45,29 @@ public class LocalStorage implements NetStatusReceiver.NetworkListener{
         IntentFilter netFilter = new IntentFilter();
         netFilter.addAction(android.net.ConnectivityManager.CONNECTIVITY_ACTION);
         context.registerReceiver(mNetStatusReceiver, netFilter);
+
+        load();
+    }
+
+    public void load(){
+        messages = new Hashtable<>();
+        JSONObject data = Utils.getMessageLog();
+        Iterator<?> keys = data.keys();
+
+        while( keys.hasNext() ) {
+            String key = (String)keys.next();
+            try {
+                JSONArray chat = new JSONArray();
+                chat = data.getJSONArray(key);
+                for(int i=0; i<chat.length(); i++){
+                    messages.get(key).add(new Message(chat.getJSONObject(i)));
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 
     public void unregisterReceiver(){
@@ -55,6 +80,23 @@ public class LocalStorage implements NetStatusReceiver.NetworkListener{
 
     public void putMessage(Message message){
         messages.get(message.getFrom()).add(message);
+    }
+
+    public void saveMessages(){
+        Set<String> keys = messages.keySet();
+        JSONObject data = new JSONObject();
+        for (String userId: keys){
+            JSONArray chat = new JSONArray();
+            for(Message message: messages.get(userId)){
+                chat.put(message.toJson());
+            }
+            try {
+                data.put("userId", chat);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        Utils.setMessageLog(data);
     }
 
     public void putTransfer(Transfer transfer){ // returns a jsonobject with the transfer, stores it in the pending data
