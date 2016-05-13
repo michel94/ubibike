@@ -19,8 +19,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 import tecnico.cmu.ubibikeapp.model.Message;
 import tecnico.cmu.ubibikeapp.network.DataHandler;
+import tecnico.cmu.ubibikeapp.network.LocalStorage;
 import tecnico.cmu.ubibikeapp.network.Peer;
 import tecnico.cmu.ubibikeapp.network.RequestCallback;
 import tecnico.cmu.ubibikeapp.network.WDService;
@@ -37,7 +40,7 @@ public class UserActivity extends Activity {
     private WDService wdservice;
     private String userID, username;
     private boolean onlineStatus;
-    int availabe=0,ValueClinteside=0;
+    int available=0, ValueClinteside=0;
 
     private DataHandler dataHandler;
 
@@ -80,11 +83,9 @@ public class UserActivity extends Activity {
         buttonSend = (ImageButton) findViewById(R.id.send_button);
         listView = (ListView) findViewById(R.id.messages_view);
 
-        // Fredy
          final TextView qtdpts = (TextView)findViewById(R.id.qtdpts);
          String s=String.valueOf(Utils.getUserStats().getScore());
          qtdpts.setText(s);
-        //
 
         chatArrayAdapter = new MessageAdapter(getApplicationContext(), R.layout.activity_right);
         listView.setAdapter(chatArrayAdapter);
@@ -118,8 +119,6 @@ public class UserActivity extends Activity {
         });
 
 
-
-
         //fredy
         final ImageButton trofeu = (ImageButton) findViewById(R.id.tropID);
 
@@ -149,32 +148,34 @@ public class UserActivity extends Activity {
                 final ListView listView =(ListView)findViewById(R.id.messages_view);
                 final Button button = (Button)findViewById(R.id.ok);
 
-              if(getpontos.getText().length()!=0) {
+                if(getpontos.getText().length()!=0) {
 
-                   availabe=Integer.parseInt(qtdpts.getText().toString());
-                   ValueClinteside=Integer.parseInt(getpontos.getText().toString());
+                    available = Integer.parseInt(qtdpts.getText().toString());
+                    int value =Integer.parseInt(getpontos.getText().toString());
 
-                            if((ValueClinteside<availabe)) {
-
-                                //TODO Enviar pontos
-
-                            //TODO: Enviar pontos
-                                String remaining = String.valueOf(availabe-ValueClinteside);
-                                qtdpts.setText(remaining);
-                                getpontos.setText(" ");
-
-                                getpontos.setVisibility(EditText.INVISIBLE);
-                                listView.setVisibility(ListView.VISIBLE);
-                                button.setVisibility(Button.INVISIBLE);
-                                chatText.setVisibility(EditText.VISIBLE);
-                                buttonSend.setVisibility(ImageButton.VISIBLE);
-
-                            }else {
-
-                                Toast toast = Toast.makeText(getApplicationContext(), "Pontos insuficientes !", Toast.LENGTH_SHORT);
-                                toast.show();
-
+                    if((value <= available)) {
+                        wdservice.sendPoints(userID, value, new RequestCallback() {
+                            @Override
+                            public void onFinish(boolean success) {
+                                if (success) {
+                                    Log.d(TAG, "Points sent");
+                                    //EditText et = (EditText) findViewById(R.id.editponts);
+                                    //et.setText(Utils.getUserStats().getScore());
+                                    Log.d(TAG, "Points: " + Utils.getUserStats().getScore());
+                                }
                             }
+                        });
+
+
+/*
+                        getpontos.setVisibility(EditText.INVISIBLE);
+                        listView.setVisibility(ListView.VISIBLE);
+                        button.setVisibility(Button.INVISIBLE);
+                        chatText.setVisibility(EditText.VISIBLE);
+                        buttonSend.setVisibility(ImageButton.VISIBLE);*/
+
+                    }
+
                 } else {
                     Toast toasts = Toast.makeText(getApplicationContext(), "Inserir pontos a enviar !", Toast.LENGTH_SHORT);
                     toasts.show();
@@ -182,17 +183,20 @@ public class UserActivity extends Activity {
 
            }
         });
-        // fredy
     }
+
 
     private boolean sendChatMessage() {
 
         wdservice.sendMessage(userID, chatText.getText().toString(), new RequestCallback() {
             @Override
             public void onFinish(boolean success) {
-                Message m = new Message(true, chatText.getText().toString(), Utils.getUserID(), userID);
-                chatArrayAdapter.add(m);
-                chatText.setText("");
+                if(success){
+                    Message m = new Message(true, chatText.getText().toString(), Utils.getUserID(), userID);
+                    chatArrayAdapter.add(m);
+                    chatText.setText("");
+                    wdservice.getLocalStorage().putMessage(m);
+                }
             }
         });
         return true;
@@ -226,8 +230,6 @@ public class UserActivity extends Activity {
                 public boolean onMessage(String text) {
                     Message m = new Message(false, text, userID, Utils.getUserID());
                     chatArrayAdapter.add(m);
-                    wdservice.getLocalStorage().putMessage(m);
-
                     return true;
                 }
                 @Override
@@ -239,6 +241,17 @@ public class UserActivity extends Activity {
                 }
             };
             dataHandler.bind(userID);
+
+            LocalStorage storage = wdservice.getLocalStorage();
+            ArrayList<Message> messages = storage.getMessages(userID);
+            if(messages != null) {
+                Log.d(TAG, "Got messages from " + userID + ", " + messages.size() + " messages");
+                for(Message m : messages) {
+                    m.left = m.getFrom().equals(userID);
+                    chatArrayAdapter.add(m);
+                }
+            }
+
 
         }
 
