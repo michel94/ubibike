@@ -244,6 +244,8 @@ public class UserActivity extends Activity {
 
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
+            Log.d(TAG, "Unbinding dataHandler");
+            dataHandler.unbind();
             wdservice = null;
         }
     };

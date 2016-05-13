@@ -350,12 +350,12 @@ public class WDService extends Service implements
         }
     }
 
-
     @Override
     public void onDestroy(){
         localStorage.saveMessages();
         wifiOff();
         unregisterReceiver(mReceiver);
+        localStorage.destroy();
         server.interrupt();
         Log.d(TAG, "Service destroyed");
     }
