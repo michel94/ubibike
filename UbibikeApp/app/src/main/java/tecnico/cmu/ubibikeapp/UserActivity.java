@@ -167,6 +167,7 @@ public class UserActivity extends Activity {
                         });
 
 
+
                         /*
                         getpontos.setVisibility(EditText.INVISIBLE);
                         listView.setVisibility(ListView.VISIBLE);
@@ -250,7 +251,7 @@ public class UserActivity extends Activity {
                     m.left = m.getFrom().equals(userID);
                     chatArrayAdapter.add(m);
                 }
-            }
+            } 
 
 
         }
