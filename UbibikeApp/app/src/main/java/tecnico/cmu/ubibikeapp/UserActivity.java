@@ -146,6 +146,7 @@ public class UserActivity extends Activity {
             onlineStatus = wdservice.isUserAvailable(userID);
             updateStatus();
 
+            Log.d(TAG, "Binding data handler");
             dataHandler = new DataHandler(wdservice){
                 @Override
                 public boolean onMessage(String text) {

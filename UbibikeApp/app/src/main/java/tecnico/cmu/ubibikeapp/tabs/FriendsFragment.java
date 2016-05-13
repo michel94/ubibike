@@ -39,7 +39,6 @@ public class FriendsFragment extends ListFragment {
     private Hashtable<String, String> usernameToUserID = new Hashtable<>();
     private DataHandler dataHandler;
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -100,50 +99,26 @@ public class FriendsFragment extends ListFragment {
             }
         });
 
-
-        /*WDService service = ((MainActivity) getActivity()).getWDService();
-
-        ArrayList<Peer> peerList = service.getPeerList();
-        for(Peer peer : peerList) {
-            String username = peer.getUsername();
-            if(!contacts.contains(username)) {
-                contacts.add(username);
-                usernameToUserID.put(username, peer.getUserID());
-            }
-        }
-        adapter.notifyDataSetChanged();*/
-
     }
 
     @Override
     public void onResume(){
         super.onResume();
-        Log.d(TAG, "Focus");
-        MainActivity act = (MainActivity)getActivity();
-        dataHandler = new DataHandler(act.getWDService()) {
-            @Override
-            public boolean onStatusChanged(boolean online, Peer peer) {
-                Log.d(TAG, "New peer " + peer.getUsername());
-                if(online){
-                    contacts.add(peer.getUsername());
-                    usernameToUserID.put(peer.getUsername(), peer.getUserID());
-                }else{
-                    contacts.remove(peer.getUsername());
-                }
-                adapter.notifyDataSetChanged();
-                return true;
-            }
-        };
-        dataHandler.bind();
-
     }
 
     @Override
-    public void onPause(){
-        super.onPause();
-        dataHandler.unbind();
-        dataHandler = null;
-        Log.d(TAG, "Lost focus");
+    public void onStart(){
+        super.onStart();
     }
 
+    public void onStatusChanged(boolean online, Peer peer){
+        Log.d(TAG, "New peer " + peer.getUsername());
+        if(online){
+            contacts.add(peer.getUsername());
+            usernameToUserID.put(peer.getUsername(), peer.getUserID());
+        }else{
+            contacts.remove(peer.getUsername());
+        }
+        adapter.notifyDataSetChanged();
+    }
 }

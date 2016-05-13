@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import tecnico.cmu.ubibikeapp.network.DataHandler;
+import tecnico.cmu.ubibikeapp.network.Peer;
 import tecnico.cmu.ubibikeapp.network.WDService;
 
 import tecnico.cmu.ubibikeapp.tabs.BikeActivityFragment;
@@ -39,10 +41,14 @@ public class MainActivity extends AppCompatActivity {
     private WDService wdservice;
     private final String TAG = "MainActivity";
     public static FragmentManager fragmentManager;
+    private FriendsFragment mFriendsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mFriendsFragment = new FriendsFragment();
+
 
         fragmentManager = getSupportFragmentManager();
         Log.d(TAG, "FragmentManager: " + (fragmentManager != null));
@@ -55,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
+
+
 
         if(!getIntent().getBooleanExtra("loading_from_notifications", false)){
             Intent intent = new Intent(getApplicationContext(), WDService.class);
@@ -73,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
         mCollectionPagerAdapter =
                 new CollectionPagerAdapter(
-                        getSupportFragmentManager());
+                        getSupportFragmentManager(),mFriendsFragment);
 
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setDisplayShowTitleEnabled(false);
@@ -124,6 +132,8 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), WDService.class);
         bindService(intent, serviceConn, Context.BIND_AUTO_CREATE);
 
+        if(dataHandler != null)
+            dataHandler.bind();
     }
 
     protected void onStop(){
@@ -131,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
         unbindService(serviceConn);
     }
 
+    private DataHandler dataHandler;
     private ServiceConnection serviceConn = new ServiceConnection() {
 
         @Override
@@ -139,18 +150,26 @@ public class MainActivity extends AppCompatActivity {
             // We've bound to LocalService, cast the IBinder and get LocalService instance
             WDService.LocalBinder binder = (WDService.LocalBinder) serviceBinder;
             wdservice = binder.getService();
-
             loadTabs();
+
+
+            dataHandler = new DataHandler(wdservice) {
+                @Override
+                public boolean onStatusChanged(boolean online, Peer peer) {
+                    mFriendsFragment.onStatusChanged(online, peer);
+                    return true;
+                }
+            };
+            dataHandler.bind();
+
         }
 
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
             wdservice = null;
+            dataHandler.unbind();
         }
     };
-
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -212,9 +231,11 @@ public class MainActivity extends AppCompatActivity {
     public static class CollectionPagerAdapter extends FragmentPagerAdapter {
 
         private static final int NR_PAGES = 4;
+        private FriendsFragment friendsFragment;
 
-        public CollectionPagerAdapter(FragmentManager fm) {
+        public CollectionPagerAdapter(FragmentManager fm, FriendsFragment friendsFragment) {
             super(fm);
+            this.friendsFragment = friendsFragment;
         }
 
         @Override
@@ -228,7 +249,7 @@ public class MainActivity extends AppCompatActivity {
                     fragment = new BikeActivityFragment();
                     break;
                 case 2:
-                    fragment = new FriendsFragment();
+                    fragment = friendsFragment;
                     break;
                 case 3:
                     fragment = new StationsFragment();
@@ -251,6 +272,13 @@ public class MainActivity extends AppCompatActivity {
 
     public WDService getWDService(){
         return wdservice;
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+
+        dataHandler.unbind();
     }
 
     public void onDestroy(){

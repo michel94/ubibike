@@ -242,7 +242,7 @@ public class WDService extends Service implements
             public void run() {
                 handlePeerChanges(oldPeerList);
             }
-        }, 1000);
+        }, 2000);
 
 
 
