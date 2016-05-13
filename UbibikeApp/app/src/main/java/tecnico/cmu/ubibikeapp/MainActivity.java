@@ -221,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
         icons.add(getResources().getDrawable(R.drawable.ic_home_white_36dp));
         icons.add(getResources().getDrawable(R.drawable.ic_directions_bike_white_36dp));
         icons.add(getResources().getDrawable(R.drawable.ic_people_white_36dp));
-        icons.add(getResources().getDrawable(R.drawable.ic_person_white_36dp));
+        icons.add(getResources().getDrawable(R.drawable.ic_search_white_36dp));
 
         if(actionBar.getTabCount() == 4)
             return;

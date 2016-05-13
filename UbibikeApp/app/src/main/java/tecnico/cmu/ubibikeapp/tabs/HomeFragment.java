@@ -59,7 +59,8 @@ public class HomeFragment extends Fragment {
                     user = Utils.getUserStats();
                 }
                 Log.d(TAG, "USER " + user.toString());
-                ((TextView) rootView.findViewById(R.id.score)).setText(user.getScore() + "");
+                double userScore = Math.round(user.getScore());
+                ((TextView) rootView.findViewById(R.id.score)).setText(userScore + "");
                 TextView distance = ((TextView) rootView.findViewById(R.id.distance));
                 distance.setText(user.getDistance() + " " +distance.getText());
                 String bikeFromPrefs = Utils.getCurrentBike();
