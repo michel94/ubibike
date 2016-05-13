@@ -98,6 +98,7 @@ public class MoveManager {
 
     private void finishTrip() {
         Utils.setCurrentBike("no_bike");
+        Utils.setCurrentStation(stationInRange);
         double distance = mTrajectory.getDistance();
         int points = (int)(distance / 100);
         mTrajectory.setPoints(points);
