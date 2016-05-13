@@ -10,8 +10,9 @@ public class User {
     private int score;
     private int id;
     private ArrayList<Trajectory> trajectories;
+    private String currentBike;
 
-    public User(String username, String password, int distance, int score, ArrayList<Trajectory> trajectories) {
+    public User(String username, String password, int distance, int score, ArrayList<Trajectory> trajectories, String currentBike) {
         this.username = username;
         this.password = password;
         this.distance = distance;
@@ -67,12 +68,17 @@ public class User {
         this.trajectories = trajectories;
     }
 
+    public String getCurrentBike() {
+        return currentBike;
+    }
+
+    public void setCurrentBike(String currentBike) {
+        this.currentBike = currentBike;
+    }
+
     @Override
     public String toString() {
         return "Username " + username + "/ score: " + score + "/ distance: " + distance;
     }
 
-    private class Trajectory {
-
-    }
 }

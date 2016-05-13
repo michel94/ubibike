@@ -17,7 +17,6 @@ import tecnico.cmu.ubibikeapp.Utils;
  */
 public class Trajectory {
     private String _id;
-    private String username;
     private String user_id;
     private ArrayList<Coordinate> coordinates;
     private int points;
@@ -28,18 +27,15 @@ public class Trajectory {
     public Trajectory(String id, String username, String user_id, ArrayList<Coordinate> coordinates, int points, double distance, String beginDate, String endDate) {
         this._id = id;
         this.coordinates = coordinates;
-        this.user_id = user_id;
-        this.username = username;
         this.points = points;
         this.distance = distance;
         this.beginDate = beginDate;
         this.endDate = endDate;
     }
 
-    public Trajectory(String username, String user_id, ArrayList<Coordinate> coordinates, String beginDate) {
+    public Trajectory(ArrayList<Coordinate> coordinates, String beginDate) {
+        this.user_id = Utils.getUserID();
         this.coordinates = coordinates;
-        this.user_id = user_id;
-        this.username = username;
         this.beginDate = beginDate;
         this.distance = 0;
         this.points = 0;
@@ -51,22 +47,6 @@ public class Trajectory {
 
     public void setId(String id) {
         this._id = id;
-    }
-
-    public String getUserId() {
-        return user_id;
-    }
-
-    public void setUserId(String user_id) {
-        this.user_id = user_id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public ArrayList<Coordinate> getCoordinates() {

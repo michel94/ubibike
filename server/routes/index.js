@@ -4,6 +4,8 @@ var schemas = require('./db')
 var db = schemas.db;
 var Test = db.get('test');
 
+var ObjectID = require('mongodb').ObjectID
+
 var User = schemas.User;
 var Bike = schemas.Bike;
 var Station = schemas.Station;
@@ -164,8 +166,23 @@ router.post('/returnBike', function(req, res, next){
 */
 router.post('/transactions', function(req, res, next){
 	var data = req.body;
-    console.log(data);
-    res.json({success: true})
+    console.log(JSON.stringify(data));
+    //res.json({success: true})
+    var transactions = data.transactions;
+    for(var i=0 ; i<transactions.length; i++){
+        var item = transactions[i];
+        if(item.type == "trip"){
+            var trajectory = item.trajectory;
+            User.findByIdAndUpdate(trajectory.user_id, {$push: {"trajectories" : trajectory}}, { safe: true, upsert: true}, function(err, model){
+                if(err){
+                    console.log(err);
+                    res.json({success: false, message: err});
+                } else {
+                    res.json({success: true, message: model});
+                }
+            })
+        }
+    }
 	/*for(var i=0; i<data.transactions.length; i++){
 		var srcUser = transactions[i].srcUser;
 		var destUser = transactions[i].destUser;
@@ -296,6 +313,6 @@ router.post('/trajectories', function(req, res, next){
         
     });
 
-})
+});
 
 module.exports = router;

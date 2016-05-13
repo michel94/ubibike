@@ -193,7 +193,8 @@ public class UserActivity extends Activity {
         wdservice.sendMessage(userID, chatText.getText().toString(), new RequestCallback() {
             @Override
             public void onFinish(boolean success) {
-                chatArrayAdapter.add(new Message(true, chatText.getText().toString()));
+                Message m = new Message(true, chatText.getText().toString(), Utils.getUserID(), userID);
+                chatArrayAdapter.add(m);
                 chatText.setText("");
             }
         });
@@ -222,10 +223,13 @@ public class UserActivity extends Activity {
             onlineStatus = wdservice.isUserAvailable(userID);
             updateStatus();
 
+            Log.d(TAG, "Binding data handler");
             dataHandler = new DataHandler(wdservice){
                 @Override
                 public boolean onMessage(String text) {
-                    chatArrayAdapter.add(new Message(false, text));
+                    Message m = new Message(false, text, userID, Utils.getUserID());
+                    chatArrayAdapter.add(m);
+                    wdservice.getLocalStorage().putMessage(m);
 
                     return true;
                 }
@@ -243,6 +247,8 @@ public class UserActivity extends Activity {
 
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
+            Log.d(TAG, "Unbinding dataHandler");
+            dataHandler.unbind();
             wdservice = null;
         }
     };

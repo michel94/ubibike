@@ -2,6 +2,7 @@ package tecnico.cmu.ubibikeapp;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -22,6 +23,7 @@ import tecnico.cmu.ubibikeapp.network.ResponseCallback;
  */
 public class Utils {
 
+    private static final String TAG = "Utils";
     private static final String UBI_PREFS = "UbibikePreferences";
 
     public static String getUserID(){
@@ -153,18 +155,13 @@ public class Utils {
     }
 
     public static void savePendingData(JSONArray pendingData){
-        JSONArray currentData = getPendingData();
-        for(int i = 0; i!= pendingData.length(); i++) {
-            try {
-                currentData.put(pendingData.get(i));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
+        //JSONArray currentData = getPendingData();
+
         SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         Gson gson = new Gson();
-        String pendingString = gson.toJson(currentData);
+        String pendingString = gson.toJson(pendingData);
+        Log.d(TAG, pendingString);
         editor.putString("pending_data", pendingString);
         editor.apply();
     }
@@ -174,6 +171,24 @@ public class Utils {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("pending_data", "");
         editor.apply();
+    }
+
+    public static void setMessageLog(JSONObject messageLog){
+        SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("messageLog", messageLog.toString());
+        editor.apply();
+    }
+
+    public static JSONObject getMessageLog(){
+        SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
+        try {
+        return (preferences != null) ? new JSONObject(preferences.getString("messageLog", "")) : new JSONObject();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return new JSONObject();
+
+        }
     }
 }
 

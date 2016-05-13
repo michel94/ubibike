@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import tecnico.cmu.ubibikeapp.R;
 import tecnico.cmu.ubibikeapp.Utils;
@@ -27,6 +28,8 @@ public class HomeFragment extends Fragment {
 
     private static final String TAG = "HomeFragment";
 
+    private TextView mCurrentBike;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(
@@ -34,13 +37,7 @@ public class HomeFragment extends Fragment {
 
         getUserStatistics(rootView);
 
-        ((TextView) rootView.findViewById(R.id.current_bike)).setText("Bicicleta exemplo");
-
-        final FloatingActionButton button = (FloatingActionButton) rootView.findViewById(R.id.fab);
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-            }
-        });
+        mCurrentBike = ((TextView) rootView.findViewById(R.id.current_bike));
 
         return rootView;
     }
@@ -65,6 +62,19 @@ public class HomeFragment extends Fragment {
                 ((TextView) rootView.findViewById(R.id.score)).setText(user.getScore() + "");
                 TextView distance = ((TextView) rootView.findViewById(R.id.distance));
                 distance.setText(user.getDistance() + " " +distance.getText());
+                String bikeFromPrefs = Utils.getCurrentBike();
+                String bikeFromServer = user.getCurrentBike();
+                String currentBike = "-";
+                if(bikeFromPrefs == null) {
+                    if(bikeFromServer == null) {
+                        currentBike = "-";
+                    } else {
+                        currentBike = "Bike: " + bikeFromServer;
+                    }
+                } else {
+                    currentBike = "Bike " + bikeFromPrefs;
+                }
+                mCurrentBike.setText(currentBike);
                 Utils.saveUserStats(user);
             }
 
