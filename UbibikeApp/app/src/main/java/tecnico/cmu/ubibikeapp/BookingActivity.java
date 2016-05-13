@@ -49,9 +49,6 @@ public class BookingActivity extends AppCompatActivity {
         stationId = extra.getString("stationId");
         Log.d(TAG, "station name: " + stationName + ", stationId: " + stationId);
 
-
-
-
         listView = (ListView)findViewById(R.id.bikelist);
         bikes = new ArrayList<>();
 

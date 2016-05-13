@@ -118,7 +118,7 @@ public class LocalStorage implements NetStatusReceiver.NetworkListener{
             e.printStackTrace();
         }
 
-        pendingData.put(data);
+        putOnPending(data);
     }
 
     public JSONArray getPendingData(){
@@ -134,11 +134,15 @@ public class LocalStorage implements NetStatusReceiver.NetworkListener{
 
             Log.d(TAG, "Storing trip with " + trajectory.getPoints() + " earned points: " + trajectory);
 
-            pendingData.put(jTrip);
+            putOnPending(jTrip);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
+    }
+
+    void putOnPending(JSONObject o){
+        pendingData.put(o);
         sendPendingDataToServer();
     }
 
@@ -180,6 +184,7 @@ public class LocalStorage implements NetStatusReceiver.NetworkListener{
         Log.d(TAG, second);
         try {
             pendingData = new JSONArray(first + ", " + second);
+            sendPendingDataToServer();
             Log.d("extendTrips", pendingData.toString());
         } catch (JSONException e) {
             e.printStackTrace();
