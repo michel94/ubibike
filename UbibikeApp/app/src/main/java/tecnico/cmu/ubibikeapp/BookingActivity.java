@@ -23,10 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tecnico.cmu.ubibikeapp.model.Bike;
-import tecnico.cmu.ubibikeapp.model.Message;
 import tecnico.cmu.ubibikeapp.network.API;
-import tecnico.cmu.ubibikeapp.network.DataHandler;
-import tecnico.cmu.ubibikeapp.network.Peer;
 import tecnico.cmu.ubibikeapp.network.ResponseCallback;
 import tecnico.cmu.ubibikeapp.network.WDService;
 
@@ -44,17 +41,20 @@ public class BookingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_booking);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Bundle extra = getIntent().getExtras();
         stationName = extra.getString("stationName");
         stationId = extra.getString("stationId");
         Log.d(TAG, "station name: " + stationName + ", stationId: " + stationId);
 
 
-        setContentView(R.layout.activity_booking);
+
 
         listView = (ListView)findViewById(R.id.bikelist);
         bikes = new ArrayList<>();
+
         bikeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, bikes);
         listView.setAdapter(bikeAdapter);
 

@@ -1,13 +1,8 @@
 package tecnico.cmu.ubibikeapp.tabs;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +13,6 @@ import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
-import tecnico.cmu.ubibikeapp.LocationTrackerActivity;
 import tecnico.cmu.ubibikeapp.R;
 import tecnico.cmu.ubibikeapp.Utils;
 import tecnico.cmu.ubibikeapp.model.ResponseUser;
@@ -61,13 +55,14 @@ public class HomeFragment extends Fragment {
                 Gson gson = new Gson();
                 ResponseUser responseUser = gson.fromJson(response.toString(), ResponseUser.class);
                 User user;
+                Log.d(TAG, "Response: " + responseUser.toString());
                 if(responseUser.isSuccess()){
                     user = responseUser.getUser();
                 } else {
                     user = Utils.getUserStats();
                 }
                 Log.d(TAG, "USER " + user.toString());
-                ((TextView) rootView.findViewById(R.id.points)).setText(user.getPoints() + "");
+                ((TextView) rootView.findViewById(R.id.score)).setText(user.getScore() + "");
                 TextView distance = ((TextView) rootView.findViewById(R.id.distance));
                 distance.setText(user.getDistance() + " " +distance.getText());
                 Utils.saveUserStats(user);
@@ -77,7 +72,7 @@ public class HomeFragment extends Fragment {
             public void onError(Exception e) {
                 User user = Utils.getUserStats();
                 Log.d(TAG, "USER " + user.toString());
-                ((TextView) rootView.findViewById(R.id.points)).setText(user.getPoints() + "");
+                ((TextView) rootView.findViewById(R.id.score)).setText(user.getScore() + "");
                 TextView distance = ((TextView) rootView.findViewById(R.id.distance));
                 distance.setText(user.getDistance() + " " +distance.getText());
                 Utils.saveUserStats(user);

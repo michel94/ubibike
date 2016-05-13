@@ -1,10 +1,7 @@
 package tecnico.cmu.ubibikeapp.network;
 
 import android.location.Location;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,7 +28,7 @@ public class PeerAPIBackend {
         Log.d(TAG, "New transfer: from " + transfer.getSrcUser() + " to " + transfer.getDestUser() + " with " + transfer.getQuantity() + " points");
         // TODO: Do something with points: update local storage, redraw view...
         User user = Utils.getUserStats();
-        user.setPoints(user.getPoints() + transfer.getQuantity());
+        user.setScore(user.getScore() + transfer.getQuantity());
 
         JSONArray jPending = data.getJSONArray("pending");
         LocalStorage storage = service.getLocalStorage();

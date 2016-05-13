@@ -1,0 +1,14 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Normal state. -->
+    <item android:drawable="@color/wallet_highlighted_text_holo_dark"
+        android:state_pressed="false"
+        android:state_selected="false"/>
+    <!-- pressed state. -->
+    <item android:drawable="@color/common_action_bar_splitter"
+        android:state_pressed="true"/>
+    <!-- Selected state. -->
+    <item android:drawable="@color/common_plus_signin_btn_text_dark_disabled"
+        android:state_pressed="false"
+        android:state_selected="true"/>
+
+</selector>

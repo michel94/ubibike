@@ -9,17 +9,15 @@
     >
 
     <ListView
-        android:layout_marginBottom="80dp"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_height="390dp"
         android:id="@+id/messages_view"
         android:background="@null"
         android:divider="@null"
         android:stackFromBottom="true"
         android:transcriptMode="alwaysScroll"
-        android:layout_below="@+id/statusIndic"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:longClickable="false"
+        android:layout_above="@+id/input_bar" />
 
     <LinearLayout
         android:id="@+id/input_bar"
@@ -31,11 +29,12 @@
 
         <EditText
             android:id="@+id/message"
-            android:layout_weight="0.7"
+            android:layout_weight="0.45"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:inputType="text"
-            android:hint="Say anything ..."/>
+            android:hint="Say anything ..."
+            android:linksClickable="false" />
 
 
         <ImageButton
@@ -49,29 +48,97 @@
 
     </LinearLayout>
 
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:layout_above="@+id/messages_view"
+    android:layout_alignParentRight="true"
+    android:layout_alignParentEnd="true"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true"
+    android:weightSum="1">
+
+    <ImageButton
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:id="@+id/tropID"
+        android:src="@drawable/trop"
+        android:layout_alignParentTop="true"
+        />
+
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:weightSum="1"
+        android:id="@+id/linearLayout"
+        android:layout_below="@+id/tropID"
+        android:layout_above="@+id/messages_view"
+        android:layout_toRightOf="@+id/tropID"
+        android:layout_toLeftOf="@+id/statusIndic"
+        android:layout_toStartOf="@+id/statusIndic"
+        android:layout_weight="0.96">
+
+
+
+        <LinearLayout
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/pointdata"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Availabe"
+                android:id="@+id/textView4"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/qtdpts"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="11"
+                android:textSize="16sp"/>
+        </LinearLayout>
+
+
+        <EditText
+            android:layout_width="115dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="10"
+            android:id="@+id/editponts"
+            android:layout_gravity="right"
+            android:hint="New Points........."
+            android:visibility="invisible"/>
+
+         <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ok"
+            android:text="Send/Close"
+            android:textSize="12dp"
+            android:visibility="invisible"/>
+
+
+    </LinearLayout>
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Offline"
         android:id="@+id/statusIndic"
-        android:layout_marginRight="50dp"
-        android:layout_marginEnd="50dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="-"
-        android:id="@+id/usernameTxt"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="27dp"
-        android:layout_marginStart="27dp"
-        android:layout_above="@+id/messages_view"
-        android:textSize="48sp"/>
+</LinearLayout>
 
 </RelativeLayout>

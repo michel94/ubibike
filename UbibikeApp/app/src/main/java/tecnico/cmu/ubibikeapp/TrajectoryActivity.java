@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -14,6 +15,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import tecnico.cmu.ubibikeapp.model.Coordinate;
 import tecnico.cmu.ubibikeapp.model.ResponseTrajectory;
@@ -30,11 +32,17 @@ public class TrajectoryActivity extends AppCompatActivity
     private String trajectoryID;
     private static final String TAG = "TrajectoryActivity";
 
+    private TextView mDistance;
+    private TextView mPoints;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         trajectoryID = getIntent().getStringExtra("_id");
+
+        mDistance = (TextView) findViewById(R.id.trajectory_distance);
+        mPoints = (TextView) findViewById(R.id.trajectory_points);
 
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -63,6 +71,8 @@ public class TrajectoryActivity extends AppCompatActivity
                     PolylineOptions polylineOptions = new PolylineOptions();
                     Trajectory trajectory = responseTrajectory.getTrajectories().get(0);
                     Log.d(TAG, trajectory.toString());
+                    mDistance.setText(Double.toString(trajectory.getDistance()));
+                    mPoints.setText(Integer.toString(trajectory.getPoints()));
                     for(Coordinate coordinate: trajectory.getCoordinates()){
                         Log.d(TAG, "Adding coordinate: " + coordinate.getPosition());
                         polylineOptions.add(coordinate.getPosition());
