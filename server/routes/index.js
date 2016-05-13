@@ -161,6 +161,7 @@ router.post('/returnBike', function(req, res, next){
 					bike.station = data.station;
 					user.save();
 					bike.save();
+					res.json({success: true});
 				}else{
 					res.json({success: false, reason: "Critical error: bike doesn't exist"});
 				}
