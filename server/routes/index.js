@@ -41,15 +41,15 @@ router.post('/userStats', function(req, res, next){
         } else {
             var user = doc[0];
             var distance = 0;
-            var points = 0;
+            //var points = 0;
             console.log(JSON.stringify(user.trajectories));
             for(var i=0; i!= user.trajectories.length   ; i++){
                 console.log("\n" + user.trajectories[i])
                 distance += user.trajectories[i].distance;
-                points += user.trajectories[i].points;
+                //points += user.trajectories[i].points;
             }
             user.distance = distance;
-            user.points = points;
+            //user.points = points;
             res.json({success:true, user: user});
         }
     })
