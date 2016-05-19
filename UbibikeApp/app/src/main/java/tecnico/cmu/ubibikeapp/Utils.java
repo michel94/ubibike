@@ -163,7 +163,7 @@ public class Utils {
     public static void clearPendingData(){
         SharedPreferences preferences = UbibikeApp.getAppContext().getSharedPreferences(UBI_PREFS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("pending_data", "");
+        editor.putString("pending_data", new JSONArray().toString());
         editor.apply();
     }
 

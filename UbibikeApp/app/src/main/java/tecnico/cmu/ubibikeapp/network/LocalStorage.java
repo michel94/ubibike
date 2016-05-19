@@ -131,6 +131,7 @@ public class LocalStorage implements NetStatusReceiver.NetworkListener{
             JSONObject jTrip = new JSONObject();
             jTrip.put("type", "trip");
             jTrip.put("trajectory", gson.toJson(trajectory));
+            jTrip.put("messageId", Utils.getNewMessageId());
 
             Log.d(TAG, "Storing trip with " + trajectory.getPoints() + " earned points: " + trajectory);
 
@@ -201,10 +202,8 @@ public class LocalStorage implements NetStatusReceiver.NetworkListener{
             sendPendingDataToServer();
         }
         String currentBike = Utils.getCurrentBike();
-        if(currentBike!=null){
-            if(!currentBike.equals("no_bike")){
-                returnBikeToStation();
-            }
+        if(currentBike == null || currentBike.equals("no_bike")){
+            returnBikeToStation();
         }
     }
 

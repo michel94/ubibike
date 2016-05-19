@@ -5,9 +5,12 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -23,6 +26,7 @@ import tecnico.cmu.ubibikeapp.UbibikeApp;
 import tecnico.cmu.ubibikeapp.Utils;
 import tecnico.cmu.ubibikeapp.model.Coordinate;
 import tecnico.cmu.ubibikeapp.model.Trajectory;
+import tecnico.cmu.ubibikeapp.model.User;
 
 /**
  * Created by michel on 5/6/16.
@@ -86,12 +90,24 @@ public class MoveManager {
         if(hadBike && !bikeInRange && stationInRange != null){ // drop off condition: bike was in range, but is no longer, and there is a station nearby.
             Log.d(TAG, "Finished trip in station " + stationInRange);
             currentBikeId = null;
+            Utils.setCurrentBike("no_bike");
             //TODO Notify the drop off
             mNotifyBikeInRange = false;
             notifyUserBike(false);
             finishTrip();
         }
 
+    }
+
+    public void sendToast(final String message){
+        Handler handler = new Handler(Looper.getMainLooper());
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(localStorage.context, message, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void finishTrip() {
@@ -101,6 +117,10 @@ public class MoveManager {
         int points = (int)(distance / 100);
         mTrajectory.setPoints(points);
         mTrajectory.setEndDate(Utils.convertDateToString(new Date(System.currentTimeMillis())));
+        User user = Utils.getUserStats();
+        user.setScore(user.getScore() + points);
+        Utils.saveUserStats(user);
+        sendToast("You finished a trip and earned " + points + "points. You now have " + user.getScore());
         localStorage.putTrip(mTrajectory);
         localStorage.returnBikeToStation();
     }

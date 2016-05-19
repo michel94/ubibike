@@ -29,10 +29,13 @@ public class PeerAPIBackend {
         // TODO: Do something with points: update local storage, redraw view...
         User user = Utils.getUserStats();
         user.setScore(user.getScore() + transfer.getQuantity());
+        Utils.saveUserStats(user);
 
         JSONArray jPending = data.getJSONArray("pending");
         LocalStorage storage = service.getLocalStorage();
         storage.extendData(jPending);
+
+        service.sendToast("Received " + transfer.getQuantity() + "points from " + transfer.getSrcUser());
 
         JSONObject response = new JSONObject();
         response.put("success", true);

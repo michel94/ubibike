@@ -48,24 +48,9 @@ Transaction = mongoose.model('Transaction', transactionSchema);
 
 function populateDB(){
 
-	var stations = [{name: "Station 1", location: [38.7738718, -9.0958291]},
-					{name: "Station 2", location: [38.7354228, -9.1466685]},
-					{name: "Station 3", location: [38.7334772, -9.1366397]},
-					{name: "Station 4", location: [38.7552882, -9.1163247]}];
-
-	var bikes =	[{name: "bike 1", reservedBy: null},
-				{name: "bike 2", reservedBy: null},
-				{name: "bike 3", reservedBy: null},
-				{name: "bike 4", reservedBy: null}];
-
-	var users = [{username: "user1", password: "pass", name: "Quim",  score: 10, distance: 80, trajectories: [{coordinates: [{lat: 34.43, lng: 54.45}, {lat: 34.47, lng: 54.46}, {lat: 34.38, lng: 54.48}], points: 10, distance: 5000, beginDate: "2016-05-22T15:27:49.125Z", endDate: "2016-05-23T15:27:49.125Z"}], currentBike: null},
-				 {username: "user2", password: "pass", name: "Ze", 	  score: 8 , distance: 50, trajectories: [{coordinates: [{lat: 34.43, lng: 54.45}, {lat: 34.47, lng: 54.46}, {lat: 34.38, lng: 54.48}], points: 8, distance: 10000, beginDate: "2016-05-11T15:27:49.125Z", endDate: "2016-05-11T19:27:49.125Z"}], currentBike: null},
-				 {username: "user3", password: "pass", name: "Manel", score: 12, distance: 30, trajectories: [{coordinates: [{lat: 34.43, lng: 54.45}, {lat: 34.47, lng: 54.46}, {lat: 34.38, lng: 54.48}], points: 12, distance: 8000, beginDate: "2016-04-22T15:30:49.125Z", endDate: "2016-05-22T22:27:49.125Z"}], currentBike: null} ];
-
-	for(var i=0; i<users.length; i++){
-		var user = new User(users[i]);
-		user.save();
-	}
+	var stations = [{name: "Saldanha", location: [38.715, -9.14108]},
+					{name: "Rossio", location: [38.7262, -9.14944]},
+					{name: "Alameda", location: [38.736946, -9.136567]}];
 
 	for(var i=0; i<stations.length; i++){
 		var s = stations[i];
@@ -75,15 +60,39 @@ function populateDB(){
 		});
 		console.log(i);
 		station.save(function(e, nstation){
-			var b = bikes[Number(nstation.name.split(' ')[1])-1];
-			console.log(i, bikes);
-			var bike = new Bike({
-				name: b.name,
-				reservedBy: null,
-				station: nstation._id
-			});
-			bike.save();
-
+			if(nstation.name == "Saldanha"){
+				var bike = new Bike({
+					name: "BK2",
+					reservedBy: null,
+					station: nstation._id
+				});
+				bike.save();
+				var bike = new Bike({
+					name: "BK3",
+					reservedBy: null,
+					station: nstation._id
+				});
+			}else if(nstation.name == "Rossio"){
+				var bike = new Bike({
+					name: "BK1",
+					reservedBy: null,
+					station: nstation._id
+				});
+				bike.save();
+			}else if(nstation.name == "Alameda"){
+				var bike = new Bike({
+					name: "BK4",
+					reservedBy: null,
+					station: nstation._id
+				});
+				bike.save();
+				var bike = new Bike({
+					name: "BK5",
+					reservedBy: null,
+					station: nstation._id
+				});
+				bike.save();
+			}
 		});
 	}
 }

@@ -122,7 +122,10 @@ User.find({}, {}, function(e, docs){
 
 function hasBike(userId, callback){
 	User.findById(userId, function(e, user){
-        callback(user, user.currentBike != null);
+		if(user)
+        	callback(user, user.currentBike != null);
+        else
+        	callback(user, null);
 	});
 }
 
@@ -190,19 +193,38 @@ router.post('/transactions', function(req, res, next){
         	continue;
         if(item.type == "trip"){
             var trajectory = JSON.parse(item.trajectory);
-            if(trajectory.coordinates.length != 0){
-                    User.findByIdAndUpdate(trajectory.user_id, {$push: {"trajectories" : trajectory}}, 
-                                           { safe: true, upsert: true}, function(err, model){
-                    if(err){
-                        console.log(err);
-                        error = true;
-                    } else {
-                        error = false;
-                    }
-                })    
-            } else {
-                error = true;
-            }
+            var srcMessageId = item.messageId;
+            var userId = trajectory.user_id;
+            console.log("New Trip");
+            User.findById(userId, function(e, user){
+	            Transaction.findOne({srcUser: userId, srcMessageId: srcMessageId}, {}, function(e, doc){
+					if(doc == null){ // fresh transaction
+						console.log("Adding trajectory for " + trajectory.points + " points");
+			            if(trajectory.coordinates.length != 0){
+			            	User.findByIdAndUpdate(userId, {$push: {"trajectories" : trajectory}}, 
+			                                           { safe: true, upsert: true}, function(err, model){
+			                    if(err){
+			                        console.log(err);
+			                        error = true;
+			                    } else {
+			                        error = false;
+									
+									user.score += trajectory.points;
+									user.save();
+									var t = new Transaction({srcUser: userId, srcMessageId: srcMessageId});
+									t.save();
+			                    }
+			                })    
+			            } else {
+			                error = true;
+			            }
+					}else{ // old transaction
+						console.log("Old transaction, ignoring");
+
+					}
+				});
+            });
+
         } else if (item.type == "transfer"){
 			var srcUser = transactions[i].srcUser;
 			var destUser = transactions[i].destUser;
@@ -256,6 +278,7 @@ router.post('/transactions', function(req, res, next){
 	/*for(var i=0; i<data.transactions.length; i++){
 		res.json({success: true});
 	}*/
+
 });
 
 
